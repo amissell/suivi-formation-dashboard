@@ -1,34 +1,44 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
-    './resources/**/*.blade.php',
-    './resources/**/*.js',
-    './resources/**/*.vue',
+    "./resources/**/*.blade.php",
+    "./resources/**/*.js",
+    "./resources/**/*.vue",
   ],
   theme: {
     extend: {
       colors: {
-        background: 'hsl(0 0% 100%)',
-        foreground: 'hsl(222.2 84% 4.9%)',
-        card: 'hsl(0 0% 100%)',
-        'card-foreground': 'hsl(222.2 84% 4.9%)',
-        primary: 'hsl(221.2 83.2% 53.3%)',
-        'primary-foreground': 'hsl(210 40% 98%)',
-        secondary: 'hsl(210 40% 96.1%)',
-        'secondary-foreground': 'hsl(222.2 47.4% 11.2%)',
-        muted: 'hsl(210 40% 96.1%)',
-        'muted-foreground': 'hsl(215.4 16.3% 46.9%)',
-        accent: 'hsl(210 40% 96.1%)',
-        'accent-foreground': 'hsl(222.2 47.4% 11.2%)',
-        border: 'hsl(214.3 31.8% 91.4%)',
-        sidebar: {
-          background: 'hsl(0 0% 98%)',
-          foreground: 'hsl(240 5.3% 26.1%)',
-          border: 'hsl(220 13% 91%)',
-          accent: 'hsl(220 14.3% 95.9%)',
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
     },
   },
   plugins: [],
-};
+}
