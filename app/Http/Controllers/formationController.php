@@ -57,16 +57,17 @@ class formationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+    public function update(Request $request, Formation $formation) {
+        $formation->update($request->all());
+        return redirect()->route('formations.index');
+}
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+    public function destroy(Formation $formation) {
+        $formation->delete();
+        return redirect()->route('formations.index');
+}
+
 }
