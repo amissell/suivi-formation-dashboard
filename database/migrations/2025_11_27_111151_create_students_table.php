@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('payment_done', 8, 2)->default(0);
             $table->decimal('payment_remaining', 8, 2)->default(0);
             $table->enum('attestation', ['yes', 'no'])->default('no');
-            $table->enum('status', ['aide vendeur', vendeur', 'superviseur', 'CDR']));
+            $table->enum('status', ['aide_vendeur', 'vendeur', 'superviseur', 'CDR']);
             $table->string('city')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
