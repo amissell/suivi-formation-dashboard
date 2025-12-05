@@ -27,50 +27,79 @@
         </div>
         <div class="p-6 overflow-x-auto">
             <table class="w-full table-auto">
-                <thead>
-                    <tr class="border-b border-border">
-                        <th class="text-left text-sm font-medium text-muted-foreground pb-3">Name</th>
-                        <th class="text-left text-sm font-medium text-muted-foreground pb-3">CIN</th>
-                        <th class="text-left text-sm font-medium text-muted-foreground pb-3">Phone</th>
-                        <th class="text-left text-sm font-medium text-muted-foreground pb-3">Formation</th>
-                        <th class="text-left text-sm font-medium text-muted-foreground pb-3">Start Date</th>
-                        <th class="text-left text-sm font-medium text-muted-foreground pb-3">Status</th>
-                        <th class="text-right text-sm font-medium text-muted-foreground pb-3">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($students as $student)
-                    <tr class="border-b border-border last:border-0">
-                        <td class="py-4 font-medium text-foreground">{{ $student->name }}</td>
-                        <td class="py-4 text-foreground">{{ $student->cin }}</td>
-                        <td class="py-4 text-foreground">{{ $student->phone }}</td>
-                        <td class="py-4 text-foreground">{{ $student->formation->name ?? '-' }}</td>
-                        <td class="py-4 text-foreground">{{ \Carbon\Carbon::parse($student->start_date)->format('Y-m-d') }}</td>
-                        <td class="py-4 text-foreground">{{ ucfirst($student->status) }}</td>
-                        <td class="py-4 text-right space-x-2">
-                            <button onclick="openModal('edit', {{ $student }})"
-                                    class="inline-flex items-center justify-center w-9 h-9 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                            </button>
-                            <form action="{{ route('students.destroy', $student) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" onclick="return confirm('Are you sure?')"
-                                        class="inline-flex items-center justify-center w-9 h-9 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                    </svg>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+    <thead>
+        <tr class="border-b border-border">
+            <th class="text-left text-sm font-medium text-muted-foreground pb-3">Name</th>
+            <th class="text-left text-sm font-medium text-muted-foreground pb-3">CIN</th>
+            <th class="text-left text-sm font-medium text-muted-foreground pb-3">Phone</th>
+            <th class="text-left text-sm font-medium text-muted-foreground pb-3">Email</th>
+            <th class="text-left text-sm font-medium text-muted-foreground pb-3">Formation</th>
+            <th class="text-left text-sm font-medium text-muted-foreground pb-3">Start Date</th>
+            <th class="text-left text-sm font-medium text-muted-foreground pb-3">Status</th>
+            <th class="text-left text-sm font-medium text-muted-foreground pb-3">Attestation</th>
+            <th class="text-left text-sm font-medium text-muted-foreground pb-3">Payment Done</th>
+            <th class="text-left text-sm font-medium text-muted-foreground pb-3">Payment Left</th>
+            <th class="text-left text-sm font-medium text-muted-foreground pb-3">City</th>
+            <th class="text-left text-sm font-medium text-muted-foreground pb-3">Notes</th>
+            <th class="text-right text-sm font-medium text-muted-foreground pb-3">Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach($students as $student)
+        <tr class="border-b border-border last:border-0">
+            <td class="py-4 font-medium text-foreground">{{ $student->name }}</td>
+            <td class="py-4 text-foreground">{{ $student->cin }}</td>
+            <td class="py-4 text-foreground">{{ $student->phone }}</td>
+            <td class="py-4 text-foreground">{{ $student->email ?? '-' }}</td>
+            <td class="py-4 text-foreground">{{ $student->formation->name ?? '-' }}</td>
+            <td class="py-4 text-foreground">{{ \Carbon\Carbon::parse($student->start_date)->format('Y-m-d') }}</td>
+            <td class="py-4 text-foreground">{{ ucfirst($student->status) }}</td>
+            <td class="py-4 text-foreground">{{ $student->attestation }}</td>
+            <td class="py-4 text-foreground">{{ $student->payment_done ?? 0 }}</td>
+            <td class="py-4 text-foreground">{{ $student->payment_remaining ?? 0 }}</td>
+            <td class="py-4 text-foreground">{{ $student->city ?? '-' }}</td>
+            <td class="py-4 text-foreground truncate max-w-xs">
+                {{ $student->notes ?? '-' }}
+            </td>
+
+            <td class="py-4 text-right flex items-center justify-end gap-2">
+
+    <!-- Edit -->
+    <button onclick="openModal('edit', {{ $student }})"
+        class="w-9 h-9 flex items-center justify-center rounded-full border border-border 
+               hover:bg-primary/10 hover:text-primary transition">
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M15 3l6 6M3 21l3-9 9-9 6 6-9 9-9 3z" />
+        </svg>
+    </button>
+
+    <!-- Delete -->
+    <form action="{{ route('students.destroy', $student) }}" method="POST" class="inline">
+        @csrf
+        @method('DELETE')
+        <button type="submit"
+            onclick="return confirm('Are you sure?')"
+            class="w-9 h-9 flex items-center justify-center rounded-full border border-border 
+                   hover:bg-red-100 hover:text-red-600 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" 
+                 class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M19 7L5 7" />
+                <path d="M10 11v6M14 11v6" />
+                <path d="M9 7V4h6v3" />
+                <path d="M5 7v12a2 2 0 002 2h10a2 2 0 002-2V7" />
+            </svg>
+        </button>
+    </form>
+
+</td>
+
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+
         </div>
     </div>
 </div>

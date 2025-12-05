@@ -17,7 +17,7 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd(vars: $request->all());
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'cin' => 'required|string|max:50',
