@@ -1,4 +1,4 @@
-<div id="student-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 hidden">
+<div id="student-modal" class="fixed inset-0 hidden bg-black/50 backdrop-blur-sm flex justify-center items-center">
     <div class="bg-card border border-border rounded-lg w-full max-w-lg p-6 shadow-lg">
         
         <!-- Header -->
@@ -48,12 +48,12 @@
                     <option value="yes">Attestation: Yes</option>
                     <option value="no">Attestation: No</option>
                 </select>
+                
+                <input type="number" step="0.01" name="payment_done" id="payment_done"
+                placeholder="Paid amount" class="w-full border border-border bg-background rounded-md p-2" />
+                <input type="number" step="0.01" name="payment_remaining" id="payment_remaining"
+                placeholder="Remaining amount" class="w-full border border-border bg-background rounded-md p-2" readonly />
 
-                <input type="number" step="0.01" name="payment_done" placeholder="Payment Done"
-                       class="w-full border border-border bg-background rounded-md p-2">
-
-                <input type="number" step="0.01" name="payment_remaining" placeholder="Payment Remaining"
-                       class="w-full border border-border bg-background rounded-md p-2">
 
                 <input type="text" name="city" placeholder="City"
                        class="w-full border border-border bg-background rounded-md p-2">

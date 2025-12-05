@@ -4,6 +4,7 @@ use App\Http\Controllers\formationController;
 use App\Http\Controllers\studentController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Formation;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -21,3 +22,6 @@ Route::resource('formations', controller: formationController::class);
 Route::resource('students', studentController::class);
 // Route::resource('formations', FormationController::class);
 
+Route::get('/formations/{formation}/price', function (Formation $formation) {
+    return response()->json(['price' => (float) $formation->price]);
+});

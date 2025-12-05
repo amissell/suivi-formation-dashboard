@@ -32,6 +32,14 @@ class StudentController extends Controller
             'city' => 'nullable|string|max:100',
             'notes' => 'nullable|string',
         ]);
+        
+        
+        $formation = Formation::find($data['formation_id']);
+        $price = $formation ? (float)$formation->price : 0;
+        $paid = isset($data['payment_done']) ? (float)$data['payment_done'] : 0;
+        
+        
+        $data['payment_remaining'] = round(max(0, $price - $paid), 2);
 
         Student::create($data);
 
@@ -60,6 +68,13 @@ class StudentController extends Controller
             'city' => 'nullable|string|max:100',
             'notes' => 'nullable|string',
         ]);
+        
+        
+        $formation = Formation::find($data['formation_id']);
+        $price = $formation ? (float)$formation->price : 0;
+        $paid = isset($data['payment_done']) ? (float)$data['payment_done'] : 0;
+        
+        $data['payment_remaining'] = round(max(0, $price - $paid), 2);
 
         $student->update($data);
 

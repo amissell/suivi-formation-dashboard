@@ -45,3 +45,38 @@ function closeModal() {
 
 window.openModal = openModal;
 window.closeModal = closeModal;
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const formationSelect = document.querySelector('select[name="formation_id"]');
+  const paymentDoneInput = document.getElementById('payment_done');
+  const paymentRemainingInput = document.getElementById('payment_remaining');
+
+  async function fetchPrice(formationId) {
+    if (!formationId) return 0;
+    try {
+      const res = await fetch(`/formations/${formationId}/price`);
+      if (!res.ok) return 0;
+      const data = await res.json();
+      return parseFloat(data.price) || 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  async function updateRemaining() {
+    const formationId = formationSelect?.value;
+    const price = await fetchPrice(formationId);
+    const paid = parseFloat(paymentDoneInput?.value) || 0;
+    let remaining = Math.max(0, (price - paid));
+    // round two decimals
+    remaining = Math.round(remaining * 100) / 100;
+    if (paymentRemainingInput) paymentRemainingInput.value = remaining.toFixed(2);
+  }
+
+  if (formationSelect) formationSelect.addEventListener('change', updateRemaining);
+  if (paymentDoneInput) paymentDoneInput.addEventListener('input', updateRemaining);
+
+  // when opening modal in edit mode you might fill inputs — call updateRemaining() after that
+  window.updateStudentPaymentRemaining = updateRemaining;
+});

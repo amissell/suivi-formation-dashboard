@@ -26,6 +26,8 @@ class Student extends Model
 
     protected $dates = [
         'start_date' => 'date',
+        'payment_done' => 'decimal:2',
+        'payment_remaining' => 'decimal:2',
     ];
 
     public function formation()

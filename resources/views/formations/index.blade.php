@@ -38,25 +38,30 @@
                 @endif
             </div>
             <div class="flex justify-end mt-4 space-x-2">
-                <button onclick="openModal('edit', @json($formation)))" 
-                        class="inline-flex items-center justify-center w-9 h-9 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                </button>
+                <button onclick="openModal('edit', @json($formation)))"
+        class="w-9 h-9 flex items-center justify-center rounded-full border border-border 
+               hover:bg-primary/10 hover:text-primary transition">
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M15 3l6 6M3 21l3-9 9-9 6 6-9 9-9 3z" />
+        </svg>
+    </button>
                 <form action="{{ route('formations.destroy', $formation) }}" method="POST" class="inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" onclick="return confirm('Are you sure?')"
-                    class="inline-flex items-center justify-center w-9 h-9 border border-input bg-background hover:bg-red-600 hover:text-white rounded-md">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
-                    </button>
-                </form>
+        @csrf
+        @method('DELETE')
+        <button type="submit"
+            onclick="return confirm('Are you sure?')"
+            class="w-9 h-9 flex items-center justify-center rounded-full border border-border 
+                   hover:bg-red-100 hover:text-red-600 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" 
+                 class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M19 7L5 7" />
+                <path d="M10 11v6M14 11v6" />
+                <path d="M9 7V4h6v3" />
+                <path d="M5 7v12a2 2 0 002 2h10a2 2 0 002-2V7" />
+            </svg>
+        </button>
+    </form>
             </div>
         </div>
         @endforeach
@@ -70,3 +75,6 @@
 <script src="{{ asset('js/formations.js') }}"></script>
 @endpush
 @endsection
+
+
+

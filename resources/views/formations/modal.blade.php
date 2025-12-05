@@ -1,74 +1,95 @@
 <!-- formations/modal.blade.php -->
-<div id="formation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-    <div class="bg-card p-6 rounded-lg w-96 relative">
-        <button onclick="closeModal()" class="absolute top-2 right-2 text-foreground">&times;</button>
-        <h2 class="text-xl font-bold mb-4" id="modal-title">Add Formation</h2>
-        <form id="formation-form" method="POST" action="/formations">
+<div id="formation-modal" class="fixed inset-0 hidden bg-black/50 backdrop-blur-sm flex justify-center items-center">
+    <div class="bg-card p-6 rounded-xl w-full max-w-md relative shadow-lg border border-border">
+        
+        <!-- Close button -->
+        <button onclick="closeFormationModal()" 
+                class="absolute top-3 right-3 text-2xl leading-none hover:text-red-500">
+            &times;
+        </button>
+
+        <h2 class="text-xl font-bold mb-5" id="formation-modal-title">Add Formation</h2>
+
+        <form id="formation-form" method="POST" action="{{ route('formations.store') }}">
             @csrf
-            <div class="mb-3">
-                <label for="name" class="block text-sm font-medium text-foreground">Name</label>
-                <input type="text" id="name" name="name" class="w-full border border-input rounded-md p-2" required>
+            <input type="hidden" name="_method" id="formation-method" value="POST">
+
+            <!-- Name -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">Name</label>
+                <input type="text" name="name" id="formation-name"
+                       class="w-full border border-input rounded-md p-2" required>
             </div>
-            <div class="mb-3">
-                <label for="trainer" class="block text-sm font-medium text-foreground">Trainer</label>
-                <input type="text" id="trainer" name="trainer" class="w-full border border-input rounded-md p-2" required>
+
+            <!-- Trainer -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">Trainer</label>
+                <input type="text" name="trainer" id="formation-trainer"
+                       class="w-full border border-input rounded-md p-2" required>
             </div>
-            <div class="mb-3">
-                <label for="description" class="block text-sm font-medium text-foreground">Description</label>
-                <textarea id="description" name="description" class="w-full border border-input rounded-md p-2"></textarea>
+
+            <!-- Description -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">Description</label>
+                <textarea name="description" id="formation-description"
+                          class="w-full border border-input rounded-md p-2"></textarea>
             </div>
-            <div class="mb-3">
-                <label for="duration" class="block text-sm font-medium text-foreground">Duration</label>
-                <input type="text" id="duration" name="duration" class="w-full border border-input rounded-md p-2">
+
+            <!-- Price -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">Price (DH)</label>
+                <input type="number" step="0.01" name="price" id="formation-price"
+                       class="w-full border border-input rounded-md p-2" required>
             </div>
-            <div class="mb-3">
-                <label for="enrolled" class="block text-sm font-medium text-foreground">Enrolled</label>
-                <input type="number" id="enrolled" name="enrolled" class="w-full border border-input rounded-md p-2">
-            </div>
-            <div class="mb-3">
-                <label for="capacity" class="block text-sm font-medium text-foreground">Capacity</label>
-                <input type="number" id="capacity" name="capacity" class="w-full border border-input rounded-md p-2">
-            </div>
-            <div class="flex justify-end mt-4">
-                <button type="button" onclick="closeModal()" class="px-4 py-2 bg-muted hover:bg-muted/80 rounded-md mr-2">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md">Save</button>
+
+            <!-- Footer -->
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" onclick="closeFormationModal()"
+                        class="px-4 py-2 bg-muted hover:bg-muted/80 rounded-md">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md">
+                    Save
+                </button>
             </div>
         </form>
     </div>
 </div>
-
-
 @push('scripts')
 <script>
-function openModal(mode, formation = null) {
+function openFormationModal(mode, formation = null) {
     const modal = document.getElementById('formation-modal');
+    const title = document.getElementById('formation-modal-title');
     const form = document.getElementById('formation-form');
-    const title = document.getElementById('modal-title');
-    const methodInput = document.getElementById('form-method');
+    const method = document.getElementById('formation-method');
 
+    // Reset form before applying values
+    form.reset();
+
+    // Open modal
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 
-    if(mode === 'edit' && formation) {
-        title.textContent = 'Edit Formation';
+    if (mode === 'edit' && formation) {
+        title.textContent = "Edit Formation";
         form.action = `/formations/${formation.id}`;
-        methodInput.value = 'PUT';
+        method.value = "PUT";
 
-        document.getElementById('name').value = formation.name;
-        document.getElementById('trainer').value = formation.trainer;
-        document.getElementById('description').value = formation.description || '';
-        document.getElementById('duration').value = formation.duration || '';
-        document.getElementById('capacity').value = formation.capacity || '';
-    } else {
-        title.textContent = 'Add Formation';
+        // Fill inputs
+        document.getElementById('formation-name').value = formation.name;
+        document.getElementById('formation-trainer').value = formation.trainer;
+        document.getElementById('formation-description').value = formation.description || '';
+        document.getElementById('formation-price').value = formation.price || '';
+    } 
+    else {
+        title.textContent = "Add Formation";
         form.action = "{{ route('formations.store') }}";
-        methodInput.value = 'POST';
-
-        form.reset();
+        method.value = "POST";
     }
 }
 
-function closeModal() {
+function closeFormationModal() {
     const modal = document.getElementById('formation-modal');
     modal.classList.add('hidden');
     modal.classList.remove('flex');
