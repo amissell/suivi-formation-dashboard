@@ -25,8 +25,8 @@ class StudentController extends Controller
             'email' => 'nullable|email|max:255',
             'formation_id' => 'required|exists:formations,id',
             'start_date' => 'required|date',
-            'payment_done' => 'nullable|numeric',
-            'payment_remaining' => 'nullable|numeric',
+            'payment_done' => 'required|numeric',
+            // 'payment_remaining' => 'required|numeric|min:0',
             'attestation' => 'required|in:yes,no',
             'status' => 'required|in:aide_vendeur,vendeur,superviseur,CDR',
             'city' => 'nullable|string|max:100',
@@ -34,12 +34,15 @@ class StudentController extends Controller
         ]);
         
         
-        $formation = Formation::find($data['formation_id']);
-        $price = $formation ? (float)$formation->price : 0;
-        $paid = isset($data['payment_done']) ? (float)$data['payment_done'] : 0;
-        
-        
-        $data['payment_remaining'] = round(max(0, $price - $paid), 2);
+         $formation = Formation::findOrFail($data['formation_id']);
+         
+        //  $paymentDone = $request->payment_done ?? 0;
+        //  $paymentRemaining = $formation->price - $paymentDone;
+         
+        //  $data['payment_remaining'] = $paymentRemaining;
+        $data['payment_remaining'] = $formation->price - $data['payment_done'];
+         
+         $data['attestation'] = 'no';
 
         Student::create($data);
 
@@ -61,8 +64,8 @@ class StudentController extends Controller
             'email' => 'nullable|email|max:255',
             'formation_id' => 'required|exists:formations,id',
             'start_date' => 'required|date',
-            'payment_done' => 'nullable|numeric',
-            'payment_remaining' => 'nullable|numeric',
+            'payment_done' => 'required|numeric|min:0',
+            'payment_remaining' => 'required|numeric|min:0',
             'attestation' => 'required|in:yes,no',
             'status' => 'required|in:aide_vendeur,vendeur,superviseur,CDR',
             'city' => 'nullable|string|max:100',

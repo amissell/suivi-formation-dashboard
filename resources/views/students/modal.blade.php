@@ -24,13 +24,15 @@
                 <input type="email" name="email" placeholder="Email"
                        class="w-full border border-border bg-background rounded-md p-2">
 
-                <select name="formation_id"
-                        class="w-full border border-border bg-background rounded-md p-2" required>
+                <select name="formation_id" id="formation_id" class="w-full border rounded p-2" required>
                     <option value="">Select Formation</option>
                     @foreach(App\Models\Formation::all() as $formation)
-                        <option value="{{ $formation->id }}">{{ $formation->name }}</option>
+                    <option value="{{ $formation->id }}" data-price="{{ $formation->price }}">
+                        {{ $formation->name }} - {{ $formation->price }} DH
+                    </option>
                     @endforeach
                 </select>
+
 
                 <input type="date" name="start_date"
                        class="w-full border border-border bg-background rounded-md p-2" required>
@@ -48,11 +50,24 @@
                     <option value="yes">Attestation: Yes</option>
                     <option value="no">Attestation: No</option>
                 </select>
+                <!-- Payment done -->
                 
-                <input type="number" step="0.01" name="payment_done" id="payment_done"
-                placeholder="Paid amount" class="w-full border border-border bg-background rounded-md p-2" />
-                <input type="number" step="0.01" name="payment_remaining" id="payment_remaining"
-                placeholder="Remaining amount" class="w-full border border-border bg-background rounded-md p-2" readonly />
+                {{-- <div class="mb-3">
+                    <label for="payment_done" class="block text-sm font-medium text-foreground">Payment Done</label>
+                    <input type="number" step="0.01" name="payment_done" id="payment_done" placeholder="Payment Done" class="w-full border rounded p-2" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="payment_remaining" class="block text-sm font-medium text-foreground">Payment Remaining</label>
+                    <input type="number" step="0.01" name="payment_remaining" id="payment_remaining" placeholder="Payment Remaining" class="w-full border rounded p-2" readonly>
+                </div>
+                
+                <input type="hidden" id="formation_price"> --}}
+
+                <input type="number" step="0.01" name="payment_done" id="payment_done" placeholder="Payment Done" class="w-full border rounded p-2">
+                <input type="number" step="0.01" name="payment_remaining" id="payment_remaining" value="0" readonly class="w-full border rounded p-2 mt-2">
+
+
 
 
                 <input type="text" name="city" placeholder="City"

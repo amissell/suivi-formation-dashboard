@@ -47,36 +47,44 @@ window.openModal = openModal;
 window.closeModal = closeModal;
 
 
-document.addEventListener('DOMContentLoaded', () => {
-  const formationSelect = document.querySelector('select[name="formation_id"]');
-  const paymentDoneInput = document.getElementById('payment_done');
-  const paymentRemainingInput = document.getElementById('payment_remaining');
+// document.addEventListener('DOMContentLoaded', () => {
+//     const formationSelect = document.querySelector('select[name="formation_id"]');
+//     const paymentDoneInput = document.getElementById('payment_done');
+//     const paymentRemainingInput = document.getElementById('payment_remaining');
+//     const formationPriceInput = document.getElementById('formation_price');
 
-  async function fetchPrice(formationId) {
-    if (!formationId) return 0;
-    try {
-      const res = await fetch(`/formations/${formationId}/price`);
-      if (!res.ok) return 0;
-      const data = await res.json();
-      return parseFloat(data.price) || 0;
-    } catch (e) {
-      return 0;
-    }
-  }
+//     // ila tbdal formation
+//     formationSelect.addEventListener('change', (e) => {
+//         const formationId = e.target.value;
+//         if(!formationId) return;
 
-  async function updateRemaining() {
-    const formationId = formationSelect?.value;
-    const price = await fetchPrice(formationId);
-    const paid = parseFloat(paymentDoneInput?.value) || 0;
-    let remaining = Math.max(0, (price - paid));
-    // round two decimals
-    remaining = Math.round(remaining * 100) / 100;
-    if (paymentRemainingInput) paymentRemainingInput.value = remaining.toFixed(2);
-  }
+//         // fetch price dial formation men server
+//         fetch(`/formations/${formationId}/price`)
+//             .then(res => res.json())
+//             .then(data => {
+//                 formationPriceInput.value = data.price; // price men server
+//                 updateRemaining();
+//             });
+//     });
 
-  if (formationSelect) formationSelect.addEventListener('change', updateRemaining);
-  if (paymentDoneInput) paymentDoneInput.addEventListener('input', updateRemaining);
+//     // ila tbdal payment_done
+//     paymentDoneInput.addEventListener('input', updateRemaining);
 
-  // when opening modal in edit mode you might fill inputs — call updateRemaining() after that
-  window.updateStudentPaymentRemaining = updateRemaining;
-});
+//     function updateRemaining() {
+//         const price = parseFloat(formationPriceInput.value || 0);
+//         const done = parseFloat(paymentDoneInput.value || 0);
+//         paymentRemainingInput.value = (price - done).toFixed(2);
+//     }
+// });
+const formationSelect = document.getElementById('formation_id');
+const paymentDone = document.getElementById('payment_done');
+const paymentRemaining = document.getElementById('payment_remaining');
+
+function updateRemaining() {
+    const price = parseFloat(formationSelect.selectedOptions[0]?.dataset.price) || 0;
+    const done = parseFloat(paymentDone.value) || 0;
+    paymentRemaining.value = (price - done).toFixed(2);
+}
+
+formationSelect.addEventListener('change', updateRemaining);
+paymentDone.addEventListener('input', updateRemaining);

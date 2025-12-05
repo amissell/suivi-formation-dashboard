@@ -34,13 +34,14 @@
                 <textarea name="description" id="formation-description"
                           class="w-full border border-input rounded-md p-2"></textarea>
             </div>
+            
+            
+            <div class="mb-3">
+                <label for="price" class="block text-sm font-medium text-foreground">Price (DH)</label>
+            <input type="number" id="price" name="price" class="w-full border border-input rounded-md p-2" step="0.01" required>
+        </div>
 
-            <!-- Price -->
-            <div class="mb-4">
-                <label class="block text-sm font-medium mb-1">Price (DH)</label>
-                <input type="number" step="0.01" name="price" id="formation-price"
-                       class="w-full border border-input rounded-md p-2" required>
-            </div>
+
 
             <!-- Footer -->
             <div class="flex justify-end gap-3 mt-6">
@@ -80,7 +81,7 @@ function openFormationModal(mode, formation = null) {
         document.getElementById('formation-name').value = formation.name;
         document.getElementById('formation-trainer').value = formation.trainer;
         document.getElementById('formation-description').value = formation.description || '';
-        document.getElementById('formation-price').value = formation.price || '';
+        document.getElementById('price').value = formation.price || '';
     } 
     else {
         title.textContent = "Add Formation";

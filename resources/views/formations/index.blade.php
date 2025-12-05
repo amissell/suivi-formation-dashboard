@@ -38,14 +38,15 @@
                 @endif
             </div>
             <div class="flex justify-end mt-4 space-x-2">
-                <button onclick="openModal('edit', @json($formation)))"
-        class="w-9 h-9 flex items-center justify-center rounded-full border border-border 
-               hover:bg-primary/10 hover:text-primary transition">
-        <svg xmlns="http://www.w3.org/2000/svg" 
-             class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path d="M15 3l6 6M3 21l3-9 9-9 6 6-9 9-9 3z" />
-        </svg>
-    </button>
+                <button onclick='openFormationModal("edit", @json($formation))'
+                class="w-9 h-9 flex items-center justify-center rounded-full border border-border 
+                hover:bg-primary/10 hover:text-primary transition">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M15 3l6 6M3 21l3-9 9-9 6 6-9 9-9 3z" />
+            </svg>
+        </button>
+
                 <form action="{{ route('formations.destroy', $formation) }}" method="POST" class="inline">
         @csrf
         @method('DELETE')

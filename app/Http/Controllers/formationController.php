@@ -32,6 +32,8 @@ class formationController extends Controller
         $validated = $request->validate([
         'name' => 'required|string|max:255',
         'trainer' => 'required|string|max:255',
+        'price' => 'required|numeric|min:0',
+
     ]);
     Formation::create($validated);
     return redirect()->route('formations.index')->with('success', 'Formation added successfully!');
