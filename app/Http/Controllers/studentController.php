@@ -5,16 +5,54 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Models\Formation;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::with('formation')->latest()->get();
         $formations = Formation::all();
-        return view('students.index', compact('students', 'formations'));
-    }
+        $query = Student::with('formation');
 
+        if ($request->search) {
+            $query->where('name', 'like', "%{$request->search}%");
+        }
+
+        // Pagination
+        $students = $query->latest()->paginate(10)->withQueryString();
+        
+        $students = Student::with('formation')
+        ->when($request->status, function ($query, $status) {
+            return $query->where('status', $status);
+        })
+        ->latest()
+        ->paginate(10);
+        
+        return view('students.index', compact('students', 'formations'));
+}
+
+
+public function exportPdf(Request $request)
+    {
+        // Build same query for PDF export
+        $query = Student::with('formation');
+
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->search) {
+            $query->where('name', 'like', "%{$request->search}%");
+        }
+
+        $students = $query->latest()->get();
+
+        // Generate PDF
+        $pdf = PDF::loadView('students.pdf', compact('students'));
+
+        return $pdf->download('students.pdf');
+    }
     public function store(Request $request)
     {
         // dd(vars: $request->all());
@@ -26,7 +64,6 @@ class StudentController extends Controller
             'formation_id' => 'required|exists:formations,id',
             'start_date' => 'required|date',
             'payment_done' => 'required|numeric',
-            // 'payment_remaining' => 'required|numeric|min:0',
             'attestation' => 'required|in:yes,no',
             'status' => 'required|in:aide_vendeur,vendeur,superviseur,CDR',
             'city' => 'nullable|string|max:100',
@@ -36,10 +73,6 @@ class StudentController extends Controller
         
          $formation = Formation::findOrFail($data['formation_id']);
          
-        //  $paymentDone = $request->payment_done ?? 0;
-        //  $paymentRemaining = $formation->price - $paymentDone;
-         
-        //  $data['payment_remaining'] = $paymentRemaining;
         $data['payment_remaining'] = $formation->price - $data['payment_done'];
          
          $data['attestation'] = 'no';

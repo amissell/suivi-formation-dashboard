@@ -17,6 +17,7 @@ use App\Models\Formation;
 // });
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+Route::get('/students/export-pdf', [StudentController::class, 'exportPdf'])->name('students.exportPdf');
 
 Route::resource('formations', controller: formationController::class);
 Route::resource('students', studentController::class);
@@ -25,3 +26,4 @@ Route::resource('students', studentController::class);
 Route::get('/formations/{formation}/price', function (Formation $formation) {
     return response()->json(['price' => (float) $formation->price]);
 });
+

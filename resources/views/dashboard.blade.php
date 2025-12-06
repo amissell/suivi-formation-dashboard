@@ -11,7 +11,7 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2">
         <!-- Total Students -->
         <div class="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between pb-2">
@@ -44,36 +44,7 @@
             </p>
         </div>
 
-        <!-- Graduated -->
-        <div class="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between pb-2">
-                <h3 class="text-sm font-medium text-muted-foreground">Graduated</h3>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary">
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                </svg>
-            </div>
-            <div class="text-2xl font-bold text-foreground">{{ $stats['graduated'] }}</div>
-            <p class="text-xs text-secondary mt-1">
-                <span class="font-medium">+8%</span> from last month
-            </p>
-        </div>
-
-        <!-- Success Rate -->
-        <div class="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between pb-2">
-                <h3 class="text-sm font-medium text-muted-foreground">Success Rate</h3>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary">
-                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
-                    <polyline points="16 7 22 7 22 13"></polyline>
-                </svg>
-            </div>
-            <div class="text-2xl font-bold text-foreground">{{ $stats['success_rate'] }}%</div>
-            <p class="text-xs text-secondary mt-1">
-                <span class="font-medium">+2%</span> from last month
-            </p>
-        </div>
-    </div>
+       
 
     <!-- Recent Data -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">

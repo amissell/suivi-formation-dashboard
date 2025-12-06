@@ -14,9 +14,7 @@ class DashboardController extends Controller
     {
         $stats = [
             'total_students' => Student::count(),
-            'total_formations' => Formation::count(), 
-            'graduated' => 'N/A', 
-            'success_rate' => 'N/A', 
+            'total_formations' => Formation::count(),  
         ];
 
         $recentFormations = Formation::latest()->take(3)->get();
