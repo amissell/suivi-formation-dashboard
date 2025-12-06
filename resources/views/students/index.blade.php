@@ -11,6 +11,10 @@
             <h2 class="text-3xl font-bold text-foreground">Students</h2>
             <p class="text-muted-foreground">Manage your academy students</p>
         </div>
+        <!-- Search by name -->
+        <input type="text" name="search" placeholder="Search by name"
+               value="{{ request('search') }}"
+               class="border border-border rounded-md p-2">
 
         <button onclick="openModal('add')"
                 class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 
@@ -40,10 +44,6 @@
                     <option value="CDR"           {{ request('status') == 'CDR' ? 'selected' : '' }}>CDR</option>
                 </select>
 
-                <!-- Search by name -->
-                <input type="text" name="search" placeholder="Search by name"
-                       value="{{ request('search') }}"
-                       class="border border-border rounded-md p-2">
 
                 <!-- Filter button -->
                 <button class="px-4 py-2 bg-primary text-primary-foreground rounded-md">

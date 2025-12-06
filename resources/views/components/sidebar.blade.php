@@ -2,7 +2,7 @@
     <!-- Logo Section -->
     <div class="p-4 border-b border-sidebar-border">
         <div class="flex items-center gap-3">
-            <img src="{{ asset('images/logo.jpg') }}" alt="Must Négoce Academy" class="w-10 h-10 object-contain">
+            <img src="{{ asset('images/logo.jpg') }}" alt="Must Négoce Academy" class="w-10 h-10 object-contain" />
             <div class="flex flex-col">
                 <span class="text-sm font-bold text-sidebar-foreground">MUST-NÉGOCE</span>
                 <span class="text-xs text-sidebar-foreground/70">ACADEMY</span>
