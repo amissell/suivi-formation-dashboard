@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Tableau de bord')
 
 @section('content')
 <div class="space-y-8">
 
     <!-- HEADER -->
     <div>
-        <h2 class="text-3xl font-bold text-foreground">Dashboard</h2>
-        <p class="text-muted-foreground">Welcome to Must Négoce Academy management system</p>
+        <h2 class="text-3xl font-bold text-foreground">Tableau de bord</h2>
+        <p class="text-muted-foreground">Bienvenue dans le système de gestion de Must Négoce Academy</p>
     </div>
 
     <!-- STATS CARDS -->
@@ -17,7 +17,7 @@
         <!-- Total Students -->
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition">
             <div class="flex items-center justify-between">
-                <h3 class="text-sm font-medium text-muted-foreground">Total Students</h3>
+                <h3 class="text-sm font-medium text-muted-foreground">Total Étudiants</h3>
 
                 <!-- USERS ICON -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -30,7 +30,7 @@
 
             <div class="text-3xl font-bold mt-2">{{ number_format($stats['total_students']) }}</div>
             <p class="text-xs text-secondary mt-1">
-                <strong>+12%</strong> from last month
+                <strong>+12%</strong> par rapport au mois dernier
             </p>
         </div>
 
@@ -48,7 +48,7 @@
 
             <div class="text-3xl font-bold mt-2">{{ number_format($stats['total_formations']) }}</div>
             <p class="text-xs text-secondary mt-1">
-                <strong>+3</strong> from last month
+                <strong>+3</strong> par rapport au mois dernier
             </p>
         </div>
     </div>
@@ -59,7 +59,7 @@
         <!-- Recent Formations -->
         <div class="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
             <div class="p-5 border-b border-border">
-                <h3 class="text-lg font-semibold text-foreground">Recent Formations</h3>
+                <h3 class="text-lg font-semibold text-foreground">Formations Récentes</h3>
             </div>
 
             <div class="p-5 space-y-4">
@@ -67,7 +67,7 @@
                     <div class="flex justify-between items-start pb-3 border-b border-border last:border-0">
                         <div>
                             <p class="font-medium">{{ $formation->name }}</p>
-                            <p class="text-sm text-muted-foreground">Trainer: {{ $formation->trainer }}</p>
+                            <p class="text-sm text-muted-foreground">Formateur : {{ $formation->trainer }}</p>
                         </div>
                     </div>
                 @endforeach
@@ -77,7 +77,7 @@
         <!-- Recent Students -->
         <div class="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
             <div class="p-5 border-b border-border">
-                <h3 class="text-lg font-semibold text-foreground">Recent Students</h3>
+                <h3 class="text-lg font-semibold text-foreground">Étudiants Récents</h3>
             </div>
 
             <div class="p-5 space-y-4">
@@ -98,31 +98,31 @@
 
         <!-- Last 7 Days -->
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
-            <h3 class="text-lg font-semibold mb-4">New Students — Last 7 Days</h3>
+            <h3 class="text-lg font-semibold mb-4">Nouveaux Étudiants — 7 Derniers Jours</h3>
             <canvas id="chartDays" height="120"></canvas>
         </div>
 
         <!-- Last 12 Months -->
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
-            <h3 class="text-lg font-semibold mb-4">Students — Last 12 Months</h3>
+            <h3 class="text-lg font-semibold mb-4">Étudiants — 12 Derniers Mois</h3>
             <canvas id="chartMonths" height="120"></canvas>
         </div>
 
         <!-- By City -->
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
-            <h3 class="text-lg font-semibold mb-4">Students by City</h3>
+            <h3 class="text-lg font-semibold mb-4">Étudiants par Ville</h3>
             <canvas id="chartCity" height="150"></canvas>
         </div>
 
         <!-- By Status -->
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
-            <h3 class="text-lg font-semibold mb-4">Students by Status</h3>
+            <h3 class="text-lg font-semibold mb-4">Étudiants par Statut</h3>
             <canvas id="chartStatus" height="150"></canvas>
         </div>
 
         <!-- By Year -->
         <div class="lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-sm">
-            <h3 class="text-lg font-semibold mb-4">Students by Year</h3>
+            <h3 class="text-lg font-semibold mb-4">Étudiants par Année</h3>
             <canvas id="chartYear" height="130"></canvas>
         </div>
     </div>
@@ -137,7 +137,7 @@ new Chart(document.getElementById('chartDays'), {
     data: {
         labels: @json($days),
         datasets: [{
-            label: 'New students',
+            label: 'Nouveaux étudiants',
             data: @json($dayTotals),
             tension: 0.35,
             borderWidth: 2
@@ -150,7 +150,7 @@ new Chart(document.getElementById('chartMonths'), {
     data: {
         labels: @json($months),
         datasets: [{
-            label: 'Students',
+            label: 'Étudiants',
             data: @json($monthTotals),
             borderWidth: 1
         }]
@@ -178,7 +178,7 @@ new Chart(document.getElementById('chartYear'), {
     data: {
         labels: @json($yearLabels),
         datasets: [{
-            label: 'Students',
+            label: 'Étudiants',
             data: @json($yearTotals),
             borderWidth: 1
         }]

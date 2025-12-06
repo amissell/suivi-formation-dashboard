@@ -23,11 +23,16 @@ class StudentController extends Controller
         $students = $query->latest()->paginate(10)->withQueryString();
         
         $students = Student::with('formation')
-        ->when($request->status, function ($query, $status) {
-            return $query->where('status', $status);
-        })
-        ->latest()
-        ->paginate(10);
+    ->when($request->formation_id, function ($query, $formationId) {
+        return $query->where('formation_id', $formationId);
+    })
+    ->when($request->search, function($query, $search) {
+        return $query->where('name', 'like', "%{$search}%");
+    })
+    ->latest()
+    ->paginate(10)
+    ->withQueryString();
+
         
         return view('students.index', compact('students', 'formations'));
 }
