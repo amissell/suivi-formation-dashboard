@@ -1,81 +1,102 @@
-<div id="student-modal" class="fixed inset-0 hidden bg-black/50 backdrop-blur-sm flex justify-center items-center">
-    <div class="bg-card border border-border rounded-lg w-full max-w-lg p-6 shadow-lg">
-        
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="modal-title text-xl font-semibold text-foreground">Ajouter Étudiant</h3>
-            <button onclick="closeModal()" class="text-foreground text-2xl leading-none">&times;</button>
+<div id="student-modal" class="fixed inset-0 hidden bg-black/50 backdrop-blur-sm flex justify-center items-start pt-10 overflow-y-auto z-50">
+  <div class="bg-white border border-gray-300 rounded-lg w-full max-w-md shadow-2xl flex flex-col max-h-[90vh]">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center p-4 border-b border-gray-300 flex-shrink-0">
+      <h3 id="modal-title" class="text-lg font-semibold">Ajouter Étudiant</h3>
+      <button type="button" onclick="closeStudentModal()" class="text-2xl text-gray-900 hover:text-blue-600">&times;</button>
+    </div>
+
+    <!-- Form Scrollable Content -->
+    <div class="overflow-y-auto p-4 flex-1" style="min-height: 0;">
+      <form method="POST" id="student-form" class="grid grid-cols-2 gap-3">
+        @csrf
+        <input type="hidden" name="student_id" id="student_id">
+
+        <!-- Row 1 -->
+        <div>
+          <label class="block text-xs font-medium mb-1">Nom *</label>
+          <input type="text" name="name" id="name" class="w-full border rounded p-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium mb-1">CIN *</label>
+          <input type="text" name="cin" id="cin" class="w-full border rounded p-2 text-sm" required>
         </div>
 
-        <form method="POST" action="{{ route('students.store') }}" id="student-form">
-            @csrf
+        <!-- Row 2 -->
+        <div>
+          <label class="block text-xs font-medium mb-1">Téléphone *</label>
+          <input type="text" name="phone" id="phone" class="w-full border rounded p-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium mb-1">E-mail</label>
+          <input type="email" name="email" id="email" class="w-full border rounded p-2 text-sm">
+        </div>
 
-            <div class="space-y-4">
+        <!-- Row 3 -->
+        <div>
+          <label class="block text-xs font-medium mb-1">Formation *</label>
+          <select name="formation_id" id="formation_id" class="w-full border rounded p-2 text-sm" required>
+            <option value="">Sélectionner</option>
+            @foreach(App\Models\Formation::all() as $formation)
+              <option value="{{ $formation->id }}" data-price="{{ $formation->price }}">{{ $formation->name }} - {{ $formation->price }} DH</option>
+            @endforeach
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium mb-1">Date de Début *</label>
+          <input type="date" name="start_date" id="start_date" class="w-full border rounded p-2 text-sm" required>
+        </div>
 
-                <input type="text" name="name" placeholder="Nom"
-                       class="w-full border border-border bg-background rounded-md p-2" required>
+        <!-- Row 4 -->
+        <div>
+          <label class="block text-xs font-medium mb-1">Statut *</label>
+          <select name="status" id="status" class="w-full border rounded p-2 text-sm" required>
+            <option value="aide_vendeur">Aide Vendeur</option>
+            <option value="vendeur">Vendeur</option>
+            <option value="superviseur">Superviseur</option>
+            <option value="CDR">CDR</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium mb-1">Attestation *</label>
+          <select name="attestation" id="attestation" class="w-full border rounded p-2 text-sm" required>
+            <option value="yes">Oui</option>
+            <option value="no">Non</option>
+          </select>
+        </div>
 
-                <input type="text" name="cin" placeholder="CIN"
-                       class="w-full border border-border bg-background rounded-md p-2" required>
+        <!-- Row 5 -->
+        <div>
+          <label class="block text-xs font-medium mb-1">Payé</label>
+          <input type="number" step="0.01" name="payment_done" id="payment_done" class="w-full border rounded p-2 text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-medium mb-1">Reste</label>
+          <input type="number" step="0.01" name="payment_remaining" id="payment_remaining" readonly class="w-full border rounded p-2 bg-gray-100 text-sm cursor-not-allowed">
+        </div>
 
-                <input type="text" name="phone" placeholder="Téléphone"
-                       class="w-full border border-border bg-background rounded-md p-2" required>
+        <!-- Row 6 -->
+        <div>
+          <label class="block text-xs font-medium mb-1">Ville</label>
+          <input type="text" name="city" id="city" class="w-full border rounded p-2 text-sm">
+        </div>
+        <div></div> <!-- empty cell to maintain grid -->
 
-                <input type="email" name="email" placeholder="E-mail"
-                       class="w-full border border-border bg-background rounded-md p-2">
+        <!-- Row 7 (Notes full width) -->
+        <div class="col-span-2">
+          <label class="block text-xs font-medium mb-1">Notes</label>
+          <textarea name="notes" id="notes" class="w-full border rounded p-2 text-sm h-20 resize-none"></textarea>
+        </div>
 
-                <select name="formation_id" id="formation_id" class="w-full border rounded p-2" required>
-                    <option value="">Sélectionner une Formation</option>
-                    @foreach(App\Models\Formation::all() as $formation)
-                    <option value="{{ $formation->id }}" data-price="{{ $formation->price }}">
-                        {{ $formation->name }} - {{ $formation->price }} DH
-                    </option>
-                    @endforeach
-                </select>
-
-
-                <input type="date" name="start_date"
-                       class="w-full border border-border bg-background rounded-md p-2" required>
-
-                <select name="status"
-                        class="w-full border border-border bg-background rounded-md p-2" required>
-                    <option value="aide_vendeur">Aide Vendeur</option>
-                    <option value="vendeur">Vendeur</option>
-                    <option value="superviseur">Superviseur</option>
-                    <option value="CDR">CDR</option>
-                </select>
-
-                <select name="attestation"
-                        class="w-full border border-border bg-background rounded-md p-2" required>
-                    <option value="yes">Attestation : Oui</option>
-                    <option value="no">Attestation : Non</option>
-                </select>
-
-                <input type="number" step="0.01" name="payment_done" id="payment_done" placeholder="Paiement Effectué" class="w-full border rounded p-2">
-                <input type="number" step="0.01" name="payment_remaining" id="payment_remaining" value="0" readonly class="w-full border rounded p-2 mt-2">
-
-
-
-
-                <input type="text" name="city" placeholder="Ville"
-                       class="w-full border border-border bg-background rounded-md p-2">
-
-                <textarea name="notes" placeholder="Notes"
-                          class="w-full border border-border bg-background rounded-md p-2 h-20"></textarea>
-
-            </div>
-
-            <div class="mt-6 flex justify-end space-x-3">
-                <button type="button" onclick="closeModal()"
-                        class="px-4 py-2 border border-border rounded-md bg-background hover:bg-muted">
-                    Annuler
-                </button>
-
-                <button type="submit"
-                        class="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
-                    Enregistrer
-                </button>
-            </div>
-        </form>
+      </form>
     </div>
+
+    <!-- Footer -->
+    <div class="flex justify-end space-x-3 p-4 border-t bg-white flex-shrink-0">
+      <button type="button" onclick="closeStudentModal()" class="px-4 py-2 border rounded-md bg-white hover:bg-gray-100 text-sm">Annuler</button>
+      <button type="submit" form="student-form" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">Enregistrer</button>
+    </div>
+
+  </div>
 </div>

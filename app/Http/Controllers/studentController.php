@@ -20,7 +20,7 @@ class StudentController extends Controller
         }
 
         // Pagination
-        $students = $query->latest()->paginate(10)->withQueryString();
+        $students = $query->latest()->paginate(20)->withQueryString();
         
         $students = Student::with('formation')
     ->when($request->formation_id, function ($query, $formationId) {
@@ -80,7 +80,7 @@ public function exportPdf(Request $request)
          
         $data['payment_remaining'] = $formation->price - $data['payment_done'];
          
-         $data['attestation'] = 'no';
+        //  $data['attestation'] = 'no';
 
         Student::create($data);
 
