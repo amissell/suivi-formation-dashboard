@@ -85,16 +85,18 @@
                   <tr class="hover:bg-muted/30 transition-colors">
 
                       <!-- Name with Avatar -->
-                      <td class="py-4 px-4">
-                          <div class="flex items-center gap-3">
-                              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center font-semibold text-primary">
-                                  {{ strtoupper(substr($student->name, 0, 1)) }}
-                              </div>
-                              <div>
-                                  <p class="font-semibold text-foreground text-sm">{{ $student->name }}</p>
-                              </div>
-                          </div>
-                      </td>
+                       
+                      <td class="py-2 px-3">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center font-medium text-xs text-primary shrink-0">
+                                {{ strtoupper(substr($student->name, 0, 1)) }}
+                            </div>
+                            <p class="font-medium text-foreground text-xs whitespace-nowrap truncate max-w-[140px]">
+                                {{ $student->name }}
+                            </p>
+                        </div>
+                    </td>
+
 
                       <!-- CIN -->
                       <td class="py-4 px-4">
@@ -165,18 +167,26 @@
                         @endif
                     </td>
                       <!-- Payment Info -->
-                      <td class="py-4 px-4">
-                          <div class="space-y-1">
-                              <div class="flex items-center gap-2">
-                                  <span class="text-xs text-muted-foreground">Payé:</span>
-                                  <span class="text-sm font-semibold text-green-600">{{ number_format($student->payment_done, 0) }} DH</span>
-                              </div>
-                              <div class="flex items-center gap-2">
-                                  <span class="text-xs text-muted-foreground">Reste:</span>
-                                  <span class="text-sm font-semibold text-orange-600">{{ number_format($student->payment_remaining, 0) }} DH</span>
-                              </div>
-                          </div>
-                      </td>
+                       
+                      <td class="py-2 px-3">
+                        <div class="flex items-center gap-4 whitespace-nowrap">
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-muted-foreground">Payé:</span>
+                                <span class="text-xs font-semibold text-green-600 whitespace-nowrap">
+                                    {{ number_format($student->payment_done, 0) }}&nbsp;DH
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-muted-foreground">Reste:</span>
+                                <span class="text-xs font-semibold text-orange-600 whitespace-nowrap">
+                                    {{ number_format($student->payment_remaining, 0) }}&nbsp;DH
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+
+
                       
                       <!-- City -->
                       <td class="py-4 px-4">
@@ -254,7 +264,7 @@
   <div id="student-modal" class="fixed inset-0 hidden bg-black/50 backdrop-blur-sm flex justify-center items-center p-4 z-50">
     <div class="bg-white border border-gray-300 rounded-xl w-full max-w-2xl shadow-2xl flex flex-col max-h-[90vh]">
 
-      <div class="flex justify-between items-center p-6 border-b border-gray-200 bg-gradient-to-r from-primary/5 to-transparent rounded-t-xl flex-shrink-0">
+      <div class="flex  justify-between items-center p-6 border-b border-gray-200 bg-gradient-to-r from-primary/5 to-transparent rounded-t-xl flex-shrink-0">
         <h3 class="text-xl font-bold text-gray-900" id="modal-title">Ajouter Étudiant</h3>
         <button onclick="closeStudentModal()" type="button" class="text-gray-400 hover:text-gray-600 transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -286,43 +296,49 @@
             <label class="block text-sm font-semibold text-gray-700 mb-2">E-mail</label>
             <input type="email" name="email" placeholder="E-mail" class="w-full border border-gray-300 bg-white rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
           </div>
-
+          
+          
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Formation *</label>
-            <select name="formation_id" id="formation_id" class="w-full border border-gray-300 bg-white rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" required>
-              <option value="">Sélectionner</option>
-              @foreach(App\Models\Formation::all() as $formation)
-              <option value="{{ $formation->id }}" data-price="{{ $formation->price }}">
-                {{ $formation->name }} - {{ number_format($formation->price, 0) }} DH
-              </option>
-              @endforeach
-            </select>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Formation *</label>
+              <select name="formation_id" id="formation_id" class="w-full border border-gray-300 bg-white rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" required>
+                  <option value="">Sélectionner</option>
+                  @foreach(App\Models\Formation::all() as $formation)
+                  <option value="{{ $formation->id }}">
+                      {{ $formation->name }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Date de Début *</label>
+                <input type="date" name="start_date" class="w-full border border-gray-300 bg-white rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" required>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Statut *</label>
+                <select name="status" class="w-full border border-gray-300 bg-white rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" required>
+                    <option value="aide_vendeur">Aide Vendeur</option>
+                    <option value="vendeur">Vendeur</option>
+                    <option value="superviseur">Superviseur</option>
+                    <option value="CDR">CDR</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Attestation *</label>
+                <select name="attestation" class="w-full border border-gray-300 bg-white rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" required>
+                    <option value="yes">Oui</option>
+                    <option value="no">Non</option>
+                </select>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Engagement (DH) *</label>
+              <input type="number" step="1" name="engagement" id="engagement" placeholder="Prix négocié"
+              class="w-full border border-gray-300 bg-white rounded-lg px-4 py-2.5 text-sm" required>
           </div>
-
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Date de Début *</label>
-            <input type="date" name="start_date" class="w-full border border-gray-300 bg-white rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" required>
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Statut *</label>
-            <select name="status" class="w-full border border-gray-300 bg-white rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" required>
-              <option value="aide_vendeur">Aide Vendeur</option>
-              <option value="vendeur">Vendeur</option>
-              <option value="superviseur">Superviseur</option>
-              <option value="CDR">CDR</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Attestation *</label>
-            <select name="attestation" class="w-full border border-gray-300 bg-white rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" required>
-              <option value="yes">Oui</option>
-              <option value="no">Non</option>
-            </select>
-          </div>
-
-          <div>
+            
+            <div>
             <label class="block text-sm font-semibold text-gray-700 mb-2">Payé</label>
             <input type="number" step="1" name="payment_done" id="payment_done" placeholder="0" class="w-full border border-gray-300 bg-white rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
           </div>
@@ -357,85 +373,79 @@
   </div>
 
   <script>
-  function openModal(mode, student = null) {
-      const modal = document.getElementById('student-modal');
-      if (!modal) return;
-      modal.classList.remove('hidden');
-      const form = document.getElementById('student-form');
-      const title = document.getElementById('modal-title');
-      
-      if (mode === 'add') {
-          title.textContent = 'Ajouter Étudiant';
-          form.action = '{{ route("students.store") }}';
-          form.reset();
-          let methodInput = form.querySelector('input[name="_method"]');
-          if (methodInput) methodInput.remove();
-      } else if (mode === 'edit' && student) {
-          title.textContent = 'Modifier Étudiant';
-          form.action = `/students/${student.id}`;
-          let methodInput = form.querySelector('input[name="_method"]');
-          if (!methodInput) {
-              methodInput = document.createElement('input');
-              methodInput.type = 'hidden';
-              methodInput.name = '_method';
-              form.appendChild(methodInput);
-          }
-          methodInput.value = 'PUT';
-          form.querySelector('input[name="name"]').value = student.name || '';
-          form.querySelector('input[name="cin"]').value = student.cin || '';
-          form.querySelector('input[name="phone"]').value = student.phone || '';
-          form.querySelector('input[name="email"]').value = student.email || '';
-          form.querySelector('select[name="formation_id"]').value = student.formation_id || '';
-          form.querySelector('input[name="start_date"]').value = student.start_date || '';
-          form.querySelector('select[name="status"]').value = student.status || '';
-          form.querySelector('select[name="attestation"]').value = student.attestation || '';
-          form.querySelector('input[name="payment_done"]').value = Math.round(student.payment_done) || '';
-          form.querySelector('input[name="payment_remaining"]').value = Math.round(student.payment_remaining) || '';
-          form.querySelector('input[name="city"]').value = student.city || '';
-          form.querySelector('textarea[name="notes"]').value = student.notes || '';
-      }
-  }
+function openModal(mode, student = null) {
+    const modal = document.getElementById('student-modal');
+    if (!modal) return;
 
-  function closeStudentModal() {
-      const modal = document.getElementById('student-modal');
-      if (modal) {
-          modal.classList.add('hidden');
-          document.getElementById('student-form').reset();
-      }
-  }
+    modal.classList.remove('hidden');
+    const form = document.getElementById('student-form');
+    const title = document.getElementById('modal-title');
 
-  document.addEventListener('DOMContentLoaded', function() {
-      const modal = document.getElementById('student-modal');
-      if (modal) {
-          modal.addEventListener('click', function(e) {
-              if (e.target === modal) closeStudentModal();
-          });
-      }
-      
-      const formationSelect = document.getElementById('formation_id');
-      const paymentDoneInput = document.getElementById('payment_done');
-      const paymentRemainingInput = document.getElementById('payment_remaining');
-      
-      function calculateRemaining() {
-          const selectedOption = formationSelect.options[formationSelect.selectedIndex];
-          const price = parseFloat(selectedOption.getAttribute('data-price')) || 0;
-          const paymentDone = parseFloat(paymentDoneInput.value) || 0;
-          const remaining = price - paymentDone;
-          paymentRemainingInput.value = remaining >= 0 ? Math.round(remaining) : 0;
-      }
-      
-      if (formationSelect && paymentDoneInput) {
-          formationSelect.addEventListener('change', calculateRemaining);
-          paymentDoneInput.addEventListener('input', calculateRemaining);
-      }
-  });
+    if (mode === 'add') {
+        title.textContent = 'Ajouter Étudiant';
+        form.action = '{{ route("students.store") }}';
+        form.reset();
 
-  document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeStudentModal();
-  });
+        const methodInput = form.querySelector('input[name="_method"]');
+        if (methodInput) methodInput.remove();
 
+    } else if (mode === 'edit' && student) {
+        title.textContent = 'Modifier Étudiant';
+        form.action = `/students/${student.id}`;
 
+        let methodInput = form.querySelector('input[name="_method"]');
+        if (!methodInput) {
+            methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            form.appendChild(methodInput);
+        }
+        methodInput.value = 'PUT';
 
-  </script>
+        form.querySelector('input[name="name"]').value = student.name || '';
+        form.querySelector('input[name="cin"]').value = student.cin || '';
+        form.querySelector('input[name="phone"]').value = student.phone || '';
+        form.querySelector('input[name="email"]').value = student.email || '';
+        form.querySelector('select[name="formation_id"]').value = student.formation_id || '';
+        form.querySelector('input[name="start_date"]').value = student.start_date || '';
+        form.querySelector('select[name="status"]').value = student.status || '';
+        form.querySelector('select[name="attestation"]').value = student.attestation || '';
+        form.querySelector('input[name="engagement"]').value = Math.round(student.engagement) || '';
+        form.querySelector('input[name="payment_done"]').value = Math.round(student.payment_done) || '';
+        form.querySelector('input[name="payment_remaining"]').value = Math.round(student.payment_remaining) || '';
+        form.querySelector('input[name="city"]').value = student.city || '';
+        form.querySelector('textarea[name="notes"]').value = student.notes || '';
+    }
+}
+
+function closeStudentModal() {
+    const modal = document.getElementById('student-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        document.getElementById('student-form').reset();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const engagementInput = document.getElementById('engagement');
+    const paymentDoneInput = document.getElementById('payment_done');
+    const paymentRemainingInput = document.getElementById('payment_remaining');
+
+    function calculateRemaining() {
+        const engagement = parseFloat(engagementInput.value) || 0;
+        const paymentDone = parseFloat(paymentDoneInput.value) || 0;
+        const remaining = engagement - paymentDone;
+
+        paymentRemainingInput.value = remaining >= 0 ? Math.round(remaining) : 0;
+    }
+
+    engagementInput.addEventListener('input', calculateRemaining);
+    paymentDoneInput.addEventListener('input', calculateRemaining);
+});
+
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeStudentModal();
+});
+</script>
 
   @endsection

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->foreignId('formation_id')->constrained()->onDelete('cascade');
             $table->date('start_date');
+            $table->decimal('engagement', 8, 2);
+            // $table->integer('engagement');
             $table->decimal('payment_done', 8, 2)->default(0);
             $table->decimal('payment_remaining', 8, 2)->default(0);
             $table->enum('attestation', ['yes', 'no'])->default('no');

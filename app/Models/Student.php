@@ -16,6 +16,7 @@ class Student extends Model
         'email',
         'formation_id',
         'start_date',
+        'engagement',
         'payment_done',
         'payment_remaining',
         'attestation',
@@ -24,8 +25,9 @@ class Student extends Model
         'notes',
     ];
 
-    protected $dates = [
+    protected $casts = [
         'start_date' => 'date',
+        'engagement' => 'decimal:2',
         'payment_done' => 'decimal:2',
         'payment_remaining' => 'decimal:2',
     ];
