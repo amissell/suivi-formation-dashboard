@@ -17,7 +17,8 @@
         <!-- Total Students -->
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition">
             <div class="flex items-center justify-between">
-                <h3 class="text-sm font-medium text-muted-foreground">Total Étudiants</h3>
+                <h3 class="text-sm font-medium text-muted-foreground">Total Candidats
+                </h3>
 
                 <!-- USERS ICON -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,7 +78,7 @@
         <!-- Recent Students -->
         <div class="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
             <div class="p-5 border-b border-border">
-                <h3 class="text-lg font-semibold text-foreground">Étudiants Récents</h3>
+                <h3 class="text-lg font-semibold text-foreground">Candidats Récents</h3>
             </div>
 
             <div class="p-5 space-y-4">
@@ -98,31 +99,31 @@
 
         <!-- Last 7 Days -->
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
-            <h3 class="text-lg font-semibold mb-4">Nouveaux Étudiants — 7 Derniers Jours</h3>
+            <h3 class="text-lg font-semibold mb-4">Nouveaux Candidat — 7 Derniers Jours</h3>
             <canvas id="chartDays" height="120"></canvas>
         </div>
 
         <!-- Last 12 Months -->
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
-            <h3 class="text-lg font-semibold mb-4">Étudiants — 12 Derniers Mois</h3>
+            <h3 class="text-lg font-semibold mb-4">Candidat — 12 Derniers Mois</h3>
             <canvas id="chartMonths" height="120"></canvas>
         </div>
 
         <!-- By City -->
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
-            <h3 class="text-lg font-semibold mb-4">Étudiants par Ville</h3>
+            <h3 class="text-lg font-semibold mb-4">Candidat par Ville</h3>
             <canvas id="chartCity" height="150"></canvas>
         </div>
 
         <!-- By Status -->
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
-            <h3 class="text-lg font-semibold mb-4">Étudiants par Statut</h3>
+            <h3 class="text-lg font-semibold mb-4">Candidat par Statut</h3>
             <canvas id="chartStatus" height="150"></canvas>
         </div>
 
         <!-- By Year -->
         <div class="lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-sm">
-            <h3 class="text-lg font-semibold mb-4">Étudiants par Année</h3>
+            <h3 class="text-lg font-semibold mb-4">Candidat par Année</h3>
             <canvas id="chartYear" height="130"></canvas>
         </div>
     </div>
@@ -150,7 +151,7 @@ new Chart(document.getElementById('chartMonths'), {
     data: {
         labels: @json($months),
         datasets: [{
-            label: 'Étudiants',
+            label: 'candida',
             data: @json($monthTotals),
             borderWidth: 1
         }]
@@ -178,7 +179,7 @@ new Chart(document.getElementById('chartYear'), {
     data: {
         labels: @json($yearLabels),
         datasets: [{
-            label: 'Étudiants',
+            label: 'candida',
             data: @json($yearTotals),
             borderWidth: 1
         }]
