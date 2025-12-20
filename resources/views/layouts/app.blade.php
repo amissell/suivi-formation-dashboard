@@ -3,26 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Must Négoce Academy - @yield('title', 'Dashboard')</title>
+
+    <!-- CSRF Token (important for fetch & forms) -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Dark mode init (must be in head) -->
+    <script>
+        if (
+            localStorage.theme === 'dark' ||
+            (!('theme' in localStorage) &&
+                window.matchMedia('(prefers-color-scheme: dark)').matches)
+        ) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+    </script>
 </head>
-<body class="bg-background text-foreground">
+
+<body class="bg-background text-foreground antialiased">
     <div class="flex min-h-screen w-full">
+
         <!-- Sidebar -->
         @include('components.sidebar')
 
-        <!-- Main Content -->
+        <!-- Main -->
         <div class="flex-1 flex flex-col">
+
             <!-- Header -->
             <header class="h-14 border-b border-border bg-card flex items-center px-4">
-                <button id="sidebar-toggle" class="p-2 hover:bg-muted rounded-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                <button id="sidebar-toggle"
+                        class="p-2 hover:bg-muted rounded-md focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="20" height="20"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
                     </svg>
                 </button>
-                <h1 class="ml-4 text-lg font-semibold text-foreground">Must Négoce Academy Dashboard</h1>
+
+                <h1 class="ml-4 text-lg font-semibold text-foreground">
+                    Must Négoce Academy Dashboard
+                </h1>
             </header>
 
             <!-- Page Content -->
@@ -32,9 +75,11 @@
         </div>
     </div>
 
-    <!-- Toast Container (for notifications) -->
-    <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+    <!-- Toasts -->
+    <div id="toast-container"
+         class="fixed top-4 right-4 z-50 space-y-2"></div>
 
+    <!-- Page specific scripts -->
     @stack('scripts')
 </body>
 </html>
