@@ -20,7 +20,6 @@ class Student extends Model
         'payment_done',
         'payment_remaining',
         'attestation',
-        'status',
         'city',
         'notes',
     ];

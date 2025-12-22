@@ -326,7 +326,7 @@
                         <th class="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider py-3 px-4">Contact</th>
                         <th class="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider py-3 px-4">Formation</th>
                         <th class="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider py-3 px-4">Date</th>
-                        <th class="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider py-3 px-4">Statut</th>
+                        <th class="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider py-3 px-4">Attestation</th>
                         <th class="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider py-3 px-4">Paiement</th>
                         <th class="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider py-3 px-4">Ville</th>
                         <th class="text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider py-3 px-4">Actions</th>
@@ -390,7 +390,7 @@
                     <!-- Status & Attestation - COMBINED -->
                     <td class="py-3 px-4">
                         <div class="space-y-1.5">
-                            @php
+                            {{-- @php
                                 $statusColors = [
                                     'aide_vendeur' => 'bg-blue-50 text-blue-700 ring-1 ring-blue-600/20',
                                     'vendeur' => 'bg-green-50 text-green-700 ring-1 ring-green-600/20',
@@ -403,23 +403,23 @@
                                     'superviseur' => 'Superviseur',
                                     'CDR' => 'CDR',
                                 ];
-                            @endphp
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold 
+                            @endphp --}}
+                            {{-- <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold 
                                          {{ $statusColors[$student->status] ?? 'bg-gray-50 text-gray-700 ring-1 ring-gray-600/20' }}">
                                 {{ $statusLabels[$student->status] ?? ucfirst($student->status) }}
-                            </span>
+                            </span> --}}
                             
                             <div class="flex items-center gap-1">
                                 @if($student->attestation === 'yes')
                                     <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
                                     </svg>
-                                    <span class="text-xs text-green-600 font-medium">Attestation</span>
+                                    <span class="text-xs text-green-600 font-medium">oui</span>
                                 @else
                                     <svg class="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"/>
                                     </svg>
-                                    <span class="text-xs text-red-500 font-medium">Pas d'attestation</span>
+                                    <span class="text-xs text-red-500 font-medium">Non</span>
                                 @endif
                             </div>
                         </div>
@@ -647,7 +647,7 @@
                             focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" required>
             </div>
 
-            <div>
+            {{-- <div>
               <label class="block text-sm font-medium text-gray-700 mb-1.5">Statut *</label>
               <select name="status" 
                       class="w-full border border-gray-300 bg-white rounded-lg px-3 py-2 text-sm 
@@ -657,7 +657,7 @@
                 <option value="superviseur">Superviseur</option>
                 <option value="CDR">CDR</option>
               </select>
-            </div>
+            </div> --}}
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1.5">Attestation *</label>
