@@ -67,11 +67,10 @@
                 </svg>
             </div>
 
-            <div class="text-3xl font-bold mt-2">{{ number_format($stats['total_students']) }}</div>
-            <p class="text-xs text-secondary mt-1">
-                <strong>+12%</strong> par rapport au mois dernier
-            </p>
-        </div>
+            <p class="text-xs mt-1 {{ $stats['student_change'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
+    <strong>{{ $stats['student_change'] >= 0 ? '+' : '' }}{{ $stats['student_change'] }}%</strong> par rapport au mois dernier
+</p>
+
 
         <!-- Total Formations -->
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition">
@@ -85,11 +84,10 @@
                 </svg>
             </div>
 
-            <div class="text-3xl font-bold mt-2">{{ number_format($stats['total_formations']) }}</div>
-            <p class="text-xs text-secondary mt-1">
-                <strong>+3</strong> par rapport au mois dernier
-            </p>
-        </div>
+            <p class="text-xs mt-1 {{ $stats['formation_change'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
+    <strong>{{ $stats['formation_change'] >= 0 ? '+' : '' }}{{ $stats['formation_change'] }}</strong> par rapport au mois dernier
+</p>
+
     </div>
 
     <!-- FINANCIAL DASHBOARD -->
@@ -217,11 +215,11 @@
             <canvas id="chartCity" height="150"></canvas>
         </div>
 
-        <!-- By Status -->
+        {{-- <!-- By Status -->
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
             <h3 class="text-lg font-semibold mb-4">Candidat par Statut</h3>
             <canvas id="chartStatus" height="150"></canvas>
-        </div>
+        </div> --}}
 
         <!-- By Year -->
         <div class="lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-sm">
@@ -268,13 +266,6 @@ new Chart(document.getElementById('chartCity'), {
     }
 });
 
-new Chart(document.getElementById('chartStatus'), {
-    type: 'doughnut',
-    data: {
-        labels: @json($statusLabels),
-        datasets: [{ data: @json($statusTotals) }]
-    }
-});
 
 new Chart(document.getElementById('chartYear'), {
     type: 'bar',

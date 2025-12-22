@@ -14,10 +14,35 @@ class DashboardController extends Controller
         // ======================
         // BASIC STATS
         // ======================
-        $stats = [
-            'total_students'   => Student::count(),
-            'total_formations' => Formation::count(),
-        ];
+$thisMonth = now()->month;
+$lastMonth = now()->subMonth()->month;
+$thisYear = now()->year;
+$lastMonthYear = now()->subMonth()->year;
+
+$studentsThisMonth = Student::whereMonth('created_at', $thisMonth)
+    ->whereYear('created_at', $thisYear)->count();
+$studentsLastMonth = Student::whereMonth('created_at', $lastMonth)
+    ->whereYear('created_at', $lastMonthYear)->count();
+
+$studentChange = $studentsLastMonth > 0 
+    ? round((($studentsThisMonth - $studentsLastMonth) / $studentsLastMonth) * 100, 1) 
+    : 0;
+
+$formationsThisMonth = Formation::whereMonth('created_at', $thisMonth)
+    ->whereYear('created_at', $thisYear)->count();
+$formationsLastMonth = Formation::whereMonth('created_at', $lastMonth)
+    ->whereYear('created_at', $lastMonthYear)->count();
+
+$formationChange = $formationsLastMonth > 0 
+    ? round((($formationsThisMonth - $formationsLastMonth) / $formationsLastMonth) * 100, 1) 
+    : $formationsThisMonth;
+
+$stats = [
+    'total_students'    => Student::count(),
+    'total_formations'  => Formation::count(),
+    'student_change'    => $studentChange,
+    'formation_change'  => $formationChange,
+];
 
         // ======================
         // FINANCIAL STATS
@@ -135,20 +160,6 @@ class DashboardController extends Controller
             $cityTotals[] = (int) $total;
         }
 
-        // ======================
-        // BY STATUS
-        // ======================
-        $rawStatus = Student::select('status', DB::raw('COUNT(*) as total'))
-            ->groupBy('status')
-            ->pluck('total', 'status')
-            ->toArray();
-
-        $statusLabels = [];
-        $statusTotals = [];
-        foreach ($rawStatus as $status => $total) {
-            $statusLabels[] = ucfirst($status);
-            $statusTotals[] = (int) $total;
-        }
 
         // ======================
         // BY YEAR
@@ -205,8 +216,6 @@ class DashboardController extends Controller
             'monthTotals',
             'cityLabels',
             'cityTotals',
-            'statusLabels',
-            'statusTotals',
             'yearLabels',
             'yearTotals',
             'revenueLabels',
