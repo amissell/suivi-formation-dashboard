@@ -14,35 +14,35 @@ class DashboardController extends Controller
         // ======================
         // BASIC STATS
         // ======================
-$thisMonth = now()->month;
-$lastMonth = now()->subMonth()->month;
-$thisYear = now()->year;
-$lastMonthYear = now()->subMonth()->year;
+        $thisMonth = now()->month;
+        $lastMonth = now()->subMonth()->month;
+        $thisYear = now()->year;
+        $lastMonthYear = now()->subMonth()->year;
 
-$studentsThisMonth = Student::whereMonth('created_at', $thisMonth)
-    ->whereYear('created_at', $thisYear)->count();
-$studentsLastMonth = Student::whereMonth('created_at', $lastMonth)
-    ->whereYear('created_at', $lastMonthYear)->count();
+        $studentsThisMonth = Student::whereMonth('created_at', $thisMonth)
+            ->whereYear('created_at', $thisYear)->count();
+        $studentsLastMonth = Student::whereMonth('created_at', $lastMonth)
+            ->whereYear('created_at', $lastMonthYear)->count();
 
-$studentChange = $studentsLastMonth > 0 
-    ? round((($studentsThisMonth - $studentsLastMonth) / $studentsLastMonth) * 100, 1) 
-    : 0;
+        $studentChange = $studentsLastMonth > 0 
+            ? round((($studentsThisMonth - $studentsLastMonth) / $studentsLastMonth) * 100, 1) 
+            : ($studentsThisMonth > 0 ? 100 : 0);
 
-$formationsThisMonth = Formation::whereMonth('created_at', $thisMonth)
-    ->whereYear('created_at', $thisYear)->count();
-$formationsLastMonth = Formation::whereMonth('created_at', $lastMonth)
-    ->whereYear('created_at', $lastMonthYear)->count();
+        $formationsThisMonth = Formation::whereMonth('created_at', $thisMonth)
+            ->whereYear('created_at', $thisYear)->count();
+        $formationsLastMonth = Formation::whereMonth('created_at', $lastMonth)
+            ->whereYear('created_at', $lastMonthYear)->count();
 
-$formationChange = $formationsLastMonth > 0 
-    ? round((($formationsThisMonth - $formationsLastMonth) / $formationsLastMonth) * 100, 1) 
-    : $formationsThisMonth;
+        $formationChange = $formationsLastMonth > 0 
+            ? round((($formationsThisMonth - $formationsLastMonth) / $formationsLastMonth) * 100, 1) 
+            : ($formationsThisMonth > 0 ? 100 : 0);
 
-$stats = [
-    'total_students'    => Student::count(),
-    'total_formations'  => Formation::count(),
-    'student_change'    => $studentChange,
-    'formation_change'  => $formationChange,
-];
+        $stats = [
+            'total_students'    => Student::count(),
+            'total_formations'  => Formation::count(),
+            'student_change'    => $studentChange,
+            'formation_change'  => $formationChange,
+        ];
 
         // ======================
         // FINANCIAL STATS
@@ -68,7 +68,7 @@ $stats = [
             ->get();
 
         $revenueLabels = $monthlyRevenue
-            ->map(fn ($r) => $r->month . '/' . $r->year)
+            ->map(fn ($r) => str_pad($r->month, 2, '0', STR_PAD_LEFT) . '/' . $r->year)
             ->toArray();
 
         $revenueTotals = $monthlyRevenue
@@ -76,10 +76,10 @@ $stats = [
             ->toArray();
 
         // ======================
-        // RECENT DATA
+        // RECENT DATA (with eager loading)
         // ======================
         $recentFormations = Formation::latest()->take(3)->get();
-        $recentStudents   = Student::latest()->take(3)->get();
+        $recentStudents   = Student::with('formation')->latest()->take(3)->get();
 
         // ======================
         // LAST 7 DAYS (STUDENTS)
@@ -102,7 +102,7 @@ $stats = [
 
         for ($d = $start->copy(); $d->lte($end); $d->addDay()) {
             $key = $d->format('Y-m-d');
-            $days[] = $d->format('M j');
+            $days[] = $d->format('d M');
             $dayTotals[] = $rawPerDay[$key] ?? 0;
         }
 
@@ -148,18 +148,20 @@ $stats = [
         // BY CITY
         // ======================
         $rawCity = Student::select('city', DB::raw('COUNT(*) as total'))
+            ->whereNotNull('city')
+            ->where('city', '!=', '')
             ->groupBy('city')
             ->orderByDesc('total')
+            ->limit(10) // Limit to top 10 cities
             ->pluck('total', 'city')
             ->toArray();
 
         $cityLabels = [];
         $cityTotals = [];
         foreach ($rawCity as $city => $total) {
-            $cityLabels[] = $city ?: 'Unknown';
+            $cityLabels[] = $city;
             $cityTotals[] = (int) $total;
         }
-
 
         // ======================
         // BY YEAR
@@ -168,6 +170,7 @@ $stats = [
                 DB::raw('YEAR(start_date) as year'),
                 DB::raw('COUNT(*) as total')
             )
+            ->whereNotNull('start_date')
             ->groupBy('year')
             ->orderBy('year')
             ->pluck('total', 'year')
@@ -186,20 +189,21 @@ $stats = [
             $alerts[] = [
                 'type'    => 'warning',
                 'icon'    => 'money',
-                'message' => "$unpaidCount étudiant(s) ont des paiements en attente",
+                'message' => "$unpaidCount candidat(s) ont des paiements en attente",
                 'link'    => route('students.index', ['payment_status' => 'unpaid']),
             ];
         }
 
         $lowEnrollment = Formation::withCount('students')
             ->having('students_count', '<', 5)
+            ->having('students_count', '>', 0)
             ->get();
 
         foreach ($lowEnrollment as $formation) {
             $alerts[] = [
                 'type'    => 'info',
                 'icon'    => 'users',
-                'message' => "Formation '{$formation->name}' a seulement {$formation->students_count} étudiant(s)",
+                'message' => "Formation '{$formation->name}' a seulement {$formation->students_count} candidat(s)",
                 'link'    => route('formations.index'),
             ];
         }

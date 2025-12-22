@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Must Négoce Academy - @yield('title', 'Dashboard')</title>
 
-    <!-- CSRF Token (important for fetch & forms) -->
+    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Vite -->
@@ -14,6 +14,7 @@
 
     <!-- Dark mode init (must be in head) -->
     <script>
+        // Initialize dark mode before page loads
         if (
             localStorage.theme === 'dark' ||
             (!('theme' in localStorage) &&
@@ -24,6 +25,7 @@
             document.documentElement.classList.remove('dark');
         }
 
+        // Toggle dark mode function
         function toggleDarkMode() {
             if (document.documentElement.classList.contains('dark')) {
                 document.documentElement.classList.remove('dark');
@@ -34,21 +36,24 @@
             }
         }
     </script>
+
+    @stack('styles')
 </head>
 
 <body class="bg-background text-foreground antialiased">
-    <div class="flex min-h-screen w-full">
+    <div class="flex h-screen overflow-hidden">
 
         <!-- Sidebar -->
         @include('components.sidebar')
 
-        <!-- Main -->
-        <div class="flex-1 flex flex-col">
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
 
             <!-- Header -->
-            <header class="h-14 border-b border-border bg-card flex items-center px-4">
+            <header class="h-16 border-b border-border bg-card flex items-center px-4 md:px-6 flex-shrink-0">
                 <button id="sidebar-toggle"
-                        class="p-2 hover:bg-muted rounded-md focus:outline-none">
+                        class="p-2 hover:bg-muted rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
+                        aria-label="Toggle sidebar">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="20" height="20"
                          viewBox="0 0 24 24"
@@ -63,19 +68,47 @@
                     </svg>
                 </button>
 
-                <h1 class="ml-4 text-lg font-semibold text-foreground">
-                    Must Négoce Academy Dashboard
+                <h1 class="ml-4 text-lg font-semibold text-foreground hidden md:block">
+                    Must Négoce Academy
                 </h1>
+
+                <div class="ml-auto flex items-center gap-2">
+                    <!-- You can add user menu, notifications, etc here -->
+                    <span class="text-sm text-muted-foreground">{{ auth()->user()->name ?? 'Admin' }}</span>
+                </div>
             </header>
 
             <!-- Page Content -->
-            <main class="flex-1 p-6 bg-muted/30">
+            <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-muted/30">
+                <!-- Flash Messages -->
+                @if(session('success'))
+                <div class="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                    <p class="text-sm text-green-800 dark:text-green-200">{{ session('success') }}</p>
+                </div>
+                @endif
+
+                @if(session('error'))
+                <div class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                    <p class="text-sm text-red-800 dark:text-red-200">{{ session('error') }}</p>
+                </div>
+                @endif
+
+                @if($errors->any())
+                <div class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                    <ul class="list-disc list-inside text-sm text-red-800 dark:text-red-200">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
                 @yield('content')
             </main>
         </div>
     </div>
 
-    <!-- Toasts -->
+    <!-- Toast Container -->
     <div id="toast-container"
          class="fixed top-4 right-4 z-50 space-y-2"></div>
 
