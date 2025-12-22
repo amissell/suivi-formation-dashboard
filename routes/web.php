@@ -6,18 +6,14 @@ use App\Http\Controllers\FormationController;
 use App\Http\Controllers\StudentController;
 use App\Models\Formation;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
+
 
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 Route::get('/students/export-excel', [StudentController::class, 'exportExcel'])
-    ->name('students.exportExcel');
+    ->name('students.export');
 
 // Resources
 Route::resource('formations', FormationController::class);
@@ -29,3 +25,8 @@ Route::get('/formations/{formation}/price', function (Formation $formation) {
         'price' => (float) $formation->price
     ]);
 });
+
+Route::post('/students/reset', [StudentController::class, 'resetStudents'])->name('students.reset');
+
+Route::post('/students/reset-import', [StudentController::class, 'resetAndImport'])
+    ->name('students.resetImport');

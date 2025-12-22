@@ -85,7 +85,7 @@
                         </a>
                         
                         <button type="submit"
-                        formaction="{{ route('students.exportExcel') }}" 
+                        formaction="{{ route('students.export') }}" 
                         formmethod="GET"
                         class="flex items-center gap-2 px-4 py-2 bg-green-500 text-white font-medium 
                         rounded-lg hover:bg-green-600 transition-all shadow-sm hover:shadow-md">
@@ -95,6 +95,18 @@
                         </svg>
                         <span class="hidden sm:inline">Excel</span>
                     </button>
+                    
+                    <form action="{{ route('students.reset') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">Reset Students</button>
+                    </form>
+                    
+                    <form action="{{ route('students.resetImport') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="file" name="file" required>
+                        <button type="submit">Reset & Import</button>
+                    </form>
+
                 </div>
             </div>
 
@@ -390,25 +402,6 @@
                     <!-- Status & Attestation - COMBINED -->
                     <td class="py-3 px-4">
                         <div class="space-y-1.5">
-                            {{-- @php
-                                $statusColors = [
-                                    'aide_vendeur' => 'bg-blue-50 text-blue-700 ring-1 ring-blue-600/20',
-                                    'vendeur' => 'bg-green-50 text-green-700 ring-1 ring-green-600/20',
-                                    'superviseur' => 'bg-purple-50 text-purple-700 ring-1 ring-purple-600/20',
-                                    'CDR' => 'bg-orange-50 text-orange-700 ring-1 ring-orange-600/20',
-                                ];
-                                $statusLabels = [
-                                    'aide_vendeur' => 'Aide Vendeur',
-                                    'vendeur' => 'Vendeur',
-                                    'superviseur' => 'Superviseur',
-                                    'CDR' => 'CDR',
-                                ];
-                            @endphp --}}
-                            {{-- <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold 
-                                         {{ $statusColors[$student->status] ?? 'bg-gray-50 text-gray-700 ring-1 ring-gray-600/20' }}">
-                                {{ $statusLabels[$student->status] ?? ucfirst($student->status) }}
-                            </span> --}}
-                            
                             <div class="flex items-center gap-1">
                                 @if($student->attestation === 'yes')
                                     <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">

@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Models\Formation;
 use Illuminate\Http\Request;
-// use Barryvdh\DomPDF\Facade\Pdf;
+
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\StudentsExport;
+use App\Imports\StudentsImport;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -20,9 +22,7 @@ class StudentController extends Controller
         // Start query with eager loading (prevents N+1 queries)
         $query = Student::with('formation');
 
-        // ============================================
-        // SEARCH FILTER - Multiple fields
-        // ============================================
+       
         if ($request->filled('search')) {
             $searchTerm = $request->search;
             
@@ -42,12 +42,6 @@ class StudentController extends Controller
             $query->where('formation_id', $request->formation_id);
         }
 
-        // ============================================
-        // STATUS FILTER
-        // ============================================
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
 
         // ============================================
         // CITY FILTER - Exact match
@@ -96,76 +90,11 @@ class StudentController extends Controller
         return view('students.index', compact('students', 'formations', 'cities'));
     }
 
-    /**
-     * Export students to PDF with ALL filters applied
-     */
-    // public function exportPdf(Request $request)
-    // {
-    //     // Apply SAME filtering logic as index() method
-    //     $query = Student::with('formation');
-
-    //     // Search filter
-    //     if ($request->filled('search')) {
-    //         $searchTerm = $request->search;
-    //         $query->where(function($q) use ($searchTerm) {
-    //             $q->where('name', 'LIKE', "%{$searchTerm}%")
-    //               ->orWhere('cin', 'LIKE', "%{$searchTerm}%")
-    //               ->orWhere('phone', 'LIKE', "%{$searchTerm}%")
-    //               ->orWhere('email', 'LIKE', "%{$searchTerm}%");
-    //         });
-    //     }
-
-    //     // Formation filter
-    //     if ($request->filled('formation_id')) {
-    //         $query->where('formation_id', $request->formation_id);
-    //     }
-
-    //     // Status filter
-    //     if ($request->filled('status')) {
-    //         $query->where('status', $request->status);
-    //     }
-
-    //     // City filter
-    //     if ($request->filled('city')) {
-    //         $query->where('city', $request->city);
-    //     }
-
-    //     // Payment status filter
-    //     if ($request->filled('payment_status')) {
-    //         if ($request->payment_status === 'paid') {
-    //             $query->where('payment_remaining', '<=', 0);
-    //         } elseif ($request->payment_status === 'unpaid') {
-    //             $query->where('payment_remaining', '>', 0);
-    //         }
-    //     }
-
-    //     // Date range filter
-    //     if ($request->filled('date_from')) {
-    //         $query->whereDate('start_date', '>=', $request->date_from);
-    //     }
-        
-    //     if ($request->filled('date_to')) {
-    //         $query->whereDate('start_date', '<=', $request->date_to);
-    //     }
-
-    //     // Get all filtered results (no pagination for PDF)
-    //     $students = $query->latest()->get();
-
-    //     // Generate PDF
-    //     $pdf = PDF::loadView('students.pdf', compact('students'));
-
-    //     // Download with timestamp in filename
-    //     return $pdf->download('etudiants-' . date('Y-m-d-His') . '.pdf');
-    // }
-
-    // /**
-    //  * Store a newly created student
-    //  */
 
 
     public function exportExcel()
     {
-        return Excel::download(new StudentsExport, 'students.xlsx');
+        return Excel::download(new StudentsExport, 'students_backup.xlsx');
     }
     public function store(Request $request)
     {
@@ -179,7 +108,7 @@ class StudentController extends Controller
             'engagement' => 'required|numeric|min:0',
             'payment_done' => 'required|numeric|min:0',
             'attestation' => 'required|in:yes,no',
-            'status' => 'required|in:aide_vendeur,vendeur,superviseur,CDR',
+            // 'status' => 'required|in:aide_vendeur,vendeur,superviseur,CDR',
             'city' => 'nullable|string|max:100',
             'notes' => 'nullable|string',
         ]);
@@ -207,7 +136,7 @@ class StudentController extends Controller
             'engagement' => 'required|numeric|min:0',
             'payment_done' => 'required|numeric|min:0',
             'attestation' => 'required|in:yes,no',
-            'status' => 'required|in:aide_vendeur,vendeur,superviseur,CDR',
+            // 'status' => 'required|in:aide_vendeur,vendeur,superviseur,CDR',
             'city' => 'nullable|string|max:100',
             'notes' => 'nullable|string',
         ]);
@@ -230,4 +159,26 @@ class StudentController extends Controller
         
         return redirect()->route('students.index')->with('success', "L'étudiant {$studentName} a été supprimé avec succès!");
     }
+
+
+    public function resetStudents()
+    {
+        \DB::table('students')->truncate(); // deletes all data
+        return redirect()->back()->with('success', 'All students data deleted.');
+    }
+
+    public function resetAndImport(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv',
+        ]);
+        
+        DB::transaction(function () use ($request) {
+            DB::table('students')->delete();
+            Excel::import(new StudentsImport, $request->file('file'));
+        });
+        return back()->with('success', 'Data reset and imported successfully');
+    }
+
 }
+
