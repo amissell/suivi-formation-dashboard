@@ -126,6 +126,8 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
+       
+
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'cin' => 'required|string|max:50',
@@ -136,7 +138,6 @@ class StudentController extends Controller
             'engagement' => 'required|numeric|min:0',
             'payment_done' => 'required|numeric|min:0',
             'attestation' => 'required|in:yes,no',
-            // 'status' => 'required|in:aide_vendeur,vendeur,superviseur,CDR',
             'city' => 'nullable|string|max:100',
             'notes' => 'nullable|string',
         ]);

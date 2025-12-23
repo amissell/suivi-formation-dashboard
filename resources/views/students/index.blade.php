@@ -24,10 +24,9 @@
         </button>
     </div>
 
-    <!-- Filter Section - ULTRA MODERN & PROFESSIONAL -->
-    <div class="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+<div class="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
         <form method="GET" id="filter-form">
-            
+
             <!-- Top Bar: Search + Quick Actions -->
             <div class="p-4 bg-gradient-to-r from-primary/5 via-transparent to-transparent">
                 <div class="flex flex-col lg:flex-row gap-3">
@@ -39,7 +38,7 @@
 
                     <!-- Action Buttons Row -->
                     <div class="flex flex-wrap gap-2">
-                        
+
                         <!-- Filter Toggle Button -->
                         <button type="button" 
                                 onclick="toggleFilters()" 
@@ -83,7 +82,7 @@
                             </svg>
                             <span class="hidden sm:inline">Réinitialiser</span>
                         </a>
-                        
+
                         <button type="submit"
                         formaction="{{ route('students.export') }}" 
                         formmethod="GET"
@@ -95,18 +94,6 @@
                         </svg>
                         <span class="hidden sm:inline">Excel</span>
                     </button>
-                    
-                    <form action="{{ route('students.reset') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">Reset Students</button>
-                    </form>
-                    
-                    <form action="{{ route('students.resetImport') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <input type="file" name="file" required>
-                        <button type="submit">Reset & Import</button>
-                    </form>
-
                 </div>
             </div>
 
@@ -115,7 +102,7 @@
                 @if(request()->hasAny(['formation_id', 'city', 'payment_status', 'date_from', 'date_to', 'search']))
                 <div class="mt-3 flex flex-wrap gap-2">
                     <span class="text-xs font-medium text-muted-foreground">Filtres actifs:</span>
-                    
+
                     @if(request('search'))
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100 text-blue-700 
                                  rounded-full text-xs font-medium">
@@ -183,7 +170,7 @@
             <!-- Advanced Filters Panel (Collapsible) -->
             <div id="advanced-filters" class="hidden border-t border-border bg-muted/20">
                 <div class="p-6 space-y-6">
-                    
+
                     <!-- Section Title -->
                     <div class="flex items-center justify-between">
                         <h3 class="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -202,7 +189,7 @@
 
                     <!-- Filter Groups -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        
+
                         <!-- Formation Filter -->
                         <div class="space-y-2">
                             <label class="flex items-center gap-2 text-sm font-medium text-foreground">
@@ -396,7 +383,7 @@
 
                     <!-- Start Date -->
                     <td class="py-3 px-4">
-                        <p class="text-xs text-muted-foreground">{{ \Carbon\Carbon::parse($student->start_date)->format('d/m/Y') }}</p>
+                        <p class="text-xs text-muted-foreground">{{ old('start_date', optional($student->start_date)->format('Y-m-d')) }}</p>
                     </td>
                     
                     <!-- Status & Attestation - COMBINED -->
