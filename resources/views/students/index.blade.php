@@ -473,7 +473,7 @@
 
                             
                             <!-- Edit Button -->
-                            <button onclick="openModal('edit', {{ $student }})" 
+                            <button onclick='openModal("edit", @json($student))' 
                                     class="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all"
                                     title="Modifier">
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -887,8 +887,15 @@ function openModal(mode, student = null) {
         form.querySelector('input[name="phone"]').value = student.phone || '';
         form.querySelector('input[name="email"]').value = student.email || '';
         form.querySelector('select[name="formation_id"]').value = student.formation_id || '';
-        form.querySelector('input[name="start_date"]').value = student.start_date || '';
-        form.querySelector('select[name="status"]').value = student.status || '';
+        // form.querySelector('input[name="start_date"]').value = student.start_date || '';
+        if (student.start_date) {
+            form.querySelector('input[name="start_date"]').value =
+            student.start_date.substring(0, 10);
+        } else {
+            form.querySelector('input[name="start_date"]').value = '';
+        }
+
+        // form.querySelector('select[name="status"]').value = student.status || '';
         form.querySelector('select[name="attestation"]').value = student.attestation || '';
         form.querySelector('input[name="engagement"]').value = Math.round(student.engagement) || '';
         form.querySelector('input[name="payment_done"]').value = Math.round(student.payment_done) || '';
@@ -955,13 +962,7 @@ function closeNotesModal() {
     }, 200);
 }
 
-// ============================================
-// 3. PAYMENT CALCULATION
-// ============================================
 
-/**
- * Calculate remaining payment and update progress bar
- */
 function calculateRemaining() {
     const engagementInput = document.getElementById('engagement');
     const paymentDoneInput = document.getElementById('payment_done');
@@ -1071,9 +1072,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('✅ All event listeners initialized');
 });
 
-// ============================================
-// 5. OPTIONAL: LIVE SEARCH (Uncomment to enable)
-// ============================================
+
 
 
 let searchTimeout = null;
