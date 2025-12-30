@@ -36,10 +36,10 @@
             </div>
             
             
-            <div class="mb-3">
+            <!-- <div class="mb-3">
                 <label for="price" class="block text-sm font-medium text-foreground">Price (DH)</label>
             <input type="number" id="price" name="price" class="w-full border border-input rounded-md p-2" step="0.01" required>
-        </div>
+        </div> -->
 
 
 

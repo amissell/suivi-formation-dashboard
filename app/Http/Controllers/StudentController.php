@@ -162,23 +162,16 @@ class StudentController extends Controller
     }
 
 
-    public function resetStudents()
+    
+    public function import(Request $request)
     {
-        \DB::table('students')->truncate(); // deletes all data
-        return redirect()->back()->with('success', 'All students data deleted.');
-    }
-
-    public function resetAndImport(Request $request)
-    {
+        // dd($request->all(), $request->file('file'));
         $request->validate([
-            'file' => 'required|mimes:xlsx,csv',
+            'file' => 'required|mimes:xlsx,xls'
         ]);
         
-        DB::transaction(function () use ($request) {
-            DB::table('students')->delete();
-            Excel::import(new StudentsImport, $request->file('file'));
-        });
-        return back()->with('success', 'Data reset and imported successfully');
+        Excel::import(new StudentsImport, $request->file('file'));
+        return back()->with('success', 'Data imported successfully');
     }
 
 }

@@ -23,6 +23,11 @@
             Ajouter Étudiant
         </button>
     </div>
+    <form action="{{ route('students.import') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <input type="file" name="file" required>
+        <button type="submit">Import Excel</button>
+    </form>
 
 <div class="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
         <form method="GET" id="filter-form">

@@ -9,11 +9,13 @@ use App\Models\Formation;
 
 
 // Dashboard
-Route::get('/dashboard', [DashboardController::class, 'index'])
+Route::get('/', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 Route::get('/students/export-excel', [StudentController::class, 'exportExcel'])
     ->name('students.export');
+
+Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
 
 // Resources
 Route::resource('formations', FormationController::class);
