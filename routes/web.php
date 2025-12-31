@@ -19,7 +19,7 @@ Route::post('/students/import', [StudentController::class, 'import'])->name('stu
 
 // Resources
 Route::resource('formations', FormationController::class);
-Route::resource('students', StudentController::class);
+Route::resource('students', StudentController::class)->except(['show']);
 
 // Get formation price (AJAX)
 Route::get('/formations/{formation}/price', function (Formation $formation) {
