@@ -53,7 +53,7 @@
                 class="flex items-center gap-3 w-full px-3 py-2 rounded-md hover:bg-sidebar-accent transition-colors">
             
             <!-- Sun icon (shown in dark mode) -->
-            <svg id="sun-icon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="5"/>
                 <line x1="12" y1="1" x2="12" y2="3"/>
                 <line x1="12" y1="21" x2="12" y2="23"/>
@@ -66,12 +66,12 @@
             </svg>
 
             <!-- Moon icon (shown in light mode) -->
-            <svg id="moon-icon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg id="moon-icon" class="w-5 h-5 block" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
             </svg>
 
-            <span class="text-sidebar-foreground dark:hidden">Mode Sombre</span>
-            <span class="text-sidebar-foreground hidden dark:block">Mode Clair</span>
+            <span class="text-sidebar-foreground">Mode Sombre</span>
+            <span class="text-sidebar-foreground hidden">Mode Clair</span>
         </button>
     </div>
 </aside>

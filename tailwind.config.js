@@ -1,33 +1,21 @@
+import defaultTheme from 'tailwindcss/defaultTheme';
+import forms from '@tailwindcss/forms';
+
+/** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./resources/**/*.blade.php",
-    "./resources/**/*.js",
-  ],
-  theme: {
-    extend: {
-      colors: {
-        primary: {
-          DEFAULT: 'hsl(211, 67%, 33%)',
-          foreground: 'hsl(0, 0%, 100%)',
+    content: [
+        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+        './storage/framework/views/*.php',
+        './resources/views/**/*.blade.php',
+    ],
+
+    theme: {
+        extend: {
+            fontFamily: {
+                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+            },
         },
-        secondary: {
-          DEFAULT: 'hsl(211, 53%, 63%)',
-          foreground: 'hsl(0, 0%, 100%)',
-        },
-        accent: {
-          DEFAULT: 'hsl(211, 53%, 63%)',
-          foreground: 'hsl(0, 0%, 100%)',
-        },
-        muted: {
-          DEFAULT: 'hsl(211, 30%, 95%)',
-          foreground: 'hsl(211, 20%, 50%)',
-        },
-        border: 'hsl(211, 30%, 90%)',
-        sidebar: {
-          DEFAULT: 'hsl(211, 67%, 33%)',
-          foreground: 'hsl(0, 0%, 100%)',
-        },
-      },
     },
-  },
-}
+
+    plugins: [forms],
+};

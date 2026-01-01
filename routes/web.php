@@ -1,34 +1,20 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\FormationController;
-use App\Http\Controllers\StudentController;
-use App\Models\Formation;
 
-
-
-// Dashboard
-Route::get('/', [DashboardController::class, 'index'])
-    ->name('dashboard');
-
-Route::get('/students/export-excel', [StudentController::class, 'exportExcel'])
-    ->name('students.export');
-
-Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
-
-// Resources
-Route::resource('formations', FormationController::class);
-Route::resource('students', StudentController::class)->except(['show']);
-
-// Get formation price (AJAX)
-Route::get('/formations/{formation}/price', function (Formation $formation) {
-    return response()->json([
-        'price' => (float) $formation->price
-    ]);
+Route::get('/', function () {
+    return view('welcome');
 });
 
-Route::post('/students/reset', [StudentController::class, 'resetStudents'])->name('students.reset');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::post('/students/reset-import', [StudentController::class, 'resetAndImport'])
-    ->name('students.resetImport');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
