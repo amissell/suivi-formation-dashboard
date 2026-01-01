@@ -44,4 +44,11 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/login');
     }
+
+    protected function authenticated(Request $request, $user)
+    {
+        return redirect()->route('dashboard');
+    }
+
+    // r resources/views/layouts/app.blade.php + pages).
 }
