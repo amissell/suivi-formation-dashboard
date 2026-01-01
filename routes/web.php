@@ -6,12 +6,11 @@ use App\Http\Controllers\FormationController;
 use App\Http\Controllers\StudentController;
 use App\Models\Formation;
 
-// Redirect root to dashboard (will auto-redirect to login if not authenticated)
 Route::redirect('/', '/dashboard');
 
 // ALL routes protected by auth middleware
 Route::middleware(['auth'])->group(function () {
-    
+
     
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])

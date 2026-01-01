@@ -3,7 +3,6 @@
 @section('title', 'Formations') <!-- or Dashboard -->
 
 @section('content')
-@include('components.sidebar')
 <div class="space-y-6">
     <!-- Header -->
     <div class="flex justify-between items-center">

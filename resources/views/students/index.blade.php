@@ -3,7 +3,6 @@
 @section('title', 'Étudiants')
 
 @section('content')
-@include('components.sidebar')
 
 <div class="space-y-6">
 
