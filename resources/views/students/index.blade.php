@@ -1,4 +1,4 @@
-@extends('layouts.app')
+
 
 @section('title', 'Étudiants')
 
@@ -1100,6 +1100,3 @@ function setupLiveSearch() {
 // Call this in DOMContentLoaded to enable:
 setupLiveSearch();
 </script>
-@endpush
-
-@endsection

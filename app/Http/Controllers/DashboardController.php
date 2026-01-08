@@ -11,9 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // ======================
-        // BASIC STATS
-        // ======================
+
         $thisMonth = now()->month;
         $lastMonth = now()->subMonth()->month;
         $thisYear = now()->year;
@@ -44,9 +42,9 @@ class DashboardController extends Controller
             'formation_change'  => $formationChange,
         ];
 
-        // ======================
+        
         // FINANCIAL STATS
-        // ======================
+        
         $financial = [
             'total_revenue'   => Student::sum('payment_done'),
             'total_remaining' => Student::sum('payment_remaining'),
@@ -55,9 +53,9 @@ class DashboardController extends Controller
             'students_unpaid' => Student::where('payment_remaining', '>', 0)->count(),
         ];
 
-        // ======================
+        
         // MONTHLY REVENUE (12 MONTHS)
-        // ======================
+        
         $monthlyRevenue = Student::selectRaw(
                 'YEAR(created_at) as year, MONTH(created_at) as month, SUM(payment_done) as total'
             )
@@ -75,15 +73,15 @@ class DashboardController extends Controller
             ->pluck('total')
             ->toArray();
 
-        // ======================
+        
+
         // RECENT DATA (with eager loading)
-        // ======================
         $recentFormations = Formation::latest()->take(3)->get();
         $recentStudents   = Student::with('formation')->latest()->take(3)->get();
 
-        // ======================
+        
         // LAST 7 DAYS (STUDENTS)
-        // ======================
+        
         $end   = Carbon::today();
         $start = $end->copy()->subDays(6);
 
@@ -106,9 +104,9 @@ class DashboardController extends Controller
             $dayTotals[] = $rawPerDay[$key] ?? 0;
         }
 
-        // ======================
+        
         // LAST 12 MONTHS (START DATE)
-        // ======================
+        
         $monthEnd   = Carbon::now();
         $monthStart = $monthEnd->copy()->subMonths(11)->startOfMonth();
 
@@ -144,9 +142,9 @@ class DashboardController extends Controller
             $cursor->addMonth();
         }
 
-        // ======================
+        
         // BY CITY
-        // ======================
+        
         $rawCity = Student::select('city', DB::raw('COUNT(*) as total'))
             ->whereNotNull('city')
             ->where('city', '!=', '')
@@ -163,9 +161,9 @@ class DashboardController extends Controller
             $cityTotals[] = (int) $total;
         }
 
-        // ======================
+        
         // BY YEAR
-        // ======================
+        
         $rawYear = Student::select(
                 DB::raw('YEAR(start_date) as year'),
                 DB::raw('COUNT(*) as total')
@@ -179,9 +177,9 @@ class DashboardController extends Controller
         $yearLabels = array_keys($rawYear);
         $yearTotals = array_values($rawYear);
 
-        // ======================
+        
         // ALERTS
-        // ======================
+        
         $alerts = [];
 
         $unpaidCount = Student::where('payment_remaining', '>', 0)->count();

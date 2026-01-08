@@ -1,5 +1,4 @@
-<aside id="sidebar" class="w-64 bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col h-screen">
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-sidebar-border transition-transform duration-300 flex flex-col h-screen -translate-x-full lg:translate-x-0">
+<aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-sidebar-border transition-transform duration-300 flex flex-col h-screen -translate-x-full lg:translate-x-0">
 
     <!-- Logo Section -->
     <div class="p-4 border-b border-sidebar-border flex-shrink-0">
