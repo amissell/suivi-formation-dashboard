@@ -173,6 +173,65 @@ class StudentController extends Controller
         Excel::import(new StudentsImport, $request->file('file'));
         return back()->with('success', 'Data imported successfully');
     }
+    /**
+ * AJAX filter for students
+ */
+public function filter(Request $request)
+{
+    $query = Student::with('formation');
+
+    // Search
+    if ($request->filled('search')) {
+        $searchTerm = $request->search;
+        $query->where(function($q) use ($searchTerm) {
+            $q->where('name', 'LIKE', "%{$searchTerm}%")
+              ->orWhere('cin', 'LIKE', "%{$searchTerm}%")
+              ->orWhere('phone', 'LIKE', "%{$searchTerm}%")
+              ->orWhere('email', 'LIKE', "%{$searchTerm}%");
+        });
+    }
+
+    // Formation filter
+    if ($request->filled('formation_id')) {
+        $query->where('formation_id', $request->formation_id);
+    }
+
+    // City filter
+    if ($request->filled('city')) {
+        $query->where('city', $request->city);
+    }
+
+    // Payment status filter
+    if ($request->filled('payment_status')) {
+        if ($request->payment_status === 'paid') {
+            $query->where('payment_remaining', '<=', 0);
+        } elseif ($request->payment_status === 'unpaid') {
+            $query->where('payment_remaining', '>', 0);
+        }
+    }
+
+    // Date range filter
+    if ($request->filled('date_from')) {
+        $query->whereDate('created_at', '>=', $request->date_from);
+    }
+    if ($request->filled('date_to')) {
+        $query->whereDate('created_at', '<=', $request->date_to);
+    }
+
+    $students = $query->orderBy('created_at', 'desc')->paginate(10);
+
+    // Return JSON for AJAX requests
+    if ($request->ajax()) {
+        return response()->json([
+            'html' => view('students.partials.table', compact('students'))->render(),
+            'pagination' => $students->links()->render(),
+            'total' => $students->total(),
+        ]);
+    }
+
+    return redirect()->route('students.index');
+}
+
 
 }
 

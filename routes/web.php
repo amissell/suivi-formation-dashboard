@@ -26,6 +26,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/students/reset-import', [StudentController::class, 'resetAndImport'])
         ->name('students.resetImport');
     Route::resource('students', StudentController::class)->except(['show']);
+    // Add this inside your auth middleware group
+    Route::get('/students/filter', [StudentController::class, 'filter'])->name('students.filter');
+
 
     // Formations
     Route::resource('formations', FormationController::class);
