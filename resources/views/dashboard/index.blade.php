@@ -191,7 +191,7 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 const chartColors = {
     primary: 'rgb(59, 130, 246)',
@@ -201,13 +201,14 @@ const chartColors = {
     info: 'rgb(99, 102, 241)'
 };
 
+// Last 7 Days Chart
 new Chart(document.getElementById('chartDays'), {
     type: 'line',
     data: {
-        labels: <?php echo json_encode($days); ?>,
+        labels: {!! json_encode($days) !!},
         datasets: [{
             label: 'Nouveaux candidats',
-            data: <?php echo json_encode($dayTotals); ?>,
+            data: {!! json_encode($dayTotals) !!},
             tension: 0.4,
             borderWidth: 2,
             borderColor: chartColors.primary,
@@ -233,13 +234,14 @@ new Chart(document.getElementById('chartDays'), {
     }
 });
 
+// Last 12 Months Chart
 new Chart(document.getElementById('chartMonths'), {
     type: 'bar',
     data: {
-        labels: <?php echo json_encode($months); ?>,
+        labels: {!! json_encode($months) !!},
         datasets: [{
             label: 'Candidats',
-            data: <?php echo json_encode($monthTotals); ?>,
+            data: {!! json_encode($monthTotals) !!},
             backgroundColor: 'rgba(59, 130, 246, 0.6)',
             borderColor: chartColors.primary,
             borderWidth: 1
@@ -257,12 +259,13 @@ new Chart(document.getElementById('chartMonths'), {
     }
 });
 
+// By City Chart
 new Chart(document.getElementById('chartCity'), {
     type: 'pie',
     data: {
-        labels: <?php echo json_encode($cityLabels); ?>,
+        labels: {!! json_encode($cityLabels) !!},
         datasets: [{
-            data: <?php echo json_encode($cityTotals); ?>,
+            data: {!! json_encode($cityTotals) !!},
             backgroundColor: [
                 'rgba(59, 130, 246, 0.8)',
                 'rgba(34, 197, 94, 0.8)',
@@ -282,13 +285,14 @@ new Chart(document.getElementById('chartCity'), {
     }
 });
 
+// By Year Chart
 new Chart(document.getElementById('chartYear'), {
     type: 'bar',
     data: {
-        labels: <?php echo json_encode($yearLabels); ?>,
+        labels: {!! json_encode($yearLabels) !!},
         datasets: [{
             label: 'Candidats',
-            data: <?php echo json_encode($yearTotals); ?>,
+            data: {!! json_encode($yearTotals) !!},
             backgroundColor: 'rgba(34, 197, 94, 0.6)',
             borderColor: chartColors.success,
             borderWidth: 1
@@ -306,13 +310,14 @@ new Chart(document.getElementById('chartYear'), {
     }
 });
 
+// Revenue Chart
 new Chart(document.getElementById('chartRevenue'), {
     type: 'bar',
     data: {
-        labels: <?php echo json_encode($revenueLabels); ?>,
+        labels: {!! json_encode($revenueLabels) !!},
         datasets: [{
             label: 'Revenus (DH)',
-            data: <?php echo json_encode($revenueTotals); ?>,
+            data: {!! json_encode($revenueTotals) !!},
             backgroundColor: 'rgba(34, 197, 94, 0.6)',
             borderColor: chartColors.success,
             borderWidth: 1
