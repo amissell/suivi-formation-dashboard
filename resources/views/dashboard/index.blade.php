@@ -177,18 +177,9 @@
                 <canvas id="chartYear"></canvas>
             </div>
         </div>
-
-        <!-- Revenue Chart -->
-        <div class="bg-card border border-border rounded-xl p-6 shadow-sm lg:col-span-2">
-            <h3 class="text-lg font-semibold text-foreground mb-4">Revenus mensuels</h3>
-            <div class="h-64">
-                <canvas id="chartRevenue"></canvas>
-            </div>
-        </div>
     </div>
 
 </div>
-@endsection
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -350,3 +341,4 @@ new Chart(document.getElementById('chartRevenue'), {
 });
 </script>
 @endpush
+@endsection

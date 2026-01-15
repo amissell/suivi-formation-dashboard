@@ -3,20 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Must Négoce Academy - @yield('title', 'Dashboard')</title>
+    <title>Must Negoce Academy - @yield('title', 'Dashboard')</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
-        if (
-            localStorage.theme === 'dark' ||
-            (!('theme' in localStorage) &&
-            window.matchMedia('(prefers-color-scheme: dark)').matches)
-        ) {
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
         }
-        
+
         function toggleDarkMode() {
             if (document.documentElement.classList.contains('dark')) {
                 document.documentElement.classList.remove('dark');
@@ -30,39 +26,39 @@
     @stack('styles')
 </head>
 <body class="bg-background text-foreground antialiased">
-    
-    <!-- Flex Container: Sidebar + Content -->
     <div class="flex h-screen overflow-hidden">
-        
-        <!-- Sidebar (part of flex, not fixed on desktop) -->
+        <!-- Sidebar -->
         @include('components.sidebar')
         
-        <!-- Main Content Area (takes remaining space) -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            
-            <!-- Header -->
-            <header class="h-16 border-b border-border bg-card flex items-center px-4 md:px-6 flex-shrink-0">
-                <button 
-                    id="sidebar-toggle"
-                    class="lg:hidden p-2 hover:bg-muted rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
-                    aria-label="Toggle sidebar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="3" y1="12" x2="21" y2="12"/>
-                        <line x1="3" y1="6" x2="21" y2="6"/>
-                        <line x1="3" y1="18" x2="21" y2="18"/>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden lg:ml-64 transition-all duration-300" id="main-content">
+            <!-- Header with mobile toggle -->
+            <header class="h-16 border-b border-border bg-card flex items-center px-4 flex-shrink-0">
+                <button id="sidebar-toggle"
+                    onclick="openMobileSidebar()"
+                    class="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
                 </button>
                 
                 <h1 class="ml-4 text-lg font-semibold text-foreground hidden md:block">
-                    Must Négoce Academy
+                    Must Negoce Academy
                 </h1>
                 
-                <div class="ml-auto flex items-center gap-2">
+                <div class="ml-auto flex items-center gap-4">
                     <span class="text-sm text-muted-foreground">{{ auth()->user()->name ?? 'Admin' }}</span>
+                    
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="text-sm text-red-500 hover:text-red-700 transition-colors">
+                            Déconnexion
+                        </button>
+                    </form>
                 </div>
             </header>
             
-            <!-- Main Content -->
+            <!-- Main Content Area -->
             <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-muted/30">
                 @if(session('success'))
                 <div class="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
@@ -91,6 +87,7 @@
         </div>
     </div>
     
+    <!-- Toast Container -->
     <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
     
     @stack('scripts')

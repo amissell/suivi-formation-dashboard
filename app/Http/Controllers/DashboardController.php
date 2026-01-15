@@ -224,4 +224,28 @@ class DashboardController extends Controller
             'revenueTotals'
         ));
     }
+    /**
+ * AJAX refresh for dashboard stats
+ */
+public function refresh()
+{
+    $stats = [
+        'total_students'    => Student::count(),
+        'total_formations'  => Formation::count(),
+    ];
+    
+    $financial = [
+        'total_revenue'   => Student::sum('payment_done'),
+        'total_remaining' => Student::sum('payment_remaining'),
+        'students_paid'   => Student::where('payment_remaining', '<=', 0)->count(),
+        'students_unpaid' => Student::where('payment_remaining', '>', 0)->count(),
+    ];
+    
+    return response()->json([
+        'stats' => $stats,
+        'financial' => $financial,
+        'updated_at' => now()->format('H:i:s'),
+    ]);
+}
+
 }

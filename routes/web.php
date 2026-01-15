@@ -28,6 +28,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('students', StudentController::class)->except(['show']);
     // Add this inside your auth middleware group
     Route::get('/students/filter', [StudentController::class, 'filter'])->name('students.filter');
+    // AJAX endpoint for dashboard data
+    Route::get('/dashboard/refresh', [DashboardController::class, 'refresh'])->name('dashboard.refresh');
+
 
 
     // Formations
