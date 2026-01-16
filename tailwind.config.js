@@ -15,52 +15,54 @@ export default {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                // Primary colors from your logo (deep blue)
+                border: 'hsl(var(--border))',
+                input: 'hsl(var(--input))',
+                ring: 'hsl(var(--ring))',
+                background: 'hsl(var(--background))',
+                foreground: 'hsl(var(--foreground))',
                 primary: {
-                    DEFAULT: '#1E3A8A',  // Deep blue
-                    50: '#EFF6FF',
-                    100: '#DBEAFE',
-                    200: '#BFDBFE',
-                    300: '#93C5FD',
-                    400: '#60A5FA',
-                    500: '#3B82F6',
-                    600: '#2563EB',
-                    700: '#1D4ED8',
-                    800: '#1E40AF',
-                    900: '#1E3A8A',
-                    foreground: '#FFFFFF',
+                    DEFAULT: 'hsl(var(--primary))',
+                    foreground: 'hsl(var(--primary-foreground))',
                 },
-                // Accent color (gold from logo)
-                accent: {
-                    DEFAULT: '#D4AF37',  // Gold
-                    50: '#FDF8E7',
-                    100: '#F9EDCF',
-                    200: '#F3DB9F',
-                    300: '#E8C76F',
-                    400: '#D4AF37',
-                    500: '#B8942D',
-                    600: '#9A7A24',
-                    700: '#7C611C',
-                    foreground: '#1E3A8A',
+                secondary: {
+                    DEFAULT: 'hsl(var(--secondary))',
+                    foreground: 'hsl(var(--secondary-foreground))',
                 },
-                // Sidebar colors
-                sidebar: {
-                    DEFAULT: '#0F172A',         // Dark navy
-                    foreground: '#E2E8F0',      // Light gray text
-                    accent: '#1E3A8A',          // Primary blue
-                    'accent-foreground': '#FFFFFF',
-                    border: '#334155',
+                destructive: {
+                    DEFAULT: 'hsl(var(--destructive))',
+                    foreground: 'hsl(var(--destructive-foreground))',
                 },
-                // Card and background
-                card: '#FFFFFF',
-                'card-foreground': '#1E293B',
-                background: '#F1F5F9',
-                foreground: '#1E293B',
-                border: '#E2E8F0',
                 muted: {
-                    DEFAULT: '#F1F5F9',
-                    foreground: '#64748B',
+                    DEFAULT: 'hsl(var(--muted))',
+                    foreground: 'hsl(var(--muted-foreground))',
                 },
+                accent: {
+                    DEFAULT: 'hsl(var(--accent))',
+                    foreground: 'hsl(var(--accent-foreground))',
+                },
+                popover: {
+                    DEFAULT: 'hsl(var(--popover))',
+                    foreground: 'hsl(var(--popover-foreground))',
+                },
+                card: {
+                    DEFAULT: 'hsl(var(--card))',
+                    foreground: 'hsl(var(--card-foreground))',
+                },
+                sidebar: {
+                    DEFAULT: 'hsl(var(--sidebar-background))',
+                    foreground: 'hsl(var(--sidebar-foreground))',
+                    primary: 'hsl(var(--sidebar-primary))',
+                    'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+                    accent: 'hsl(var(--sidebar-accent))',
+                    'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+                    border: 'hsl(var(--sidebar-border))',
+                    ring: 'hsl(var(--sidebar-ring))',
+                },
+            },
+            borderRadius: {
+                lg: 'var(--radius)',
+                md: 'calc(var(--radius) - 2px)',
+                sm: 'calc(var(--radius) - 4px)',
             },
         },
     },

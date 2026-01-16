@@ -3,93 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Must Negoce Academy - @yield('title', 'Dashboard')</title>
+    <title>Must Négoce Academy - @yield('title', 'Dashboard')</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
+        // Dark mode initialization
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
         }
-
         function toggleDarkMode() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.theme = 'light';
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.theme = 'dark';
-            }
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
         }
     </script>
     @stack('styles')
 </head>
 <body class="bg-background text-foreground antialiased">
-    <div class="flex h-screen overflow-hidden">
+    <div class="flex min-h-screen w-full">
         <!-- Sidebar -->
         @include('components.sidebar')
         
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden lg:ml-64 transition-all duration-300" id="main-content">
-            <!-- Header with mobile toggle -->
-            <header class="h-16 border-b border-border bg-card flex items-center px-4 flex-shrink-0">
-                <button id="sidebar-toggle"
-                    onclick="openMobileSidebar()"
-                    class="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors">
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col lg:ml-64 transition-all duration-300" id="main-content">
+            <!-- Header (like Lovable's h-14 header) -->
+            <header class="h-14 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center px-4 sticky top-0 z-30">
+                <!-- Mobile Menu Button -->
+                <button onclick="openMobileSidebar()" 
+                        class="lg:hidden p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
                 </button>
                 
-                <h1 class="ml-4 text-lg font-semibold text-foreground hidden md:block">
-                    Must Negoce Academy
-                </h1>
+                <!-- Sidebar Toggle (Desktop) -->
+                <button onclick="toggleSidebar()" 
+                        class="hidden lg:block p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
                 
+                <!-- Title -->
+                <h1 class="ml-4 text-lg font-semibold">Must Négoce Academy Dashboard</h1>
+                
+                <!-- Right side actions -->
                 <div class="ml-auto flex items-center gap-4">
-                    <span class="text-sm text-muted-foreground">{{ auth()->user()->name ?? 'Admin' }}</span>
-                    
+                    <button onclick="toggleDarkMode()" 
+                            class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                        <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                        </svg>
+                        <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="5" stroke-width="2"/>
+                            <path stroke-width="2" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                    </button>
+                    <span class="text-sm text-slate-600 dark:text-slate-400">{{ auth()->user()->name ?? 'Admin' }}</span>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
-                        <button type="submit" class="text-sm text-red-500 hover:text-red-700 transition-colors">
+                        <button type="submit" class="text-sm text-red-500 hover:text-red-600 transition-colors">
                             Déconnexion
                         </button>
                     </form>
                 </div>
             </header>
             
-            <!-- Main Content Area -->
-            <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-muted/30">
-                @if(session('success'))
-                <div class="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                    <p class="text-sm text-green-800 dark:text-green-200">{{ session('success') }}</p>
-                </div>
-                @endif
-                
-                @if(session('error'))
-                <div class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                    <p class="text-sm text-red-800 dark:text-red-200">{{ session('error') }}</p>
-                </div>
-                @endif
-                
-                @if($errors->any())
-                <div class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                    <ul class="list-disc list-inside text-sm text-red-800 dark:text-red-200">
-                        @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
-                
+            <!-- Main Content -->
+            <main class="flex-1 p-6 bg-slate-50 dark:bg-slate-900/50">
                 @yield('content')
             </main>
         </div>
     </div>
     
-    <!-- Toast Container -->
-    <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
-    
     @stack('scripts')
 </body>
 </html>
+    

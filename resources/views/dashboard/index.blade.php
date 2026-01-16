@@ -118,7 +118,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                 </svg>
             </div>
-            <div class="text-3xl font-bold text-foreground">
+            <div class="text-3xl font-bold text-green-600 dark:text-green-500">
                 {{ number_format($financial['total_revenue']) }} DH
             </div>
             <p class="text-sm mt-2 text-muted-foreground">
@@ -134,7 +134,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
             </div>
-            <div class="text-3xl font-bold text-foreground">
+            <div class="text-3xl font-bold text-red-600 dark:text-red-500">
                 {{ number_format($financial['total_remaining']) }} DH
             </div>
             <p class="text-sm mt-2 text-muted-foreground">
@@ -162,7 +162,6 @@
             </div>
         </div>
 
-        <!-- By City Chart -->
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
             <h3 class="text-lg font-semibold text-foreground mb-4">Par ville</h3>
             <div class="h-64">

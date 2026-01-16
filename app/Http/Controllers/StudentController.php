@@ -5,12 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Models\Formation;
 use Illuminate\Http\Request;
-
-
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\StudentsExport;
 use App\Imports\StudentsImport;
-use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -19,10 +16,16 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
+        // Save current filters to session for preservation after edit/update
+        $filters = $request->only(['search', 'formation_id', 'city', 'payment_status', 'date_from', 'date_to']);
+        session(['student_filters' => array_filter($filters)]);
+
         // Start query with eager loading (prevents N+1 queries)
         $query = Student::with('formation');
 
-       
+        // ============================================
+        // SEARCH FILTER
+        // ============================================
         if ($request->filled('search')) {
             $searchTerm = $request->search;
             
@@ -42,12 +45,10 @@ class StudentController extends Controller
             $query->where('formation_id', $request->formation_id);
         }
 
-
         // ============================================
-        // CITY FILTER - Exact match
+        // CITY FILTER
         // ============================================
         if ($request->filled('city')) {
-            // Changed from LIKE to exact match for dropdown
             $query->where('city', $request->city);
         }
 
@@ -90,12 +91,9 @@ class StudentController extends Controller
         return view('students.index', compact('students', 'formations', 'cities'));
     }
 
-
-
-    public function exportExcel()
-    {
-        return Excel::download(new StudentsExport, 'students_backup.xlsx');
-    }
+    /**
+     * Store a newly created student
+     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -106,19 +104,22 @@ class StudentController extends Controller
             'formation_id' => 'required|exists:formations,id',
             'start_date' => 'required|date',
             'engagement' => 'required|numeric|min:0',
-            'payment_done' => 'required|numeric|min:0',
+            'payment_done' => 'nullable|numeric|min:0',
             'attestation' => 'required|in:yes,no',
-            // 'status' => 'required|in:aide_vendeur,vendeur,superviseur,CDR',
             'city' => 'nullable|string|max:100',
             'notes' => 'nullable|string',
         ]);
         
         // Calculate remaining payment
+        $data['payment_done'] = $data['payment_done'] ?? 0;
         $data['payment_remaining'] = $data['engagement'] - $data['payment_done'];
         
         Student::create($data);
         
-        return redirect()->route('students.index')->with('success', 'Étudiant ajouté avec succès!');
+        // Redirect with preserved filters from session
+        $filters = session('student_filters', []);
+        return redirect()->route('students.index', $filters)
+            ->with('success', 'Candidat ajouté avec succès!');
     }
 
     /**
@@ -126,8 +127,6 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-       
-
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'cin' => 'required|string|max:50',
@@ -136,18 +135,22 @@ class StudentController extends Controller
             'formation_id' => 'required|exists:formations,id',
             'start_date' => 'required|date',
             'engagement' => 'required|numeric|min:0',
-            'payment_done' => 'required|numeric|min:0',
+            'payment_done' => 'nullable|numeric|min:0',
             'attestation' => 'required|in:yes,no',
             'city' => 'nullable|string|max:100',
             'notes' => 'nullable|string',
         ]);
         
-        // Recalculate remaining payment
+        // Calculate remaining payment
+        $data['payment_done'] = $data['payment_done'] ?? 0;
         $data['payment_remaining'] = round(max(0, $data['engagement'] - $data['payment_done']), 2);
         
         $student->update($data);
-
-        return redirect()->route('students.index')->with('success', 'Étudiant modifié avec succès!');
+        
+        // Redirect with preserved filters from session
+        $filters = session('student_filters', []);
+        return redirect()->route('students.index', $filters)
+            ->with('success', 'Candidat modifié avec succès!');
     }
 
     /**
@@ -158,80 +161,69 @@ class StudentController extends Controller
         $studentName = $student->name;
         $student->delete();
         
-        return redirect()->route('students.index')->with('success', "L'étudiant {$studentName} a été supprimé avec succès!");
+        // Redirect with preserved filters from session
+        $filters = session('student_filters', []);
+        return redirect()->route('students.index', $filters)
+            ->with('success', "Le candidat {$studentName} a été supprimé avec succès!");
     }
 
-
-    
+    /**
+     * Import students from Excel
+     */
     public function import(Request $request)
     {
-        // dd($request->all(), $request->file('file'));
         $request->validate([
             'file' => 'required|mimes:xlsx,xls'
         ]);
         
         Excel::import(new StudentsImport, $request->file('file'));
-        return back()->with('success', 'Data imported successfully');
+        
+        return redirect()->route('students.index')
+            ->with('success', 'Données importées avec succès!');
     }
+
     /**
- * AJAX filter for students
- */
-public function filter(Request $request)
-{
-    $query = Student::with('formation');
+     * Export students to Excel
+     */
+    public function export(Request $request)
+    {
+        // Apply same filters as index
+        $query = Student::with('formation');
 
-    // Search
-    if ($request->filled('search')) {
-        $searchTerm = $request->search;
-        $query->where(function($q) use ($searchTerm) {
-            $q->where('name', 'LIKE', "%{$searchTerm}%")
-              ->orWhere('cin', 'LIKE', "%{$searchTerm}%")
-              ->orWhere('phone', 'LIKE', "%{$searchTerm}%")
-              ->orWhere('email', 'LIKE', "%{$searchTerm}%");
-        });
-    }
-
-    // Formation filter
-    if ($request->filled('formation_id')) {
-        $query->where('formation_id', $request->formation_id);
-    }
-
-    // City filter
-    if ($request->filled('city')) {
-        $query->where('city', $request->city);
-    }
-
-    // Payment status filter
-    if ($request->filled('payment_status')) {
-        if ($request->payment_status === 'paid') {
-            $query->where('payment_remaining', '<=', 0);
-        } elseif ($request->payment_status === 'unpaid') {
-            $query->where('payment_remaining', '>', 0);
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('cin', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('phone', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('email', 'LIKE', "%{$searchTerm}%");
+            });
         }
-    }
 
-    // Date range filter
-    if ($request->filled('date_from')) {
-        $query->whereDate('created_at', '>=', $request->date_from);
-    }
-    if ($request->filled('date_to')) {
-        $query->whereDate('created_at', '<=', $request->date_to);
-    }
+        if ($request->filled('formation_id')) {
+            $query->where('formation_id', $request->formation_id);
+        }
 
-    $students = $query->orderBy('created_at', 'desc')->paginate(10);
+        if ($request->filled('city')) {
+            $query->where('city', $request->city);
+        }
 
-    // Return JSON for AJAX requests
-    if ($request->ajax()) {
-        return response()->json([
-            'html' => view('students.partials.table', compact('students'))->render(),
-            'pagination' => $students->links()->render(),
-            'total' => $students->total(),
-        ]);
+        if ($request->filled('payment_status')) {
+            if ($request->payment_status === 'paid') {
+                $query->where('payment_remaining', '<=', 0);
+            } elseif ($request->payment_status === 'unpaid') {
+                $query->where('payment_remaining', '>', 0);
+            }
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('start_date', '>=', $request->date_from);
+        }
+        
+        if ($request->filled('date_to')) {
+            $query->whereDate('start_date', '<=', $request->date_to);
+        }
+
+        return Excel::download(new StudentsExport($query->get()), 'candidats_' . date('Y-m-d') . '.xlsx');
     }
-
-    return redirect()->route('students.index');
 }
-
-
-}
-
