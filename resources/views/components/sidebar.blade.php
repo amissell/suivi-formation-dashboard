@@ -66,6 +66,19 @@
                     <span class="nav-text">Candidats</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('groups.index') }}"
+                class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors
+                {{ request()->routeIs('groups.*')
+                ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
+                : 'text-sidebar-foreground hover:bg-sidebar-accent' }}">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H4v-2a4 4 0 0 1 3-3.87m6-2.13a4 4 0 1 0-6 0M21 12a3 3 0 1 0-6 0M3 12a3 3 0 1 0 6 0"/>
+                </svg>
+                <span class="nav-text">Groupes</span>
+            </a>
+        </li>
         </ul>
     </nav>
 </aside>

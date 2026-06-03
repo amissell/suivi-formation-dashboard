@@ -14,17 +14,36 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-
-
-    $from = $request->input('date_from');
-    $to   = $request->input('date_to');
-
-    $base = fn () => Student::query()->dateRange($from, $to);
-
+        
+    
+    $now            = Carbon::now();
+    $thisMonthStart = $now->copy()->startOfMonth();
+    $lastMonthStart = $now->copy()->subMonthNoOverflow()->startOfMonth();
+    $lastMonthEnd   = $now->copy()->subMonthNoOverflow()->endOfMonth();
+    
+    
+    $percentChange = function (int $current, int $previous): float {
+        if ($previous === 0) {
+            return $current > 0 ? 100.0 : 0.0;
+            }
+            return round((($current - $previous) / $previous) * 100, 1);
+        };
+        
+        
+        $studentsThisMonth = Student::where('created_at', '>=', $thisMonthStart)->count();
+        $studentsLastMonth = Student::whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->count();
+        
+        $formationsThisMonth = Formation::where('created_at', '>=', $thisMonthStart)->count();
+        $formationsLastMonth = Formation::whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->count();
+        
         $stats = [
-            'total_students'    => Student::count(),
-            'total_formations'  => Formation::count(),
+            
+        'total_students'    => Student::count(),
+        'total_formations'  => Formation::count(),
+        'student_change'    => $percentChange($studentsThisMonth, $studentsLastMonth),
+        'formation_change'  => $percentChange($formationsThisMonth, $formationsLastMonth),
         ];
+
 
         
         // FINANCIAL STATS
