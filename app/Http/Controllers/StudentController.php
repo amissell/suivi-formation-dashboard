@@ -182,48 +182,49 @@ class StudentController extends Controller
             ->with('success', 'Données importées avec succès!');
     }
 
-    /**
-     * Export students to Excel
-     */
+
+
     public function export(Request $request)
-    {
-        // Apply same filters as index
-        $query = Student::with('formation');
+{
+    $query = Student::query()->with('formation');
 
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
-                $q->where('name', 'LIKE', "%{$searchTerm}%")
-                  ->orWhere('cin', 'LIKE', "%{$searchTerm}%")
-                  ->orWhere('phone', 'LIKE', "%{$searchTerm}%")
-                  ->orWhere('email', 'LIKE', "%{$searchTerm}%");
-            });
-        }
-
-        if ($request->filled('formation_id')) {
-            $query->where('formation_id', $request->formation_id);
-        }
-
-        if ($request->filled('city')) {
-            $query->where('city', $request->city);
-        }
-
-        if ($request->filled('payment_status')) {
-            if ($request->payment_status === 'paid') {
-                $query->where('payment_remaining', '<=', 0);
-            } elseif ($request->payment_status === 'unpaid') {
-                $query->where('payment_remaining', '>', 0);
-            }
-        }
-
-        if ($request->filled('date_from')) {
-            $query->whereDate('start_date', '>=', $request->date_from);
-        }
-        
-        if ($request->filled('date_to')) {
-            $query->whereDate('start_date', '<=', $request->date_to);
-        }
-
-        return Excel::download(new StudentsExport($query->get()), 'candidats_' . date('Y-m-d') . '.xlsx');
+    if ($request->filled('search')) {
+        $searchTerm = $request->search;
+        $query->where(function ($q) use ($searchTerm) {
+            $q->where('name', 'LIKE', "%{$searchTerm}%")
+              ->orWhere('cin', 'LIKE', "%{$searchTerm}%")
+              ->orWhere('phone', 'LIKE', "%{$searchTerm}%")
+              ->orWhere('email', 'LIKE', "%{$searchTerm}%");
+        });
     }
+
+    if ($request->filled('formation_id')) {
+        $query->where('formation_id', $request->formation_id);
+    }
+
+    if ($request->filled('city')) {
+        $query->where('city', $request->city);
+    }
+
+    if ($request->filled('payment_status')) {
+        if ($request->payment_status === 'paid') {
+            $query->where('payment_remaining', '<=', 0);
+        } elseif ($request->payment_status === 'unpaid') {
+            $query->where('payment_remaining', '>', 0);
+        }
+    }
+
+    if ($request->filled('date_from')) {
+        $query->whereDate('start_date', '>=', $request->date_from);
+    }
+    if ($request->filled('date_to')) {
+        $query->whereDate('start_date', '<=', $request->date_to);
+    }
+
+    return Excel::download(
+        new StudentsExport($query),
+        'candidats_' . date('Y-m-d') . '.xlsx'
+    );
+}
+
 }

@@ -1,37 +1,55 @@
 <?php
+
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Illuminate\Database\Eloquent\Builder;
 
-class StudentsExport implements FromCollection, WithHeadings, WithMapping
+class StudentsExport implements FromQuery, WithHeadings, WithMapping, WithChunkReading
 {
-    protected $students;
+    protected Builder $query;
 
-    public function __construct(Collection $students)
+    public function __construct(Builder $query)
     {
-        $this->students = $students;
+        // Force eager loading of relations used in map()
+        $this->query = $query->with(['formation', 'groups']);
     }
 
-    public function collection() { return $this->students; }
+    public function query()
+    {
+        return $this->query;
+    }
 
     public function headings(): array
     {
-        return ['Nom','CIN','Téléphone','Email','Formation','Date début',
-                'Engagement','Payé','Reste','Ville','Groupe'];
+        return [
+            'Nom', 'CIN', 'Téléphone', 'Email', 'Formation', 'Date début',
+            'Engagement', 'Payé', 'Reste', 'Ville', 'Groupes',
+        ];
     }
 
     public function map($s): array
     {
         return [
-            $s->name, $s->cin, $s->phone, $s->email,
+            $s->name,
+            $s->cin,
+            $s->phone,
+            $s->email,
             optional($s->formation)->name,
             optional($s->start_date)->format('Y-m-d'),
-            $s->engagement, $s->payment_done, $s->payment_remaining,
+            $s->engagement,
+            $s->payment_done,
+            $s->payment_remaining,
             $s->city,
             $s->groups->pluck('name')->implode(', '),
         ];
+    }
+
+    public function chunkSize(): int
+    {
+        return 500;
     }
 }

@@ -6,45 +6,24 @@ use App\Models\Formation;
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+// use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
 
-
-
-
-
-    public function index()
+    public function index(Request $request)
     {
 
-        $thisMonth = now()->month;
-        $lastMonth = now()->subMonth()->month;
-        $thisYear = now()->year;
-        $lastMonthYear = now()->subMonth()->year;
 
-        $studentsThisMonth = Student::whereMonth('created_at', $thisMonth)
-            ->whereYear('created_at', $thisYear)->count();
-        $studentsLastMonth = Student::whereMonth('created_at', $lastMonth)
-            ->whereYear('created_at', $lastMonthYear)->count();
+    $from = $request->input('date_from');
+    $to   = $request->input('date_to');
 
-        $studentChange = $studentsLastMonth > 0 
-            ? round((($studentsThisMonth - $studentsLastMonth) / $studentsLastMonth) * 100, 1) 
-            : ($studentsThisMonth > 0 ? 100 : 0);
-
-        $formationsThisMonth = Formation::whereMonth('created_at', $thisMonth)
-            ->whereYear('created_at', $thisYear)->count();
-        $formationsLastMonth = Formation::whereMonth('created_at', $lastMonth)
-            ->whereYear('created_at', $lastMonthYear)->count();
-
-        $formationChange = $formationsLastMonth > 0 
-            ? round((($formationsThisMonth - $formationsLastMonth) / $formationsLastMonth) * 100, 1) 
-            : ($formationsThisMonth > 0 ? 100 : 0);
+    $base = fn () => Student::query()->dateRange($from, $to);
 
         $stats = [
             'total_students'    => Student::count(),
             'total_formations'  => Formation::count(),
-            'student_change'    => $studentChange,
-            'formation_change'  => $formationChange,
         ];
 
         

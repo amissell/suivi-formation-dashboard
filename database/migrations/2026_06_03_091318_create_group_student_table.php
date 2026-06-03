@@ -15,6 +15,7 @@ return new class extends Migration
             $t->id();
             $t->foreignId('group_id')->constrained()->cascadeOnDelete();
             $t->foreignId('student_id')->constrained()->cascadeOnDelete();
+            $t->timestamps();
             $t->unique(['group_id','student_id']);
         });
 
