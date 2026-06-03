@@ -35,4 +35,7 @@ class Student extends Model
     {
         return $this->belongsTo(Formation::class);
     }
+
+    public function groups() { return $this->belongsToMany(Group::class); }
+
 }

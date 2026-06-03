@@ -5,6 +5,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FormationController;
 use App\Http\Controllers\StudentController;
 use App\Models\Formation;
+use App\Http\Controllers\GroupController;
+
 
 Route::redirect('/', '/dashboard');
 
@@ -17,8 +19,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('dashboard');
 
     // Students
-    Route::get('/students/export-excel', [StudentController::class, 'exportExcel'])
-        ->name('students.export');
+    Route::get('/students/export-excel', [StudentController::class, 'export'])
+    ->name('students.export');
     Route::post('/students/import', [StudentController::class, 'import'])
         ->name('students.import');
     Route::post('/students/reset', [StudentController::class, 'resetStudents'])
@@ -30,6 +32,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/students/filter', [StudentController::class, 'filter'])->name('students.filter');
     // AJAX endpoint for dashboard data
     Route::get('/dashboard/refresh', [DashboardController::class, 'refresh'])->name('dashboard.refresh');
+    Route::resource('groups', GroupController::class);
+
 
 
 

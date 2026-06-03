@@ -1,0 +1,77 @@
+<?php
+namespace App\Http\Controllers;
+
+use App\Models\Group;
+use App\Models\Student;
+use App\Models\Formation;
+use Illuminate\Http\Request;
+
+class GroupController extends Controller
+{
+    public function index(Request $r)
+    {
+        $q = Group::with('students','formation')->latest();
+        if ($r->filled('date_from')) $q->whereDate('month_date','>=',$r->date_from);
+        if ($r->filled('date_to'))   $q->whereDate('month_date','<=',$r->date_to);
+        $groups = $q->paginate(15)->withQueryString();
+        return view('groups.index', compact('groups'));
+    }
+
+    public function create()
+    {
+        // suggestion: candidats dyal had shhar
+        $students = Student::with('formation')->orderBy('name')->get();
+        $formations = Formation::orderBy('name')->get();
+        return view('groups.create', compact('students','formations'));
+    }
+
+    public function store(Request $r)
+    {
+        $data = $r->validate([
+            'name' => 'required|string|max:255',
+            'month_date' => 'nullable|date',
+            'formation_id' => 'nullable|exists:formations,id',
+            'notes' => 'nullable|string',
+            'students' => 'array',
+            'students.*' => 'exists:students,id',
+        ]);
+        $group = Group::create($data);
+        $group->students()->sync($r->input('students', []));
+        return redirect()->route('groups.index')->with('success','Groupe créé!');
+    }
+
+    public function show(Group $group)
+    {
+        $group->load('students.formation','formation');
+        return view('groups.show', compact('group'));
+    }
+
+    public function edit(Group $group)
+    {
+        $students = Student::orderBy('name')->get();
+        $formations = Formation::orderBy('name')->get();
+        $selected = $group->students->pluck('id')->toArray();
+        return view('groups.edit', compact('group','students','formations','selected'));
+    }
+
+    public function update(Request $r, Group $group)
+    {
+        $data = $r->validate([
+            'name' => 'required|string|max:255',
+            'month_date' => 'nullable|date',
+            'formation_id' => 'nullable|exists:formations,id',
+            'notes' => 'nullable|string',
+            'students' => 'array',
+            'students.*' => 'exists:students,id',
+        ]);
+        $group->update($data);
+        $group->students()->sync($r->input('students', []));
+        return redirect()->route('groups.index')->with('success','Groupe modifié!');
+    }
+
+    public function destroy(Group $group)
+    {
+        $group->delete();
+        return back()->with('success','Groupe supprimé!');
+    }
+}
