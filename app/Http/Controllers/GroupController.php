@@ -19,7 +19,6 @@ class GroupController extends Controller
 
     public function create()
     {
-        // suggestion: candidats dyal had shhar
         $students = Student::with('formation')->orderBy('name')->get();
         $formations = Formation::orderBy('name')->get();
         return view('groups.create', compact('students','formations'));
@@ -28,16 +27,21 @@ class GroupController extends Controller
     public function store(Request $r)
     {
         $data = $r->validate([
-            'name' => 'required|string|max:255',
-            'month_date' => 'nullable|date',
+            'name'         => 'required|string|max:255',
+            'month_date'   => 'nullable|date',
             'formation_id' => 'nullable|exists:formations,id',
-            'notes' => 'nullable|string',
-            'students' => 'array',
-            'students.*' => 'exists:students,id',
+            'notes'        => 'nullable|string',
+            'students'     => 'array',
+            'students.*'   => 'exists:students,id',
         ]);
+
+        $studentIds = $data['students'] ?? [];
+        unset($data['students']); // remove before create() — not a column
+
         $group = Group::create($data);
-        $group->students()->sync($r->input('students', []));
-        return redirect()->route('groups.index')->with('success','Groupe créé!');
+        $group->students()->sync($studentIds);
+
+        return redirect()->route('groups.index')->with('success', 'Groupe créé!');
     }
 
     public function show(Group $group)
@@ -57,21 +61,26 @@ class GroupController extends Controller
     public function update(Request $r, Group $group)
     {
         $data = $r->validate([
-            'name' => 'required|string|max:255',
-            'month_date' => 'nullable|date',
+            'name'         => 'required|string|max:255',
+            'month_date'   => 'nullable|date',
             'formation_id' => 'nullable|exists:formations,id',
-            'notes' => 'nullable|string',
-            'students' => 'array',
-            'students.*' => 'exists:students,id',
+            'notes'        => 'nullable|string',
+            'students'     => 'array',
+            'students.*'   => 'exists:students,id',
         ]);
-        $group->update($data);
-        $group->students()->sync($r->input('students', []));
-        return redirect()->route('groups.index')->with('success','Groupe modifié!');
+
+        $studentIds = $data['students'] ?? [];
+        unset($data['students']); // remove before update() — not a column
+
+        $group->update($data); // ← FIX: was Group::create($data) — wrong!
+        $group->students()->sync($studentIds);
+
+        return redirect()->route('groups.index')->with('success', 'Groupe modifié!');
     }
 
     public function destroy(Group $group)
     {
         $group->delete();
-        return back()->with('success','Groupe supprimé!');
+        return back()->with('success', 'Groupe supprimé!');
     }
 }
