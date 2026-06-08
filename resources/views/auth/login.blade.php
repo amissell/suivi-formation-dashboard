@@ -46,7 +46,7 @@
             <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-[#6EC1E4]/20">
                 
                 <!-- Header with Logo -->
-                <div class="bg-gradient-to-r from-primary-700 to-primary-900 px-8 py-6 text-center">                    <!-- Shimmer Effect -->
+                l<div class="bg-gradient-to-r from-primary-700 to-primary-900 px-8 py-6 text-center">                    <!-- Shimmer Effect -->
                     <div class="absolute inset-0 shimmer"></div>
                     
                     <!-- Logo Container -->

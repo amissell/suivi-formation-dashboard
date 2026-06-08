@@ -19,24 +19,35 @@ class GroupController extends Controller
 
     public function create()
     {
-        $students = Student::with('formation')->orderBy('name')->get();
+        $students   = Student::with('formation')->orderBy('name')->get();
         $formations = Formation::orderBy('name')->get();
-        return view('groups.create', compact('students','formations'));
+        // Pass all active slots for the conflict warning UI
+        $activeSlots = Group::whereNotNull('jour_semaine')
+            ->where(function ($q) {
+                $q->whereNull('date_fin')
+                  ->orWhereDate('date_fin', '>=', now()->toDateString());
+            })
+            ->get(['id','name','jour_semaine','slot_heure_debut','slot_heure_fin','date_fin']);
+        return view('groups.create', compact('students','formations','activeSlots'));
     }
 
     public function store(Request $r)
     {
         $data = $r->validate([
-            'name'         => 'required|string|max:255',
-            'month_date'   => 'nullable|date',
-            'formation_id' => 'nullable|exists:formations,id',
-            'notes'        => 'nullable|string',
-            'students'     => 'array',
-            'students.*'   => 'exists:students,id',
+            'name'             => 'required|string|max:255',
+            'month_date'       => 'nullable|date',
+            'formation_id'     => 'nullable|exists:formations,id',
+            'notes'            => 'nullable|string',
+            'students'         => 'array',
+            'students.*'       => 'exists:students,id',
+            'jour_semaine'     => 'nullable|in:lundi,mardi,mercredi,jeudi,vendredi,samedi',
+            'slot_heure_debut' => 'nullable|date_format:H:i',
+            'slot_heure_fin'   => 'nullable|date_format:H:i|after:slot_heure_debut',
+            'date_fin'         => 'nullable|date',
         ]);
 
         $studentIds = $data['students'] ?? [];
-        unset($data['students']); // remove before create() — not a column
+        unset($data['students']);
 
         $group = Group::create($data);
         $group->students()->sync($studentIds);
@@ -46,33 +57,44 @@ class GroupController extends Controller
 
     public function show(Group $group)
     {
-        $group->load('students.formation','formation');
+        $group->load('students.formation', 'formation', 'seances');
         return view('groups.show', compact('group'));
     }
 
     public function edit(Group $group)
     {
-        $students = Student::orderBy('name')->get();
+        $students   = Student::orderBy('name')->get();
         $formations = Formation::orderBy('name')->get();
-        $selected = $group->students->pluck('id')->toArray();
-        return view('groups.edit', compact('group','students','formations','selected'));
+        $selected   = $group->students->pluck('id')->toArray();
+        $activeSlots = Group::whereNotNull('jour_semaine')
+            ->where('id', '!=', $group->id)
+            ->where(function ($q) {
+                $q->whereNull('date_fin')
+                  ->orWhereDate('date_fin', '>=', now()->toDateString());
+            })
+            ->get(['id','name','jour_semaine','slot_heure_debut','slot_heure_fin','date_fin']);
+        return view('groups.edit', compact('group','students','formations','selected','activeSlots'));
     }
 
     public function update(Request $r, Group $group)
     {
         $data = $r->validate([
-            'name'         => 'required|string|max:255',
-            'month_date'   => 'nullable|date',
-            'formation_id' => 'nullable|exists:formations,id',
-            'notes'        => 'nullable|string',
-            'students'     => 'array',
-            'students.*'   => 'exists:students,id',
+            'name'             => 'required|string|max:255',
+            'month_date'       => 'nullable|date',
+            'formation_id'     => 'nullable|exists:formations,id',
+            'notes'            => 'nullable|string',
+            'students'         => 'array',
+            'students.*'       => 'exists:students,id',
+            'jour_semaine'     => 'nullable|in:lundi,mardi,mercredi,jeudi,vendredi,samedi',
+            'slot_heure_debut' => 'nullable|date_format:H:i',
+            'slot_heure_fin'   => 'nullable|date_format:H:i|after:slot_heure_debut',
+            'date_fin'         => 'nullable|date',
         ]);
 
         $studentIds = $data['students'] ?? [];
-        unset($data['students']); // remove before update() — not a column
+        unset($data['students']);
 
-        $group->update($data); // ← FIX: was Group::create($data) — wrong!
+        $group->update($data);
         $group->students()->sync($studentIds);
 
         return redirect()->route('groups.index')->with('success', 'Groupe modifié!');
@@ -82,5 +104,33 @@ class GroupController extends Controller
     {
         $group->delete();
         return back()->with('success', 'Groupe supprimé!');
+    }
+
+    /**
+     * AJAX: check conflicts for a given slot
+     * GET /groups/check-slot?jour=lundi&debut=09:00&fin=11:00&exclude=5
+     */
+    public function checkSlot(Request $r)
+    {
+        $jour  = $r->input('jour');
+        $debut = $r->input('debut');
+        $fin   = $r->input('fin');
+        $excl  = $r->input('exclude') ? (int)$r->input('exclude') : null;
+
+        if (!$jour || !$debut) {
+            return response()->json(['conflicts' => []]);
+        }
+
+        $conflicts = Group::conflicts($jour, $debut, $fin ?: null, $excl);
+
+        return response()->json([
+            'conflicts' => $conflicts->map(fn($g) => [
+                'id'       => $g->id,
+                'name'     => $g->name,
+                'slot'     => $g->slotLabel(),
+                'date_fin' => $g->date_fin?->format('d/m/Y'),
+                'formation'=> $g->formation?->name,
+            ])
+        ]);
     }
 }

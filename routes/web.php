@@ -6,6 +6,7 @@ use App\Http\Controllers\FormationController;
 use App\Http\Controllers\StudentController;
 use App\Models\Formation;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\SeanceController;
 
 
 Route::redirect('/', '/dashboard');
@@ -32,7 +33,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/students/filter', [StudentController::class, 'filter'])->name('students.filter');
     // AJAX endpoint for dashboard data
     Route::get('/dashboard/refresh', [DashboardController::class, 'refresh'])->name('dashboard.refresh');
+    Route::get('/groups/check-slot', [GroupController::class, 'checkSlot'])->name('groups.checkSlot');
     Route::resource('groups', GroupController::class);
+    Route::resource('groups.seances', SeanceController::class)->except(['show']);
 
 
 

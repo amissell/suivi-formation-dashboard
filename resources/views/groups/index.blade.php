@@ -63,6 +63,7 @@
                         <th class="text-left font-medium px-4 py-3">Nom</th>
                         <th class="text-left font-medium px-4 py-3">Mois</th>
                         <th class="text-left font-medium px-4 py-3">Formation</th>
+                        <th class="text-left font-medium px-4 py-3">📅 Semaine</th>
                         <th class="text-center font-medium px-4 py-3">Candidats</th>
                         <th class="text-right font-medium px-4 py-3">Actions</th>
                     </tr>
@@ -73,6 +74,36 @@
                             <td class="px-4 py-3 font-medium text-foreground">{{ $g->name }}</td>
                             <td class="px-4 py-3 text-muted-foreground">{{ optional($g->month_date)->format('m/Y') ?? '—' }}</td>
                             <td class="px-4 py-3 text-muted-foreground">{{ optional($g->formation)->name ?? '—' }}</td>
+
+                            {{-- SEMAINE COLUMN --}}
+                            <td class="px-4 py-3">
+                                @if($g->jour_semaine)
+                                    @php $active = $g->isActive(); @endphp
+                                    <div class="flex flex-col gap-0.5">
+                                        <span class="inline-flex items-center gap-1.5 font-medium {{ $active ? 'text-foreground' : 'text-muted-foreground line-through' }}">
+                                            {{ \App\Models\Group::JOURS[$g->jour_semaine] }}
+                                            @if($g->slot_heure_debut)
+                                                <span class="text-xs font-normal">
+                                                    {{ \Carbon\Carbon::parse($g->slot_heure_debut)->format('H:i') }}
+                                                    @if($g->slot_heure_fin)
+                                                        –{{ \Carbon\Carbon::parse($g->slot_heure_fin)->format('H:i') }}
+                                                    @endif
+                                                </span>
+                                            @endif
+                                        </span>
+                                        @if($active)
+                                            <span class="text-xs text-green-600 dark:text-green-400 font-medium">● Actif</span>
+                                        @else
+                                            <span class="text-xs text-muted-foreground">
+                                                Libéré le {{ optional($g->date_fin)->format('d/m/Y') }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                @else
+                                    <span class="text-muted-foreground">—</span>
+                                @endif
+                            </td>
+
                             <td class="px-4 py-3 text-center">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
                                     {{ $g->students->count() }}
@@ -96,7 +127,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center py-10 text-muted-foreground">
+                            <td colspan="6" class="text-center py-10 text-muted-foreground">
                                 Aucun groupe trouvé
                             </td>
                         </tr>
