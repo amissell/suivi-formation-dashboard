@@ -12,12 +12,13 @@ class Group extends Model
 {
     protected $fillable = [
         'name', 'month_date', 'formation_id', 'notes',
-        'jour_semaine', 'slot_heure_debut', 'slot_heure_fin', 'date_fin',
+        'jours_semaine', 'slot_heure_debut', 'slot_heure_fin', 'date_fin',
     ];
 
     protected $casts = [
-        'month_date' => 'date',
-        'date_fin'   => 'date',
+        'month_date'    => 'date',
+        'date_fin'      => 'date',
+        'jours_semaine' => 'array',
     ];
 
     // Days labels FR
@@ -50,18 +51,24 @@ class Group extends Model
      */
     public function isActive(): bool
     {
-        if (!$this->jour_semaine) return false;
+        if (empty($this->jours_semaine)) return false;
         if (!$this->date_fin) return true; // no end date = still active
         return $this->date_fin->isFuture() || $this->date_fin->isToday();
     }
 
     /**
-     * Formatted slot string, e.g. "Mardi 09:00–11:00"
+     * Formatted slot string, e.g. "Mardi, Jeudi 09:00–11:00"
      */
     public function slotLabel(): ?string
     {
-        if (!$this->jour_semaine) return null;
-        $label = self::JOURS[$this->jour_semaine] ?? ucfirst($this->jour_semaine);
+        if (empty($this->jours_semaine)) return null;
+
+        $days = array_map(
+            fn($j) => self::JOURS[$j] ?? ucfirst($j),
+            $this->jours_semaine
+        );
+        $label = implode(', ', $days);
+
         if ($this->slot_heure_debut) {
             $label .= ' ' . Carbon::parse($this->slot_heure_debut)->format('H:i');
             if ($this->slot_heure_fin) {
@@ -72,27 +79,39 @@ class Group extends Model
     }
 
     /**
-     * Find conflicting groups for a given slot (same day + overlapping hours),
+     * Find conflicting groups for given days (same day(s) + overlapping hours),
      * optionally excluding a specific group id.
+     *
+     * @param array $jours e.g. ['lundi','mercredi']
      */
-    public static function conflicts(string $jour, string $heureDebut, ?string $heureFin, ?int $excludeId = null): \Illuminate\Database\Eloquent\Collection
+    public static function conflicts(array $jours, string $heureDebut, ?string $heureFin, ?int $excludeId = null): \Illuminate\Database\Eloquent\Collection
     {
-        // Only check against groups that are still active (date_fin null or future)
-        $query = static::where('jour_semaine', $jour)
-            ->where(function ($q) {
+        $jours = array_values(array_filter($jours));
+        if (empty($jours)) {
+            return new \Illuminate\Database\Eloquent\Collection();
+        }
+
+        $query = static::where(function ($q) {
                 $q->whereNull('date_fin')
                   ->orWhereDate('date_fin', '>=', now()->toDateString());
             })
-            ->whereNotNull('slot_heure_debut');
+            ->whereNotNull('slot_heure_debut')
+            ->whereNotNull('jours_semaine');
 
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
 
+        // Match groups that share at least one day with the requested days
+        $query->where(function ($q) use ($jours) {
+            foreach ($jours as $jour) {
+                $q->orWhereJsonContains('jours_semaine', $jour);
+            }
+        });
+
         // Time overlap: existing.start < new.end AND existing.end > new.start
         $query->where(function ($q) use ($heureDebut, $heureFin) {
             if ($heureFin) {
-                // Full overlap check
                 $q->where(function ($inner) use ($heureDebut, $heureFin) {
                     $inner->where('slot_heure_debut', '<', $heureFin)
                           ->where(function ($i2) use ($heureDebut) {
@@ -101,11 +120,12 @@ class Group extends Model
                           });
                 });
             } else {
-                // No end time given: just check if same start
                 $q->where('slot_heure_debut', $heureDebut);
             }
         });
 
-        return $query->with('formation')->get();
+        return $query->with('formation')->get()->filter(function ($g) use ($jours) {
+            return count(array_intersect($g->jours_semaine ?? [], $jours)) > 0;
+        })->values();
     }
 }

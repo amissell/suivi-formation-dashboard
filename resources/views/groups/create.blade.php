@@ -69,15 +69,17 @@
             </h3>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <label class="block text-xs font-medium text-muted-foreground mb-1">Jour de la semaine</label>
-                    <select name="jour_semaine" id="jour_semaine"
-                            class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">— Aucun —</option>
+                <div class="md:col-span-1">
+                    <label class="block text-xs font-medium text-muted-foreground mb-1">Jours de la semaine (max 2)</label>
+                    <div id="jours_semaine" class="flex flex-wrap gap-2">
                         @foreach(\App\Models\Group::JOURS as $val => $label)
-                            <option value="{{ $val }}" {{ old('jour_semaine') === $val ? 'selected' : '' }}>{{ $label }}</option>
+                            <label class="jour-chip inline-flex items-center gap-1.5 px-2.5 py-1.5 border border-border rounded-lg cursor-pointer text-sm hover:bg-muted transition-colors">
+                                <input type="checkbox" name="jours_semaine[]" value="{{ $val }}" class="jour-checkbox rounded border-border"
+                                       {{ in_array($val, old('jours_semaine', [])) ? 'checked' : '' }}>
+                                {{ $label }}
+                            </label>
                         @endforeach
-                    </select>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-muted-foreground mb-1">Heure début</label>
@@ -208,28 +210,40 @@ document.addEventListener('change', e => {
 updateCount();
 
 // ─── Conflict checker ───────────────────────────────────────────────────────
-const jourEl  = document.getElementById('jour_semaine');
+const jourChecks = document.querySelectorAll('.jour-checkbox');
 const debutEl = document.getElementById('slot_heure_debut');
 const finEl   = document.getElementById('slot_heure_fin');
 const conflictBox  = document.getElementById('conflict-box');
 const conflictList = document.getElementById('conflict-list');
 const freeBox      = document.getElementById('free-slot-box');
 
+// Limit to max 2 days selected
+jourChecks.forEach(cb => cb.addEventListener('change', () => {
+    const checked = document.querySelectorAll('.jour-checkbox:checked');
+    if (checked.length > 2) {
+        cb.checked = false;
+        return;
+    }
+    checkConflicts();
+}));
+
 let debounceTimer = null;
 
 function checkConflicts() {
-    const jour  = jourEl.value;
+    const jours = Array.from(document.querySelectorAll('.jour-checkbox:checked')).map(c => c.value);
     const debut = debutEl.value;
     const fin   = finEl.value;
 
     conflictBox.classList.add('hidden');
     freeBox.classList.add('hidden');
 
-    if (!jour || !debut) return;
+    if (jours.length === 0 || !debut) return;
 
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(async () => {
-        const params = new URLSearchParams({ jour, debut });
+        const params = new URLSearchParams();
+        jours.forEach(j => params.append('jours[]', j));
+        params.append('debut', debut);
         if (fin) params.append('fin', fin);
         // exclude=null on create (no id)
 
@@ -250,7 +264,7 @@ function checkConflicts() {
     }, 400);
 }
 
-[jourEl, debutEl, finEl].forEach(el => el.addEventListener('change', checkConflicts));
+[debutEl, finEl].forEach(el => el.addEventListener('change', checkConflicts));
 </script>
 @endpush
 @endsection

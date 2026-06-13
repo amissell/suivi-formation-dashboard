@@ -20,4 +20,17 @@ class Seance extends Model
     {
         return $this->belongsTo(Group::class);
     }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    /**
+     * Only count "réalisée" sessions toward attendance/engagement stats.
+     */
+    public function countsForEngagement(): bool
+    {
+        return $this->statut === 'réalisée';
+    }
 }

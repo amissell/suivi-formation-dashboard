@@ -21,7 +21,7 @@ class StudentController extends Controller
         session(['student_filters' => array_filter($filters)]);
 
         // Start query with eager loading (prevents N+1 queries)
-        $query = Student::with('formation');
+        $query = Student::with(['formation', 'groups.formation', 'attendances.seance']);
 
         // ============================================
         // SEARCH FILTER

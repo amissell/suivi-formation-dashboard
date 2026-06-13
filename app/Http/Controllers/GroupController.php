@@ -22,12 +22,12 @@ class GroupController extends Controller
         $students   = Student::with('formation')->orderBy('name')->get();
         $formations = Formation::orderBy('name')->get();
         // Pass all active slots for the conflict warning UI
-        $activeSlots = Group::whereNotNull('jour_semaine')
+        $activeSlots = Group::whereNotNull('jours_semaine')
             ->where(function ($q) {
                 $q->whereNull('date_fin')
                   ->orWhereDate('date_fin', '>=', now()->toDateString());
             })
-            ->get(['id','name','jour_semaine','slot_heure_debut','slot_heure_fin','date_fin']);
+            ->get(['id','name','jours_semaine','slot_heure_debut','slot_heure_fin','date_fin']);
         return view('groups.create', compact('students','formations','activeSlots'));
     }
 
@@ -40,7 +40,8 @@ class GroupController extends Controller
             'notes'            => 'nullable|string',
             'students'         => 'array',
             'students.*'       => 'exists:students,id',
-            'jour_semaine'     => 'nullable|in:lundi,mardi,mercredi,jeudi,vendredi,samedi',
+            'jours_semaine'    => 'nullable|array|max:2',
+            'jours_semaine.*'  => 'in:lundi,mardi,mercredi,jeudi,vendredi,samedi',
             'slot_heure_debut' => 'nullable|date_format:H:i',
             'slot_heure_fin'   => 'nullable|date_format:H:i|after:slot_heure_debut',
             'date_fin'         => 'nullable|date',
@@ -48,6 +49,8 @@ class GroupController extends Controller
 
         $studentIds = $data['students'] ?? [];
         unset($data['students']);
+
+        $data['jours_semaine'] = !empty($data['jours_semaine']) ? array_values($data['jours_semaine']) : null;
 
         $group = Group::create($data);
         $group->students()->sync($studentIds);
@@ -57,7 +60,7 @@ class GroupController extends Controller
 
     public function show(Group $group)
     {
-        $group->load('students.formation', 'formation', 'seances');
+        $group->load('students.formation', 'students.attendances.seance', 'formation', 'seances');
         return view('groups.show', compact('group'));
     }
 
@@ -66,13 +69,13 @@ class GroupController extends Controller
         $students   = Student::orderBy('name')->get();
         $formations = Formation::orderBy('name')->get();
         $selected   = $group->students->pluck('id')->toArray();
-        $activeSlots = Group::whereNotNull('jour_semaine')
+        $activeSlots = Group::whereNotNull('jours_semaine')
             ->where('id', '!=', $group->id)
             ->where(function ($q) {
                 $q->whereNull('date_fin')
                   ->orWhereDate('date_fin', '>=', now()->toDateString());
             })
-            ->get(['id','name','jour_semaine','slot_heure_debut','slot_heure_fin','date_fin']);
+            ->get(['id','name','jours_semaine','slot_heure_debut','slot_heure_fin','date_fin']);
         return view('groups.edit', compact('group','students','formations','selected','activeSlots'));
     }
 
@@ -85,7 +88,8 @@ class GroupController extends Controller
             'notes'            => 'nullable|string',
             'students'         => 'array',
             'students.*'       => 'exists:students,id',
-            'jour_semaine'     => 'nullable|in:lundi,mardi,mercredi,jeudi,vendredi,samedi',
+            'jours_semaine'    => 'nullable|array|max:2',
+            'jours_semaine.*'  => 'in:lundi,mardi,mercredi,jeudi,vendredi,samedi',
             'slot_heure_debut' => 'nullable|date_format:H:i',
             'slot_heure_fin'   => 'nullable|date_format:H:i|after:slot_heure_debut',
             'date_fin'         => 'nullable|date',
@@ -93,6 +97,8 @@ class GroupController extends Controller
 
         $studentIds = $data['students'] ?? [];
         unset($data['students']);
+
+        $data['jours_semaine'] = !empty($data['jours_semaine']) ? array_values($data['jours_semaine']) : null;
 
         $group->update($data);
         $group->students()->sync($studentIds);
@@ -107,21 +113,21 @@ class GroupController extends Controller
     }
 
     /**
-     * AJAX: check conflicts for a given slot
-     * GET /groups/check-slot?jour=lundi&debut=09:00&fin=11:00&exclude=5
+     * AJAX: check conflicts for given slot
+     * GET /groups/check-slot?jours[]=lundi&jours[]=mercredi&debut=09:00&fin=11:00&exclude=5
      */
     public function checkSlot(Request $r)
     {
-        $jour  = $r->input('jour');
+        $jours = (array) $r->input('jours', []);
         $debut = $r->input('debut');
         $fin   = $r->input('fin');
         $excl  = $r->input('exclude') ? (int)$r->input('exclude') : null;
 
-        if (!$jour || !$debut) {
+        if (empty($jours) || !$debut) {
             return response()->json(['conflicts' => []]);
         }
 
-        $conflicts = Group::conflicts($jour, $debut, $fin ?: null, $excl);
+        $conflicts = Group::conflicts($jours, $debut, $fin ?: null, $excl);
 
         return response()->json([
             'conflicts' => $conflicts->map(fn($g) => [

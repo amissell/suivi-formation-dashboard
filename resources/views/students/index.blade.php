@@ -318,6 +318,8 @@
                         <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Candidat</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Contact</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Formation</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Groupes</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Engagement</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Date</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Attestation</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Paiement</th>
@@ -370,6 +372,46 @@
                         <!-- Formation -->
                         <td class="py-3 px-4">
                             <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $student->formation->name ?? '-' }}</p>
+                        </td>
+
+                        <!-- Groups -->
+                        <td class="py-3 px-4">
+                            <div class="flex flex-wrap gap-1 max-w-[180px]">
+                                @forelse($student->groups as $g)
+                                    <a href="{{ route('groups.show', $g) }}"
+                                       title="{{ optional($g->formation)->name ?? '' }}"
+                                       class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
+                                        {{ $g->name }}
+                                    </a>
+                                @empty
+                                    <span class="text-xs text-gray-400 dark:text-gray-500">—</span>
+                                @endforelse
+                            </div>
+                        </td>
+
+                        <!-- Engagement (attendance-based, auto-calculated) -->
+                        <td class="py-3 px-4">
+                            @php $rate = $student->engagement_rate; @endphp
+                            @if($rate === null)
+                                <span class="text-xs text-gray-400 dark:text-gray-500">Aucune séance</span>
+                            @else
+                                @php
+                                    $barColor = $rate >= 75 ? 'bg-green-500' : ($rate >= 50 ? 'bg-amber-500' : 'bg-red-500');
+                                    $badgeColor = $rate >= 75
+                                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                                        : ($rate >= 50
+                                            ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
+                                            : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300');
+                                @endphp
+                                <div class="space-y-1 min-w-[120px]">
+                                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                        <div class="{{ $barColor }} h-1.5 rounded-full transition-all" style="width: {{ $rate }}%"></div>
+                                    </div>
+                                    <span class="inline-block px-1.5 py-0.5 rounded text-xs font-semibold {{ $badgeColor }}">
+                                        {{ $rate }}%
+                                    </span>
+                                </div>
+                            @endif
                         </td>
 
                         <!-- Start Date -->

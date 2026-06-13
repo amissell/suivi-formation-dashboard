@@ -7,6 +7,7 @@ use App\Http\Controllers\StudentController;
 use App\Models\Formation;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\SeanceController;
+use App\Http\Controllers\AttendanceController;
 
 
 Route::redirect('/', '/dashboard');
@@ -36,6 +37,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/groups/check-slot', [GroupController::class, 'checkSlot'])->name('groups.checkSlot');
     Route::resource('groups', GroupController::class);
     Route::resource('groups.seances', SeanceController::class)->except(['show']);
+    Route::get('/groups/{group}/seances/{seance}/attendance', [AttendanceController::class, 'edit'])->name('seances.attendance.edit');
+    Route::post('/groups/{group}/seances/{seance}/attendance', [AttendanceController::class, 'update'])->name('seances.attendance.update');
 
 
 

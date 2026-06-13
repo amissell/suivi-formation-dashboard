@@ -77,11 +77,11 @@
 
                             {{-- SEMAINE COLUMN --}}
                             <td class="px-4 py-3">
-                                @if($g->jour_semaine)
+                                @if(!empty($g->jours_semaine))
                                     @php $active = $g->isActive(); @endphp
                                     <div class="flex flex-col gap-0.5">
                                         <span class="inline-flex items-center gap-1.5 font-medium {{ $active ? 'text-foreground' : 'text-muted-foreground line-through' }}">
-                                            {{ \App\Models\Group::JOURS[$g->jour_semaine] }}
+                                            {{ implode(', ', array_map(fn($j) => \App\Models\Group::JOURS[$j] ?? $j, $g->jours_semaine)) }}
                                             @if($g->slot_heure_debut)
                                                 <span class="text-xs font-normal">
                                                     {{ \Carbon\Carbon::parse($g->slot_heure_debut)->format('H:i') }}
