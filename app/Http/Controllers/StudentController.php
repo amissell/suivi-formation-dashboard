@@ -28,7 +28,7 @@ class StudentController extends Controller
         // ============================================
         if ($request->filled('search')) {
             $searchTerm = $request->search;
-            
+
             // Search across multiple fields
             $query->where(function($q) use ($searchTerm) {
                 $q->where('name', 'LIKE', "%{$searchTerm}%")
@@ -69,7 +69,7 @@ class StudentController extends Controller
         if ($request->filled('date_from')) {
             $query->whereDate('start_date', '>=', $request->date_from);
         }
-        
+
         if ($request->filled('date_to')) {
             $query->whereDate('start_date', '<=', $request->date_to);
         }
@@ -78,7 +78,7 @@ class StudentController extends Controller
         // SORTING & PAGINATION
         // ============================================
         $students = $query->latest()->paginate(15)->withQueryString();
-        
+
         // Get data for dropdowns
         $formations = Formation::orderBy('name')->get();
         $cities = Student::whereNotNull('city')
@@ -105,17 +105,20 @@ class StudentController extends Controller
             'start_date' => 'required|date',
             'engagement' => 'required|numeric|min:0',
             'payment_done' => 'nullable|numeric|min:0',
-            'attestation' => 'required|in:yes,no',
             'city' => 'nullable|string|max:100',
             'notes' => 'nullable|string',
         ]);
-        
+
+        // New candidates never start with a certificate — it's granted later via edit
+        $data['attestation'] = 'no';
+        $data['certificate_generated'] = 'no';
+
         // Calculate remaining payment
         $data['payment_done'] = $data['payment_done'] ?? 0;
         $data['payment_remaining'] = $data['engagement'] - $data['payment_done'];
-        
+
         Student::create($data);
-        
+
         // Redirect with preserved filters from session
         $filters = session('student_filters', []);
         return redirect()->route('students.index', $filters)
@@ -137,16 +140,17 @@ class StudentController extends Controller
             'engagement' => 'required|numeric|min:0',
             'payment_done' => 'nullable|numeric|min:0',
             'attestation' => 'required|in:yes,no',
+            'certificate_generated' => 'required|in:yes,no',
             'city' => 'nullable|string|max:100',
             'notes' => 'nullable|string',
         ]);
-        
+
         // Calculate remaining payment
         $data['payment_done'] = $data['payment_done'] ?? 0;
         $data['payment_remaining'] = round(max(0, $data['engagement'] - $data['payment_done']), 2);
-        
+
         $student->update($data);
-        
+
         // Redirect with preserved filters from session
         $filters = session('student_filters', []);
         return redirect()->route('students.index', $filters)
@@ -160,7 +164,7 @@ class StudentController extends Controller
     {
         $studentName = $student->name;
         $student->delete();
-        
+
         // Redirect with preserved filters from session
         $filters = session('student_filters', []);
         return redirect()->route('students.index', $filters)
@@ -175,9 +179,9 @@ class StudentController extends Controller
         $request->validate([
             'file' => 'required|mimes:xlsx,xls'
         ]);
-        
+
         Excel::import(new StudentsImport, $request->file('file'));
-        
+
         return redirect()->route('students.index')
             ->with('success', 'Données importées avec succès!');
     }

@@ -12,7 +12,7 @@ class Student extends Model
     protected $fillable = [
         'name', 'cin', 'phone', 'email', 'formation_id',
         'start_date', 'engagement', 'payment_done', 'payment_remaining',
-        'attestation', 'city', 'notes',
+        'attestation', 'certificate_generated', 'city', 'notes',
     ];
 
     protected $casts = [

@@ -10,7 +10,7 @@
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Candidats</h1>
             <p class="text-gray-500 dark:text-gray-400">Gérer les candidats de l'académie</p>
         </div>
-        <button onclick="openModal('add')" 
+        <button onclick="openModal('add')"
                 class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
@@ -24,9 +24,9 @@
         <div class="flex flex-wrap gap-3">
             <form action="{{ route('students.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2">
                 @csrf
-                <input type="file" name="file" required 
+                <input type="file" name="file" required
                        class="text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                <button type="submit" 
+                <button type="submit"
                         class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm font-medium">
                     <span class="flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,8 +47,8 @@
                 <div class="flex flex-col lg:flex-row gap-3">
                     <!-- Search Input -->
                     <div class="flex-1 min-w-[200px]">
-                        <input type="text" 
-                               name="search" 
+                        <input type="text"
+                               name="search"
                                id="search-input"
                                value="{{ request('search') }}"
                                placeholder="🔍 Rechercher par nom, CIN, téléphone, email..."
@@ -58,12 +58,12 @@
                     <!-- Action Buttons -->
                     <div class="flex flex-wrap gap-2">
                         <!-- Filter Toggle Button -->
-                        <button type="button" 
-                                onclick="toggleFilters()" 
+                        <button type="button"
+                                onclick="toggleFilters()"
                                 id="filter-toggle-btn"
                                 class="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 relative">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                             </svg>
                             <span class="font-medium">Filtres</span>
@@ -75,20 +75,20 @@
                         </button>
 
                         <!-- Search Button -->
-                        <button type="submit" 
+                        <button type="submit"
                                 class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
                             <span class="hidden sm:inline">Rechercher</span>
                         </button>
 
                         <!-- Reset Button -->
-                        <a href="{{ route('students.index') }}" 
+                        <a href="{{ route('students.index') }}"
                            class="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 hover:text-red-600 transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                             </svg>
                             <span class="hidden sm:inline">Réinitialiser</span>
@@ -96,11 +96,11 @@
 
                         <!-- Export Excel Button -->
                         <button type="submit"
-                                formaction="{{ route('students.export') }}" 
+                                formaction="{{ route('students.export') }}"
                                 formmethod="GET"
                                 class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
                             <span class="hidden sm:inline">Excel</span>
@@ -159,7 +159,7 @@
 
                     @if(request('date_from') || request('date_to'))
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full text-xs font-medium">
-                        Période: {{ request('date_from') ? \Carbon\Carbon::parse(request('date_from'))->format('d/m/Y') : '...' }} 
+                        Période: {{ request('date_from') ? \Carbon\Carbon::parse(request('date_from'))->format('d/m/Y') : '...' }}
                         → {{ request('date_to') ? \Carbon\Carbon::parse(request('date_to'))->format('d/m/Y') : '...' }}
                         <button type="button" onclick="removeDateFilters()" class="hover:bg-indigo-200 dark:hover:bg-indigo-800 rounded-full p-0.5">
                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -179,12 +179,12 @@
                     <div class="flex items-center justify-between">
                         <h3 class="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                             <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
                             </svg>
                             Filtres Avancés
                         </h3>
-                        <button type="button" 
+                        <button type="button"
                                 onclick="clearAllFilters()"
                                 class="text-xs font-medium text-red-600 hover:text-red-700 hover:underline">
                             Effacer tous les filtres
@@ -197,12 +197,12 @@
                         <div class="space-y-2">
                             <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                             </svg>
                             Formation
                             </label>
-                            <select name="formation_id" 
+                            <select name="formation_id"
                                     class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">Toutes les formations</option>
                                 @foreach($formations as $formation)
@@ -217,14 +217,14 @@
                         <div class="space-y-2">
                             <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 </svg>
                                 Ville
                             </label>
-                            <select name="city" 
+                            <select name="city"
                                     class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">Toutes les villes</option>
                                 @foreach($cities as $city)
@@ -239,12 +239,12 @@
                         <div class="space-y-2">
                             <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                                 </svg>
                                 Statut Paiement
                             </label>
-                            <select name="payment_status" 
+                            <select name="payment_status"
                                     class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">Tous les paiements</option>
                                 <option value="paid" {{ request('payment_status') == 'paid' ? 'selected' : '' }}>✓ Payé complètement</option>
@@ -257,7 +257,7 @@
                     <div class="space-y-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                         <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                             <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
                             Période d'inscription
@@ -265,16 +265,16 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-1.5">
                                 <span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Date de début</span>
-                                <input type="date" 
-                                       name="date_from" 
+                                <input type="date"
+                                       name="date_from"
                                        value="{{ request('date_from') }}"
                                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
 
                             <div class="space-y-1.5">
                                 <span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Date de fin</span>
-                                <input type="date" 
-                                       name="date_to" 
+                                <input type="date"
+                                       name="date_to"
                                        value="{{ request('date_to') }}"
                                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
@@ -283,15 +283,15 @@
 
                     <!-- Apply Filters Actions -->
                     <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <button type="button" 
+                        <button type="button"
                                 onclick="clearAllFilters()"
                                 class="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                             Effacer tout
                         </button>
-                        <button type="submit" 
+                        <button type="submit"
                                 class="px-6 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M5 13l4 4L19 7"/>
                             </svg>
                             Appliquer les filtres
@@ -322,6 +322,7 @@
                         <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Engagement</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Date</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Attestation</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Certificat Généré</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Paiement</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Ville</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Actions</th>
@@ -352,7 +353,7 @@
                             <div class="space-y-1">
                                 <p class="text-xs text-gray-900 dark:text-white flex items-center gap-1.5">
                                     <svg class="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                     </svg>
                                     {{ $student->phone }}
@@ -360,7 +361,7 @@
                                 @if($student->email)
                                 <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1.5 truncate max-w-[180px]">
                                     <svg class="w-3 h-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                     </svg>
                                     <span class="truncate">{{ $student->email }}</span>
@@ -420,7 +421,7 @@
                                 {{ optional($student->start_date)->format('d/m/Y') ?? '-' }}
                             </p>
                         </td>
-                        
+
                         <!-- Attestation Status -->
                         <td class="py-3 px-4">
                             <div class="flex items-center gap-1">
@@ -437,7 +438,24 @@
                                 @endif
                             </div>
                         </td>
-                        
+
+                        <!-- Certificate Generated Status -->
+                        <td class="py-3 px-4">
+                            <div class="flex items-center gap-1">
+                                @if($student->certificate_generated === 'yes')
+                                    <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+                                    </svg>
+                                    <span class="text-xs text-green-600 font-medium">Oui</span>
+                                @else
+                                    <svg class="w-3 h-3 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l6.518 11.59c.75 1.334-.213 2.987-1.743 2.987H3.482c-1.53 0-2.493-1.653-1.743-2.987l6.518-11.59zM11 13a1 1 0 10-2 0 1 1 0 002 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span class="text-xs text-amber-600 font-medium">Non</span>
+                                @endif
+                            </div>
+                        </td>
+
                         <!-- Payment Info with Progress Bar -->
                         <td class="py-3 px-4">
                             <div class="space-y-2 min-w-[180px]">
@@ -447,13 +465,13 @@
                                     $remaining = $student->payment_remaining ?? 0;
                                     $percentage = $engagement > 0 ? ($paid / $engagement) * 100 : 0;
                                 @endphp
-                                
+
                                 <!-- Progress Bar -->
                                 <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                                    <div class="bg-green-600 h-1.5 rounded-full transition-all" 
+                                    <div class="bg-green-600 h-1.5 rounded-full transition-all"
                                          style="width: {{ min($percentage, 100) }}%"></div>
                                 </div>
-                                
+
                                 <!-- Payment Details -->
                                 <div class="flex items-center justify-between text-xs">
                                     <span class="text-green-600 font-semibold">
@@ -464,7 +482,7 @@
                                         {{ number_format($engagement, 0) }} DH
                                     </span>
                                 </div>
-                                
+
                                 @if($remaining > 0)
                                 <p class="text-xs text-orange-600 font-medium">
                                     Reste: {{ number_format($remaining, 0) }} DH
@@ -501,7 +519,7 @@
                                 @endif
 
                                 <!-- Edit Button -->
-                                <button onclick='openModal("edit", @json($student))' 
+                                <button onclick='openModal("edit", @json($student))'
                                         class="p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-500 hover:text-blue-600 transition-colors"
                                         title="Modifier">
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -513,8 +531,8 @@
                                 <form action="{{ route('students.destroy', $student) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" 
-                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer {{ addslashes($student->name) }} ?')" 
+                                    <button type="submit"
+                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer {{ addslashes($student->name) }} ?')"
                                             class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-500 hover:text-red-600 transition-colors"
                                             title="Supprimer">
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -541,7 +559,7 @@
             </div>
             @endif
         </div>
-        
+
         <!-- Pagination -->
         @if($students->hasPages())
         <div id="pagination-container" class="p-4 border-t border-gray-200 dark:border-gray-700">
@@ -560,7 +578,7 @@
                 <h3 class="text-xl font-bold text-gray-900 dark:text-white" id="modal-title">Ajouter Candidat</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Remplissez les informations du candidat</p>
             </div>
-            <button onclick="closeStudentModal()" type="button" 
+            <button onclick="closeStudentModal()" type="button"
                     class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -572,45 +590,45 @@
         <div class="overflow-y-auto p-6 flex-1" style="min-height: 0;">
             <form method="POST" action="{{ route('students.store') }}" id="student-form" class="space-y-6">
                 @csrf
-                
+
                 <!-- Section: Informations Personnelles -->
                 <div class="space-y-4">
                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         Informations Personnelles
                     </h4>
-                    
+
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Nom complet *</label>
-                            <input type="text" name="name" placeholder="Ex: Ahmed Benali" 
+                            <input type="text" name="name" placeholder="Ex: Ahmed Benali"
                                    class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">CIN *</label>
-                            <input type="text" name="cin" placeholder="Ex: AB123456" 
+                            <input type="text" name="cin" placeholder="Ex: AB123456"
                                    class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Téléphone *</label>
-                            <input type="text" name="phone" placeholder="Ex: 0612345678" 
+                            <input type="text" name="phone" placeholder="Ex: 0612345678"
                                    class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">E-mail</label>
-                            <input type="email" name="email" placeholder="Ex: ahmed@example.com" 
+                            <input type="email" name="email" placeholder="Ex: ahmed@example.com"
                                    class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <div class="col-span-2">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Ville</label>
-                            <input type="text" name="city" placeholder="Ex: Casablanca" 
+                            <input type="text" name="city" placeholder="Ex: Casablanca"
                                    class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
                     </div>
@@ -620,16 +638,16 @@
                 <div class="space-y-4">
                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                         </svg>
                         Formation et Statut
                     </h4>
-                    
+
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Formation *</label>
-                            <select name="formation_id" id="formation_id" 
+                            <select name="formation_id" id="formation_id"
                                     class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                                 <option value="">Sélectionner une formation</option>
                                 @foreach(App\Models\Formation::all() as $formation)
@@ -640,17 +658,28 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Date de Début *</label>
-                            <input type="date" name="start_date" 
+                            <input type="date" name="start_date"
                                    class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         </div>
 
-                        <div>
+                        <div id="attestation-field">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Attestation *</label>
-                            <select name="attestation" 
+                            <select name="attestation"
                                     class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                                 <option value="yes">Oui</option>
                                 <option value="no">Non</option>
                             </select>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Non disponible par défaut à la création — à activer une fois le certificat prêt.</p>
+                        </div>
+
+                        <div id="certificate-generated-field">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Certificat Généré *</label>
+                            <select name="certificate_generated"
+                                    class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                <option value="no">Non</option>
+                                <option value="yes">Oui</option>
+                            </select>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Cochez "Oui" une fois le certificat imprimé, pour éviter de le regénérer.</p>
                         </div>
                     </div>
                 </div>
@@ -659,12 +688,12 @@
                 <div class="space-y-4">
                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                         </svg>
                         Informations de Paiement
                     </h4>
-                    
+
                     <div class="grid grid-cols-3 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Engagement (DH) *</label>
@@ -674,13 +703,13 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Payé (DH)</label>
-                            <input type="number" step="1" name="payment_done" id="payment_done" placeholder="Ex: 2000" 
+                            <input type="number" step="1" name="payment_done" id="payment_done" placeholder="Ex: 2000"
                                    class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Reste (DH)</label>
-                            <input type="number" step="1" name="payment_remaining" id="payment_remaining" value="0" readonly 
+                            <input type="number" step="1" name="payment_remaining" id="payment_remaining" value="0" readonly
                                    class="w-full border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-900 rounded-lg px-3 py-2 text-sm text-gray-500 dark:text-gray-400 cursor-not-allowed">
                         </div>
                     </div>
@@ -701,14 +730,14 @@
                 <div class="space-y-4">
                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                         </svg>
                         Notes Additionnelles
                     </h4>
-                    
+
                     <div>
-                        <textarea name="notes" placeholder="Ajoutez des notes ou remarques sur ce candidat..." 
+                        <textarea name="notes" placeholder="Ajoutez des notes ou remarques sur ce candidat..."
                                   class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
                     </div>
                 </div>
@@ -717,7 +746,7 @@
 
         <!-- Footer -->
         <div class="flex justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-700 rounded-b-xl flex-shrink-0">
-            <button type="button" onclick="closeStudentModal()" 
+            <button type="button" onclick="closeStudentModal()"
                     class="px-5 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium text-gray-700 dark:text-gray-300">
                 Annuler
             </button>
@@ -739,7 +768,7 @@
         <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
             <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
                 Notes - <span id="notes-student-name"></span>
@@ -754,7 +783,7 @@
             <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap" id="notes-content"></p>
         </div>
         <div class="p-6 border-t border-gray-200 dark:border-gray-700">
-            <button onclick="closeNotesModal()" 
+            <button onclick="closeNotesModal()"
                     class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
                 Fermer
             </button>
@@ -773,10 +802,10 @@
 function toggleFilters() {
     const filters = document.getElementById('advanced-filters');
     const button = document.getElementById('filter-toggle-btn');
-    
+
     if (filters) {
         filters.classList.toggle('hidden');
-        
+
         if (!filters.classList.contains('hidden')) {
             button?.classList.add('bg-gray-50', 'dark:bg-gray-700');
         } else {
@@ -788,7 +817,7 @@ function toggleFilters() {
 function removeFilter(filterName) {
     const form = document.getElementById('filter-form');
     const input = form.querySelector(`[name="${filterName}"]`);
-    
+
     if (input) {
         input.value = '';
         form.submit();
@@ -799,16 +828,16 @@ function removeDateFilters() {
     const form = document.getElementById('filter-form');
     const dateFrom = form.querySelector('[name="date_from"]');
     const dateTo = form.querySelector('[name="date_to"]');
-    
+
     if (dateFrom) dateFrom.value = '';
     if (dateTo) dateTo.value = '';
-    
+
     form.submit();
 }
 
 function clearAllFilters() {
     const form = document.getElementById('filter-form');
-    
+
     if (form) {
         form.reset();
         form.submit();
@@ -825,7 +854,7 @@ function openModal(mode, student = null) {
     if (!modal) return;
 
     modal.classList.remove('hidden');
-    
+
     setTimeout(() => {
         modalContent.classList.remove('scale-95', 'opacity-0');
         modalContent.classList.add('scale-100', 'opacity-100');
@@ -844,9 +873,16 @@ function openModal(mode, student = null) {
 
         document.getElementById('payment-preview')?.classList.add('hidden');
 
+        // Attestation isn't decided at creation — it's always "no" until edited later
+        document.getElementById('attestation-field')?.classList.add('hidden');
+        document.getElementById('certificate-generated-field')?.classList.add('hidden');
+
     } else if (mode === 'edit' && student) {
         title.textContent = 'Modifier Candidat';
         form.action = `/students/${student.id}`;
+
+        document.getElementById('attestation-field')?.classList.remove('hidden');
+        document.getElementById('certificate-generated-field')?.classList.remove('hidden');
 
         let methodInput = form.querySelector('input[name="_method"]');
         if (!methodInput) {
@@ -862,7 +898,7 @@ function openModal(mode, student = null) {
         form.querySelector('input[name="phone"]').value = student.phone || '';
         form.querySelector('input[name="email"]').value = student.email || '';
         form.querySelector('select[name="formation_id"]').value = student.formation_id || '';
-        
+
         if (student.start_date) {
             form.querySelector('input[name="start_date"]').value = student.start_date.substring(0, 10);
         } else {
@@ -870,6 +906,7 @@ function openModal(mode, student = null) {
         }
 
         form.querySelector('select[name="attestation"]').value = student.attestation || '';
+        form.querySelector('select[name="certificate_generated"]').value = student.certificate_generated || 'no';
         form.querySelector('input[name="engagement"]').value = Math.round(student.engagement) || '';
         form.querySelector('input[name="payment_done"]').value = Math.round(student.payment_done) || '';
         form.querySelector('input[name="payment_remaining"]').value = Math.round(student.payment_remaining) || '';
@@ -883,10 +920,10 @@ function openModal(mode, student = null) {
 function closeStudentModal() {
     const modal = document.getElementById('student-modal');
     const modalContent = document.getElementById('modal-content');
-    
+
     if (modal && modalContent) {
         modalContent.classList.add('scale-95', 'opacity-0');
-        
+
         setTimeout(() => {
             modal.classList.add('hidden');
             document.getElementById('student-form').reset();
@@ -898,14 +935,14 @@ function closeStudentModal() {
 function showNotes(notes, studentName) {
     const modal = document.getElementById('notes-modal');
     const modalContent = document.getElementById('notes-modal-content');
-    
+
     if (!modal || !modalContent) return;
-    
+
     document.getElementById('notes-student-name').textContent = studentName;
     document.getElementById('notes-content').textContent = notes;
-    
+
     modal.classList.remove('hidden');
-    
+
     setTimeout(() => {
         modalContent.classList.remove('scale-95', 'opacity-0');
         modalContent.classList.add('scale-100', 'opacity-100');
@@ -915,11 +952,11 @@ function showNotes(notes, studentName) {
 function closeNotesModal() {
     const modal = document.getElementById('notes-modal');
     const modalContent = document.getElementById('notes-modal-content');
-    
+
     if (!modal || !modalContent) return;
-    
+
     modalContent.classList.add('scale-95', 'opacity-0');
-    
+
     setTimeout(() => {
         modal.classList.add('hidden');
     }, 200);
@@ -981,7 +1018,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const submitBtn = document.getElementById('submit-btn');
             const submitText = document.getElementById('submit-text');
             const loadingSpinner = document.getElementById('loading-spinner');
-            
+
             if (submitBtn && submitText && loadingSpinner) {
                 submitBtn.disabled = true;
                 submitText.classList.add('hidden');
@@ -1019,13 +1056,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Auto-open Filters if Active
     const urlParams = new URLSearchParams(window.location.search);
-    const hasActiveFilters = 
+    const hasActiveFilters =
         urlParams.has('formation_id') ||
         urlParams.has('city') ||
         urlParams.has('payment_status') ||
         urlParams.has('date_from') ||
         urlParams.has('date_to');
-    
+
     if (hasActiveFilters) {
         const advancedFilters = document.getElementById('advanced-filters');
         if (advancedFilters) {
