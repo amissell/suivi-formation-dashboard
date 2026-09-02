@@ -10,9 +10,19 @@ class Student extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'cin', 'phone', 'email', 'formation_id',
+        'name', 'cin', 'phone', 'email', 'formation_id', 'status',
         'start_date', 'engagement', 'payment_done', 'payment_remaining',
         'attestation', 'certificate_generated', 'city', 'notes',
+    ];
+
+    /**
+     * Human-readable labels for the `status` (profession) enum.
+     */
+    public const PROFESSIONS = [
+        'aide_vendeur' => 'Aide Vendeur',
+        'vendeur'      => 'Vendeur',
+        'superviseur'  => 'Superviseur',
+        'CDR'          => 'CDR',
     ];
 
     protected $casts = [

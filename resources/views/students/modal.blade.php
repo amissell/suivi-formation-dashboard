@@ -66,7 +66,6 @@
           </select>
         </div>
 
-        <!-- Row 5 -->
         <div>
           <label class="block text-xs font-medium mb-1">Payé</label>
           <input type="number" step="0.01" name="payment_done" id="payment_done" class="w-full border rounded p-2 text-sm">

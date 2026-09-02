@@ -17,7 +17,7 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         // Save current filters to session for preservation after edit/update
-        $filters = $request->only(['search', 'formation_id', 'city', 'payment_status', 'date_from', 'date_to']);
+        $filters = $request->only(['search', 'formation_id', 'city', 'payment_status', 'profession', 'attestation', 'certificate_generated', 'date_from', 'date_to']);
         session(['student_filters' => array_filter($filters)]);
 
         // Start query with eager loading (prevents N+1 queries)
@@ -64,6 +64,27 @@ class StudentController extends Controller
         }
 
         // ============================================
+        // PROFESSION (STATUS) FILTER
+        // ============================================
+        if ($request->filled('profession')) {
+            $query->where('status', $request->profession);
+        }
+
+        // ============================================
+        // ATTESTATION FILTER (a obtenu l'attestation ou non)
+        // ============================================
+        if ($request->filled('attestation')) {
+            $query->where('attestation', $request->attestation);
+        }
+
+        // ============================================
+        // CERTIFICATE GENERATED FILTER (a déjà pris le certificat ou non)
+        // ============================================
+        if ($request->filled('certificate_generated')) {
+            $query->where('certificate_generated', $request->certificate_generated);
+        }
+
+        // ============================================
         // DATE RANGE FILTER
         // ============================================
         if ($request->filled('date_from')) {
@@ -79,6 +100,12 @@ class StudentController extends Controller
         // ============================================
         $students = $query->latest()->paginate(15)->withQueryString();
 
+        // AJAX filter requests only need the results fragment re-rendered —
+        // skip loading/computing the dropdown data and the full layout.
+        if ($request->ajax()) {
+            return view('students.partials.results', compact('students'));
+        }
+
         // Get data for dropdowns
         $formations = Formation::orderBy('name')->get();
         $cities = Student::whereNotNull('city')
@@ -87,8 +114,9 @@ class StudentController extends Controller
                         ->filter()
                         ->sort()
                         ->values();
+        $professions = Student::PROFESSIONS;
 
-        return view('students.index', compact('students', 'formations', 'cities'));
+        return view('students.index', compact('students', 'formations', 'cities', 'professions'));
     }
 
     /**
@@ -102,6 +130,7 @@ class StudentController extends Controller
             'phone' => 'required|string|max:20',
             'email' => 'nullable|email|max:255',
             'formation_id' => 'required|exists:formations,id',
+            'status' => 'required|in:' . implode(',', array_keys(Student::PROFESSIONS)),
             'start_date' => 'required|date',
             'engagement' => 'required|numeric|min:0',
             'payment_done' => 'nullable|numeric|min:0',
@@ -136,6 +165,7 @@ class StudentController extends Controller
             'phone' => 'required|string|max:20',
             'email' => 'nullable|email|max:255',
             'formation_id' => 'required|exists:formations,id',
+            'status' => 'required|in:' . implode(',', array_keys(Student::PROFESSIONS)),
             'start_date' => 'required|date',
             'engagement' => 'required|numeric|min:0',
             'payment_done' => 'nullable|numeric|min:0',
@@ -169,6 +199,14 @@ class StudentController extends Controller
         $filters = session('student_filters', []);
         return redirect()->route('students.index', $filters)
             ->with('success', "Le candidat {$studentName} a été supprimé avec succès!");
+    }
+
+    /**
+     * Alias for the filter form's GET endpoint — reuses the same logic as index().
+     */
+    public function filter(Request $request)
+    {
+        return $this->index($request);
     }
 
     /**
