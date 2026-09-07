@@ -9,13 +9,29 @@ use Illuminate\Http\Request;
 class GroupController extends Controller
 {
     public function index(Request $r)
-    {
-        $q = Group::with('students','formation')->latest();
-        if ($r->filled('date_from')) $q->whereDate('month_date','>=',$r->date_from);
-        if ($r->filled('date_to'))   $q->whereDate('month_date','<=',$r->date_to);
-        $groups = $q->paginate(15)->withQueryString();
-        return view('groups.index', compact('groups'));
+{
+    $q = Group::with('students','formation')->latest();
+
+    if ($r->filled('date_from')) $q->whereDate('month_date','>=',$r->date_from);
+    if ($r->filled('date_to'))   $q->whereDate('month_date','<=',$r->date_to);
+
+    if ($r->filled('status')) {
+        if ($r->status === 'active') {
+            $q->whereNotNull('jours_semaine')
+              ->where(function ($sub) {
+                  $sub->whereNull('date_fin')
+                      ->orWhereDate('date_fin', '>=', now()->toDateString());
+              });
+        } elseif ($r->status === 'inactive') {
+            $q->whereNotNull('jours_semaine')
+              ->whereNotNull('date_fin')
+              ->whereDate('date_fin', '<', now()->toDateString());
+        }
     }
+
+    $groups = $q->paginate(15)->withQueryString();
+    return view('groups.index', compact('groups'));
+}
 
     public function create()
     {

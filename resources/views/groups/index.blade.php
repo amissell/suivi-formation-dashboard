@@ -27,32 +27,43 @@
         </div>
     @endif
 
-    {{-- FILTERS --}}
-    <div class="bg-card border border-border rounded-xl p-4 shadow-sm">
-        <form method="GET" class="flex flex-wrap items-end gap-3">
-            <div class="flex flex-col">
-                <label class="text-xs font-medium text-muted-foreground mb-1">Du</label>
-                <input type="date" name="date_from" value="{{ request('date_from') }}"
-                       class="px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-            </div>
-            <div class="flex flex-col">
-                <label class="text-xs font-medium text-muted-foreground mb-1">Au</label>
-                <input type="date" name="date_to" value="{{ request('date_to') }}"
-                       class="px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-            </div>
-            <button type="submit"
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-                </svg>
-                Filtrer
-            </button>
-            <a href="{{ route('groups.index') }}"
-               class="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 hover:text-red-600 transition-colors">
-                Réinitialiser
-            </a>
-        </form>
-    </div>
+{{-- FILTERS --}}
+<div class="bg-card border border-border rounded-xl p-4 shadow-sm">
+    <form method="GET" class="flex flex-wrap items-end gap-3">
+        <div class="flex flex-col">
+            <label class="text-xs font-medium text-muted-foreground mb-1">Du</label>
+            <input type="date" name="date_from" value="{{ request('date_from') }}"
+                   class="px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+        <div class="flex flex-col">
+            <label class="text-xs font-medium text-muted-foreground mb-1">Au</label>
+            <input type="date" name="date_to" value="{{ request('date_to') }}"
+                   class="px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div class="flex flex-col">
+            <label class="text-xs font-medium text-muted-foreground mb-1">Statut</label>
+            <select name="status"
+                    class="px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option value="">Tous</option>
+                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Actif</option>
+                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Libéré</option>
+            </select>
+        </div>
+
+        <button type="submit"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+            </svg>
+            Filtrer
+        </button>
+        <a href="{{ route('groups.index') }}"
+           class="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 hover:text-red-600 transition-colors">
+            Réinitialiser
+        </a>
+    </form>
+</div>
 
     {{-- TABLE --}}
     <div class="bg-card border border-border rounded-xl shadow-sm overflow-hidden">

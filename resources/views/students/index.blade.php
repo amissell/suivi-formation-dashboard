@@ -4,7 +4,6 @@
 
 @section('content')
 <div class="space-y-6">
-    <!-- Page Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Candidats</h1>
@@ -19,7 +18,6 @@
         </button>
     </div>
 
-    <!-- Import/Export Section -->
     <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
         <div class="flex flex-wrap gap-3">
             <form action="{{ route('students.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2">
@@ -39,7 +37,6 @@
         </div>
     </div>
 
-    <!-- Filters Card -->
     <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
         <form method="GET" id="filter-form" action="{{ route('students.index') }}" class="space-y-3">
             <div class="flex flex-col sm:flex-row gap-3">
@@ -110,7 +107,6 @@
     @include('students.partials.results')
 </div>
 
-<!-- Student Modal -->
 <div id="student-modal" class="fixed inset-0 hidden bg-black/60 backdrop-blur-sm flex justify-center items-center p-4 z-50">
     <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl w-full max-w-3xl shadow-2xl flex flex-col max-h-[90vh] transform transition-all scale-95 opacity-0" id="modal-content">
         <!-- Header -->
@@ -127,12 +123,10 @@
             </button>
         </div>
 
-        <!-- Form Body -->
         <div class="overflow-y-auto p-6 flex-1" style="min-height: 0;">
             <form method="POST" action="{{ route('students.store') }}" id="student-form" class="space-y-6">
                 @csrf
 
-                <!-- Section: Informations Personnelles -->
                 <div class="space-y-4">
                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -175,7 +169,6 @@
                     </div>
                 </div>
 
-                <!-- Section: Formation et Statut -->
                 <div class="space-y-4">
                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -236,7 +229,6 @@
                     </div>
                 </div>
 
-                <!-- Section: Paiement -->
                 <div class="space-y-4">
                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -266,7 +258,6 @@
                         </div>
                     </div>
 
-                    <!-- Payment Progress Preview -->
                     <div id="payment-preview" class="hidden p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-sm font-medium text-blue-900 dark:text-blue-200">Progression du paiement</span>
@@ -278,7 +269,6 @@
                     </div>
                 </div>
 
-                <!-- Section: Notes -->
                 <div class="space-y-4">
                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -296,7 +286,6 @@
             </form>
         </div>
 
-        <!-- Footer -->
         <div class="flex justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-700 rounded-b-xl flex-shrink-0">
             <button type="button" onclick="closeStudentModal()"
                     class="px-5 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -314,7 +303,6 @@
     </div>
 </div>
 
-<!-- Notes Modal -->
 <div id="notes-modal" class="fixed inset-0 hidden bg-black/60 backdrop-blur-sm flex justify-center items-center p-4 z-50">
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md transform transition-all scale-95 opacity-0" id="notes-modal-content">
         <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
