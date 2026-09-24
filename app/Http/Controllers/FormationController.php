@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 
 class FormationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $formations = Formation::all();

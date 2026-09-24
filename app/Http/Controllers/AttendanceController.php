@@ -9,9 +9,6 @@ use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
-    /**
-     * Show the attendance sheet for a given session.
-     */
     public function edit(Group $group, Seance $seance)
     {
         abort_unless($seance->group_id === $group->id, 404);

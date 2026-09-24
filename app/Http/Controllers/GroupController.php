@@ -127,11 +127,6 @@ class GroupController extends Controller
         $group->delete();
         return back()->with('success', 'Groupe supprimé!');
     }
-
-    /**
-     * AJAX: check conflicts for given slot
-     * GET /groups/check-slot?jours[]=lundi&jours[]=mercredi&debut=09:00&fin=11:00&exclude=5
-     */
     public function checkSlot(Request $r)
     {
         $jours = (array) $r->input('jours', []);

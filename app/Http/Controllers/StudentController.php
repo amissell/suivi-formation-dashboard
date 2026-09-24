@@ -11,21 +11,13 @@ use App\Imports\StudentsImport;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of students with filters
-     */
+  
     public function index(Request $request)
     {
-        // Save current filters to session for preservation after edit/update
         $filters = $request->only(['search', 'formation_id', 'city', 'payment_status', 'profession', 'attestation', 'certificate_generated', 'date_from', 'date_to']);
         session(['student_filters' => array_filter($filters)]);
 
-        // Start query with eager loading (prevents N+1 queries)
         $query = Student::with(['formation', 'groups.formation', 'attendances.seance']);
-
-        // ============================================
-        // SEARCH FILTER
-        // ============================================
         if ($request->filled('search')) {
             $searchTerm = $request->search;
 
@@ -37,24 +29,12 @@ class StudentController extends Controller
                   ->orWhere('email', 'LIKE', "%{$searchTerm}%");
             });
         }
-
-        // ============================================
-        // FORMATION FILTER
-        // ============================================
         if ($request->filled('formation_id')) {
             $query->where('formation_id', $request->formation_id);
         }
-
-        // ============================================
-        // CITY FILTER
-        // ============================================
         if ($request->filled('city')) {
             $query->where('city', $request->city);
         }
-
-        // ============================================
-        // PAYMENT STATUS FILTER
-        // ============================================
         if ($request->filled('payment_status')) {
             if ($request->payment_status === 'paid') {
                 $query->where('payment_remaining', '<=', 0);
@@ -70,16 +50,10 @@ class StudentController extends Controller
             $query->where('status', $request->profession);
         }
 
-        // ============================================
-        // ATTESTATION FILTER (a obtenu l'attestation ou non)
-        // ============================================
         if ($request->filled('attestation')) {
             $query->where('attestation', $request->attestation);
         }
 
-        // ============================================
-        // CERTIFICATE GENERATED FILTER (a déjà pris le certificat ou non)
-        // ============================================
         if ($request->filled('certificate_generated')) {
             $query->where('certificate_generated', $request->certificate_generated);
         }
@@ -118,10 +92,6 @@ class StudentController extends Controller
 
         return view('students.index', compact('students', 'formations', 'cities', 'professions'));
     }
-
-    /**
-     * Store a newly created student
-     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -138,7 +108,6 @@ class StudentController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        // New candidates never start with a certificate — it's granted later via edit
         $data['attestation'] = 'no';
         $data['certificate_generated'] = 'no';
 
@@ -154,9 +123,6 @@ class StudentController extends Controller
             ->with('success', 'Candidat ajouté avec succès!');
     }
 
-    /**
-     * Update the specified student
-     */
     public function update(Request $request, Student $student)
     {
         $data = $request->validate([
@@ -186,10 +152,6 @@ class StudentController extends Controller
         return redirect()->route('students.index', $filters)
             ->with('success', 'Candidat modifié avec succès!');
     }
-
-    /**
-     * Remove the specified student
-     */
     public function destroy(Student $student)
     {
         $studentName = $student->name;
@@ -201,17 +163,12 @@ class StudentController extends Controller
             ->with('success', "Le candidat {$studentName} a été supprimé avec succès!");
     }
 
-    /**
-     * Alias for the filter form's GET endpoint — reuses the same logic as index().
-     */
     public function filter(Request $request)
     {
         return $this->index($request);
     }
 
-    /**
-     * Import students from Excel
-     */
+
     public function import(Request $request)
     {
         $request->validate([

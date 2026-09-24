@@ -14,30 +14,30 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-        
-    
+
+
     $now            = Carbon::now();
     $thisMonthStart = $now->copy()->startOfMonth();
     $lastMonthStart = $now->copy()->subMonthNoOverflow()->startOfMonth();
     $lastMonthEnd   = $now->copy()->subMonthNoOverflow()->endOfMonth();
-    
-    
+
+
     $percentChange = function (int $current, int $previous): float {
         if ($previous === 0) {
             return $current > 0 ? 100.0 : 0.0;
             }
             return round((($current - $previous) / $previous) * 100, 1);
         };
-        
-        
+
+
         $studentsThisMonth = Student::where('created_at', '>=', $thisMonthStart)->count();
         $studentsLastMonth = Student::whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->count();
-        
+
         $formationsThisMonth = Formation::where('created_at', '>=', $thisMonthStart)->count();
         $formationsLastMonth = Formation::whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->count();
-        
+
         $stats = [
-            
+
         'total_students'    => Student::count(),
         'total_formations'  => Formation::count(),
         'student_change'    => $percentChange($studentsThisMonth, $studentsLastMonth),
@@ -45,9 +45,6 @@ class DashboardController extends Controller
         ];
 
 
-        
-        // FINANCIAL STATS
-        
         $financial = [
             'total_revenue'   => Student::sum('payment_done'),
             'total_remaining' => Student::sum('payment_remaining'),
@@ -56,9 +53,9 @@ class DashboardController extends Controller
             'students_unpaid' => Student::where('payment_remaining', '>', 0)->count(),
         ];
 
-        
+
         // MONTHLY REVENUE (12 MONTHS)
-        
+
         $monthlyRevenue = Student::selectRaw(
                 'YEAR(created_at) as year, MONTH(created_at) as month, SUM(payment_done) as total'
             )
@@ -76,15 +73,15 @@ class DashboardController extends Controller
             ->pluck('total')
             ->toArray();
 
-        
+
 
         // RECENT DATA (with eager loading)
         $recentFormations = Formation::latest()->take(3)->get();
         $recentStudents   = Student::with('formation')->latest()->take(3)->get();
 
-        
+
         // LAST 7 DAYS (STUDENTS)
-        
+
         $end   = Carbon::today();
         $start = $end->copy()->subDays(6);
 
@@ -107,9 +104,9 @@ class DashboardController extends Controller
             $dayTotals[] = $rawPerDay[$key] ?? 0;
         }
 
-        
+
         // LAST 12 MONTHS (START DATE)
-        
+
         $monthEnd   = Carbon::now();
         $monthStart = $monthEnd->copy()->subMonths(11)->startOfMonth();
 
@@ -145,9 +142,9 @@ class DashboardController extends Controller
             $cursor->addMonth();
         }
 
-        
+
         // BY CITY
-        
+
         $rawCity = Student::select('city', DB::raw('COUNT(*) as total'))
             ->whereNotNull('city')
             ->where('city', '!=', '')
@@ -164,9 +161,9 @@ class DashboardController extends Controller
             $cityTotals[] = (int) $total;
         }
 
-        
+
         // BY YEAR
-        
+
         $rawYear = Student::select(
                 DB::raw('YEAR(start_date) as year'),
                 DB::raw('COUNT(*) as total')
@@ -180,9 +177,9 @@ class DashboardController extends Controller
         $yearLabels = array_keys($rawYear);
         $yearTotals = array_values($rawYear);
 
-        
+
         // ALERTS
-        
+
         $alerts = [];
 
         $unpaidCount = Student::where('payment_remaining', '>', 0)->count();
@@ -236,14 +233,14 @@ public function refresh()
         'total_students'    => Student::count(),
         'total_formations'  => Formation::count(),
     ];
-    
+
     $financial = [
         'total_revenue'   => Student::sum('payment_done'),
         'total_remaining' => Student::sum('payment_remaining'),
         'students_paid'   => Student::where('payment_remaining', '<=', 0)->count(),
         'students_unpaid' => Student::where('payment_remaining', '>', 0)->count(),
     ];
-    
+
     return response()->json([
         'stats' => $stats,
         'financial' => $financial,

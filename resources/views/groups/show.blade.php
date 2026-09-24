@@ -28,7 +28,6 @@
         </div>
     </div>
 
-    {{-- INFO CARDS --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
             <h3 class="text-sm font-medium text-muted-foreground mb-2">Candidats</h3>

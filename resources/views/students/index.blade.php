@@ -73,6 +73,11 @@
                         </option>
                     @endforeach
                 </select>
+                <select name="payment_status" class="filter-field px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500">
+                    <option value="">Paiement (tous)</option>
+                    <option value="paid" {{ request('payment_status') === 'paid' ? 'selected' : '' }}>Paiement complété</option>
+                    <option value="unpaid" {{ request('payment_status') === 'unpaid' ? 'selected' : '' }}>Paiement en attente</option>
+                </select>
                 <select name="attestation" class="filter-field px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500">
                     <option value="">Attestation (tous)</option>
                     <option value="yes" {{ request('attestation') === 'yes' ? 'selected' : '' }}>A obtenu l'attestation</option>
@@ -94,7 +99,7 @@
                        class="filter-field px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500">
             </div>
 
-            @if(request()->hasAny(['search','formation_id','profession','attestation','certificate_generated','date_from','date_to']))
+            @if(request()->hasAny(['search','formation_id','payment_status','profession','attestation','certificate_generated','date_from','date_to']))
             <div class="flex items-center justify-between pt-1">
                 <span class="text-xs text-gray-400 dark:text-gray-500">
                     Filtres actifs — les résultats se mettent à jour automatiquement.
