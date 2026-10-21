@@ -3,12 +3,13 @@
 @section('title', 'Modifier la séance')
 
 @section('content')
-<div class="max-w-2xl mx-auto space-y-6">
+<div class="mx-auto max-w-3xl space-y-6">
 
     <div class="flex items-center justify-between">
         <div>
-            <h2 class="text-3xl font-bold text-foreground">Modifier la séance</h2>
-            <p class="text-muted-foreground">{{ $group->name }}</p>
+            <p class="text-xs font-semibold uppercase tracking-[.16em] text-primary">{{ $group->name }}</p>
+            <h2 class="mt-1 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Modifier la séance</h2>
+            <p class="mt-1 text-sm text-muted-foreground">Mettez à jour la date, l’horaire ou les détails.</p>
         </div>
         <a href="{{ route('groups.show', $group) }}"
            class="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors text-sm font-medium">
@@ -34,26 +35,26 @@
         <div>
             <label class="block text-sm font-medium text-foreground mb-1.5">Titre *</label>
             <input type="text" name="titre" value="{{ old('titre', $seance->titre) }}" required
-                   class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                   class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div>
                 <label class="block text-sm font-medium text-foreground mb-1.5">Date *</label>
                 <input type="date" name="date_seance" value="{{ old('date_seance', optional($seance->date_seance)->format('Y-m-d')) }}" required
-                       class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
             </div>
             <div>
                 <label class="block text-sm font-medium text-foreground mb-1.5">Heure début</label>
                 <input type="time" name="heure_debut"
                        value="{{ old('heure_debut', $seance->heure_debut ? \Carbon\Carbon::parse($seance->heure_debut)->format('H:i') : '') }}"
-                       class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
             </div>
             <div>
                 <label class="block text-sm font-medium text-foreground mb-1.5">Heure fin</label>
                 <input type="time" name="heure_fin"
                        value="{{ old('heure_fin', $seance->heure_fin ? \Carbon\Carbon::parse($seance->heure_fin)->format('H:i') : '') }}"
-                       class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
             </div>
         </div>
 
@@ -61,12 +62,12 @@
             <div>
                 <label class="block text-sm font-medium text-foreground mb-1.5">Type</label>
                 <input type="text" name="type" value="{{ old('type', $seance->type) }}"
-                       class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
             </div>
             <div>
                 <label class="block text-sm font-medium text-foreground mb-1.5">Statut</label>
                 <select name="statut"
-                        class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
                     @foreach(['planifiée' => 'Planifiée', 'réalisée' => 'Réalisée', 'annulée' => 'Annulée'] as $val => $label)
                         <option value="{{ $val }}" {{ old('statut', $seance->statut) === $val ? 'selected' : '' }}>{{ $label }}</option>
                     @endforeach
@@ -77,22 +78,22 @@
         <div>
             <label class="block text-sm font-medium text-foreground mb-1.5">Lien Zoom / visio</label>
             <input type="url" name="lien_zoom" value="{{ old('lien_zoom', $seance->lien_zoom) }}"
-                   class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                   class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
         </div>
 
         <div>
             <label class="block text-sm font-medium text-foreground mb-1.5">Description</label>
             <textarea name="description" rows="3"
-                      class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('description', $seance->description) }}</textarea>
+                      class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">{{ old('description', $seance->description) }}</textarea>
         </div>
 
-        <div class="flex gap-2 pt-2">
+        <div class="flex flex-col-reverse gap-2 border-t border-border pt-5 sm:flex-row sm:justify-end">
             <button type="submit"
-                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
+                    class="rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90">
                 Enregistrer
             </button>
             <a href="{{ route('groups.show', $group) }}"
-               class="px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors font-medium">
+               class="rounded-lg border border-border px-4 py-2.5 text-center text-sm font-semibold text-foreground transition hover:bg-muted">
                 Annuler
             </a>
         </div>

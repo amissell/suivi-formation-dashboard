@@ -25,52 +25,44 @@
         
         <!-- Main Content Area -->
         <div class="flex-1 flex flex-col lg:ml-64 transition-all duration-300" id="main-content">
-            <!-- Header (like Lovable's h-14 header) -->
-            <header class="h-14 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center px-4 sticky top-0 z-30">
-                <!-- Mobile Menu Button -->
-                <button onclick="openMobileSidebar()" 
-                        class="lg:hidden p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
+            <header class="sticky top-0 z-30 flex h-16 shrink-0 items-center border-b border-border bg-card/95 px-3 shadow-sm backdrop-blur-xl sm:px-6">
+                <button type="button" onclick="openMobileSidebar()" aria-label="Ouvrir le menu" class="mr-2 inline-flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground lg:hidden">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="1.8" stroke-linecap="round"/></svg>
                 </button>
-                
-                <!-- Sidebar Toggle (Desktop) -->
-                <button onclick="toggleSidebar()" 
-                        class="hidden lg:block p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
+                <button type="button" onclick="toggleSidebar()" aria-label="Réduire ou agrandir le menu" class="hidden h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground lg:inline-flex">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="16" rx="2" stroke-width="1.7"/><path d="M9 4v16" stroke-width="1.7" stroke-linecap="round"/></svg>
                 </button>
-                
-                <!-- Title -->
-                <h1 class="ml-4 text-lg font-semibold">Must Négoce Academy Dashboard</h1>
-                
-                <!-- Right side actions -->
-                <div class="ml-auto flex items-center gap-4">
-                    <button onclick="toggleDarkMode()" 
-                            class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                        <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                        </svg>
-                        <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="5" stroke-width="2"/>
-                            <path stroke-width="2" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                        </svg>
+
+                @php
+                    $pageTitle = request()->routeIs('dashboard') ? 'Dashboard' : (request()->routeIs('students.*') ? 'Candidats' : (request()->routeIs('formations.*') ? 'Formations' : (request()->routeIs('groups.*') ? 'Groupes' : 'Administration')));
+                @endphp
+                <div class="ml-1 min-w-0 sm:ml-3">
+                    <p class="truncate text-sm font-semibold text-foreground sm:text-base">{{ $pageTitle }}</p>
+                    <p class="hidden text-[11px] text-muted-foreground sm:block">Must Négoce Academy <span class="mx-1 text-border">/</span> Gestion</p>
+                </div>
+
+                <div class="ml-auto flex items-center gap-1.5 sm:gap-3">
+                    <button type="button" onclick="toggleDarkMode()" aria-label="Changer le thème" title="Changer le thème" class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground">
+                        <svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.4 15.4A8.5 8.5 0 0 1 8.6 3.6 8.8 8.8 0 1 0 20.4 15.4Z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <svg class="hidden h-5 w-5 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4" stroke-width="1.8"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke-width="1.8" stroke-linecap="round"/></svg>
                     </button>
-                    <span class="text-sm text-slate-600 dark:text-slate-400">{{ auth()->user()->name ?? 'Admin' }}</span>
+                    <div class="hidden h-8 w-px bg-border sm:block"></div>
+                    <div class="hidden items-center gap-2.5 sm:flex">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-800 dark:bg-blue-400/15 dark:text-blue-200">{{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}</div>
+                        <span class="max-w-36 truncate text-sm font-medium text-foreground">{{ auth()->user()->name ?? 'Admin' }}</span>
+                    </div>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
-                        <button type="submit" class="text-sm text-red-500 hover:text-red-600 transition-colors">
-                            Déconnexion
+                        <button type="submit" class="inline-flex h-10 items-center gap-2 rounded-lg px-2.5 text-sm font-medium text-muted-foreground transition hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-400/10 dark:hover:text-red-300 sm:px-3" aria-label="Déconnexion" title="Déconnexion">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 17l5-5-5-5m5 5H3m9-9h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span class="hidden sm:inline">Déconnexion</span>
                         </button>
                     </form>
                 </div>
             </header>
-            
+
             <!-- Main Content -->
-            <main class="flex-1 p-6 bg-slate-50 dark:bg-slate-900/50">
+            <main class="flex-1 bg-background p-4 sm:p-6 lg:p-8">
                 @yield('content')
             </main>
         </div>
@@ -79,4 +71,4 @@
     @stack('scripts')
 </body>
 </html>
-    
+

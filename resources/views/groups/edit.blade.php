@@ -3,15 +3,15 @@
 @section('title', 'Modifier le groupe')
 
 @section('content')
-<div class="max-w-3xl mx-auto space-y-6">
+<div class="mx-auto max-w-4xl space-y-6">
 
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
             <h2 class="text-3xl font-bold text-foreground">Modifier le groupe</h2>
             <p class="text-muted-foreground">{{ $group->name }}</p>
         </div>
         <a href="{{ route('groups.index') }}"
-           class="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors text-sm font-medium">
+           class="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition hover:bg-muted">
             ← Retour
         </a>
     </div>
@@ -35,7 +35,7 @@
         <div>
             <label class="block text-sm font-medium text-foreground mb-1.5">Nom *</label>
             <input type="text" name="name" value="{{ old('name', $group->name) }}" required
-                   class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                   class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -43,12 +43,12 @@
                 <label class="block text-sm font-medium text-foreground mb-1.5">Mois</label>
                 <input type="date" name="month_date"
                        value="{{ old('month_date', optional($group->month_date)->format('Y-m-d')) }}"
-                       class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                       class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
             </div>
             <div>
                 <label class="block text-sm font-medium text-foreground mb-1.5">Formation</label>
                 <select name="formation_id"
-                        class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
                     <option value="">— Aucune —</option>
                     @foreach($formations as $f)
                         <option value="{{ $f->id }}"
@@ -87,13 +87,13 @@
                     <label class="block text-xs font-medium text-muted-foreground mb-1">Heure début</label>
                     <input type="time" name="slot_heure_debut" id="slot_heure_debut"
                            value="{{ old('slot_heure_debut', $group->slot_heure_debut ? \Carbon\Carbon::parse($group->slot_heure_debut)->format('H:i') : '') }}"
-                           class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                           class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-muted-foreground mb-1">Heure fin</label>
                     <input type="time" name="slot_heure_fin" id="slot_heure_fin"
                            value="{{ old('slot_heure_fin', $group->slot_heure_fin ? \Carbon\Carbon::parse($group->slot_heure_fin)->format('H:i') : '') }}"
-                           class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                           class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
                 </div>
             </div>
 
@@ -102,7 +102,7 @@
                     <label class="block text-xs font-medium text-muted-foreground mb-1">Date de fin de formation</label>
                     <input type="date" name="date_fin" id="date_fin"
                            value="{{ old('date_fin', optional($group->date_fin)->format('Y-m-d')) }}"
-                           class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                           class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
                     <p class="text-xs text-muted-foreground mt-1">Après cette date, le créneau sera libéré</p>
                 </div>
             </div>
@@ -135,7 +135,7 @@
         <div>
             <label class="block text-sm font-medium text-foreground mb-1.5">Notes</label>
             <textarea name="notes" rows="3"
-                      class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('notes', $group->notes) }}</textarea>
+                      class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">{{ old('notes', $group->notes) }}</textarea>
         </div>
 
         {{-- STUDENT SELECTOR --}}
@@ -151,7 +151,7 @@
             </div>
             <input type="text" id="studentSearch" placeholder="🔍 Rechercher un candidat..."
                    onkeyup="filterStudents()"
-                   class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground mb-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                   class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground mb-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
             <div id="studentsList"
                  class="max-h-72 overflow-y-auto border border-border rounded-lg p-3 space-y-1 bg-background">
                 @foreach($students as $s)
@@ -173,13 +173,13 @@
             </p>
         </div>
 
-        <div class="flex gap-2 pt-2">
+        <div class="flex flex-col-reverse gap-2 border-t border-border pt-5 sm:flex-row sm:justify-end">
             <button type="submit"
-                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
+                    class="rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90">
                 Enregistrer
             </button>
             <a href="{{ route('groups.index') }}"
-               class="px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors font-medium">
+               class="rounded-lg border border-border px-4 py-2.5 text-center text-sm font-semibold text-foreground transition hover:bg-muted">
                 Annuler
             </a>
         </div>

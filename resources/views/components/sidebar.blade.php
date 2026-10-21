@@ -1,173 +1,103 @@
-<aside id="sidebar" 
-       class="fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-sidebar-border 
-              flex flex-col h-screen transition-all duration-300 ease-in-out
-              -translate-x-full lg:translate-x-0"
-       data-collapsed="false">
+<aside id="sidebar" class="fixed inset-y-0 left-0 z-50 flex h-screen w-64 -translate-x-full flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground shadow-xl transition-all duration-300 ease-in-out lg:translate-x-0" data-collapsed="false">
+    <a href="{{ route('dashboard') }}" class="group flex h-[76px] shrink-0 items-center gap-3 border-b border-sidebar-border px-5 transition-colors hover:bg-white/[.03]" aria-label="Must Négoce Academy — Dashboard">
+        <img id="logo-full" src="{{ asset('images/logo.jpg') }}" alt="" class="h-10 w-10 rounded-xl bg-white object-contain p-0.5 shadow-sm">
+        <span id="logo-mini" class="hidden h-10 w-10 items-center justify-center rounded-xl bg-amber-400 text-sm font-black tracking-tight text-slate-950">MN</span>
+        <span class="logo-copy min-w-0">
+            <span class="block truncate text-sm font-bold tracking-wide">MUST-NÉGOCE</span>
+            <span class="mt-0.5 block text-[10px] font-semibold uppercase tracking-[.2em] text-sidebar-foreground/55">Academy · Admin</span>
+        </span>
+    </a>
 
-    <!-- Logo Section -->
-    <div class="p-4 border-b border-sidebar-border">
-        <div id="logo-full" class="flex items-center gap-3">
-            <img src="{{ asset('images/logo.jpg') }}" alt="Must Négoce Academy" 
-                 class="w-10 h-10 object-contain rounded" />
-            <div class="flex flex-col">
-                <span class="text-sm font-bold text-sidebar-foreground">MUST-NÉGOCE</span>
-                <span class="text-xs text-sidebar-foreground/70">ACADEMY</span>
+    <nav class="flex-1 overflow-y-auto px-3 py-6" aria-label="Navigation principale">
+        <p id="nav-label" class="mb-3 px-3 text-[10px] font-bold uppercase tracking-[.18em] text-sidebar-foreground/45">Menu principal</p>
+        <ul class="space-y-1.5">
+            @php
+                $navigation = [
+                    ['route' => 'dashboard', 'pattern' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'dashboard'],
+                    ['route' => 'formations.index', 'pattern' => 'formations.*', 'label' => 'Formations', 'icon' => 'formations'],
+                    ['route' => 'students.index', 'pattern' => 'students.*', 'label' => 'Candidats', 'icon' => 'students'],
+                    ['route' => 'groups.index', 'pattern' => 'groups.*', 'label' => 'Groupes', 'icon' => 'groups'],
+                ];
+            @endphp
+            @foreach($navigation as $item)
+                @php $active = request()->routeIs($item['pattern']); @endphp
+                <li>
+                    <a href="{{ route($item['route']) }}" title="{{ $item['label'] }}" aria-current="{{ $active ? 'page' : 'false' }}"
+                       class="nav-item relative flex h-11 items-center gap-3 overflow-hidden rounded-lg px-3 text-sm transition-colors {{ $active ? 'bg-blue-500/15 font-semibold text-white' : 'text-sidebar-foreground/75 hover:bg-white/[.06] hover:text-white' }}">
+                        @if($active)<span class="absolute inset-y-2 left-0 w-1 rounded-r-full bg-amber-400"></span>@endif
+                        @if($item['icon'] === 'dashboard')
+                            <svg class="h-5 w-5 shrink-0 {{ $active ? 'text-amber-300' : '' }}" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke-width="1.8"/></svg>
+                        @elseif($item['icon'] === 'formations')
+                            <svg class="h-5 w-5 shrink-0 {{ $active ? 'text-amber-300' : '' }}" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        @elseif($item['icon'] === 'students')
+                            <svg class="h-5 w-5 shrink-0 {{ $active ? 'text-amber-300' : '' }}" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m16-11a4 4 0 0 1 0 8m4 3v-2a4 4 0 0 0-3-3.87M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        @else
+                            <svg class="h-5 w-5 shrink-0 {{ $active ? 'text-amber-300' : '' }}" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m16-11a4 4 0 0 1 0 8m4 3v-2a4 4 0 0 0-3-3.87M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        @endif
+                        <span class="nav-text truncate">{{ $item['label'] }}</span>
+                        @if($active)<span class="nav-active-dot ml-auto h-1.5 w-1.5 rounded-full bg-amber-300"></span>@endif
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </nav>
+
+    <div class="border-t border-sidebar-border p-4">
+        <div class="flex items-center gap-3 rounded-xl bg-white/[.04] p-3">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-500/20 text-xs font-bold text-blue-100">{{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}</div>
+            <div class="sidebar-user min-w-0">
+                <p class="truncate text-xs font-semibold">{{ auth()->user()->name ?? 'Administrateur' }}</p>
+                <p class="mt-0.5 text-[10px] text-sidebar-foreground/50">Espace de gestion</p>
             </div>
         </div>
     </div>
-
-    <!-- Navigation -->
-    <nav class="flex-1 p-4 overflow-y-auto">
-        <p class="text-xs font-semibold text-sidebar-foreground/70 uppercase tracking-wider mb-3 px-3">
-            Navigation
-        </p>
-        <ul class="space-y-1">
-            <li>
-                <a href="{{ route('dashboard') }}"
-                   class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors
-                          {{ request()->routeIs('dashboard') 
-                              ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' 
-                              : 'text-sidebar-foreground hover:bg-sidebar-accent' }}">
-                    <!-- Dashboard Icon -->
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="7" height="7" stroke-width="2" rx="1"/>
-                        <rect x="14" y="3" width="7" height="7" stroke-width="2" rx="1"/>
-                        <rect x="14" y="14" width="7" height="7" stroke-width="2" rx="1"/>
-                        <rect x="3" y="14" width="7" height="7" stroke-width="2" rx="1"/>
-                    </svg>
-                    <span class="nav-text">Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('formations.index') }}"
-                   class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors
-                          {{ request()->routeIs('formations.*') 
-                              ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' 
-                              : 'text-sidebar-foreground hover:bg-sidebar-accent' }}">
-                    <!-- Formations Icon -->
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                    </svg>
-                    <span class="nav-text">Formations</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('students.index') }}"
-                   class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors
-                          {{ request()->routeIs('students.*') 
-                              ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' 
-                              : 'text-sidebar-foreground hover:bg-sidebar-accent' }}">
-                    <!-- Students Icon -->
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
-                    <span class="nav-text">Candidats</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('groups.index') }}"
-                class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors
-                {{ request()->routeIs('groups.*')
-                ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
-                : 'text-sidebar-foreground hover:bg-sidebar-accent' }}">
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H4v-2a4 4 0 0 1 3-3.87m6-2.13a4 4 0 1 0-6 0M21 12a3 3 0 1 0-6 0M3 12a3 3 0 1 0 6 0"/>
-                </svg>
-                <span class="nav-text">Groupes</span>
-            </a>
-        </li>
-        </ul>
-    </nav>
 </aside>
 
-
-<!-- Mobile Overlay -->
-<div id="sidebar-overlay" 
-     class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" 
-     onclick="closeMobileSidebar()"></div>
+<button id="sidebar-overlay" type="button" aria-label="Fermer le menu" class="fixed inset-0 z-40 hidden bg-slate-950/55 backdrop-blur-[2px] lg:hidden" onclick="closeMobileSidebar()"></button>
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Restore sidebar state from localStorage
-    const savedState = localStorage.getItem('sidebar-collapsed');
-    if (savedState === 'true') {
-        collapseSidebar();
+function setSidebarCollapsed(collapsed, persist = true) {
+    const sidebar = document.getElementById('sidebar');
+    const main = document.getElementById('main-content');
+    if (!sidebar) return;
+
+    sidebar.dataset.collapsed = collapsed ? 'true' : 'false';
+    sidebar.classList.toggle('w-16', collapsed);
+    sidebar.classList.toggle('w-64', !collapsed);
+    document.querySelectorAll('.nav-text, .logo-copy, .sidebar-user, #nav-label, .nav-active-dot').forEach(el => el.classList.toggle('hidden', collapsed));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('justify-center', collapsed));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('px-0', collapsed));
+    document.querySelectorAll('#logo-full, #logo-mini').forEach(el => el.classList.toggle('hidden', (el.id === 'logo-full') === collapsed));
+    document.querySelectorAll('#logo-mini').forEach(el => el.classList.toggle('flex', collapsed));
+
+    if (main) {
+        main.classList.toggle('lg:ml-16', collapsed);
+        main.classList.toggle('lg:ml-64', !collapsed);
     }
+    if (persist) localStorage.setItem('sidebar-collapsed', collapsed ? 'true' : 'false');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const collapsed = localStorage.getItem('sidebar-collapsed') === 'true' && window.matchMedia('(min-width: 1024px)').matches;
+    setSidebarCollapsed(collapsed, false);
 });
-
-function collapseSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('main-content');
-    
-    sidebar.classList.remove('w-64');
-    sidebar.classList.add('w-16');
-    sidebar.dataset.collapsed = 'true';
-    
-    // Hide text elements
-    document.querySelectorAll('.nav-text').forEach(el => el.classList.add('hidden'));
-    document.getElementById('nav-label').classList.add('hidden');
-    
-    // Switch logos
-    document.getElementById('logo-full').classList.add('hidden');
-    document.getElementById('logo-mini').classList.remove('hidden');
-    document.getElementById('logo-mini').classList.add('flex');
-    
-    // Adjust main content
-    if (mainContent) {
-        mainContent.classList.remove('lg:ml-64');
-        mainContent.classList.add('lg:ml-16');
-    }
-    
-    localStorage.setItem('sidebar-collapsed', 'true');
-}
-
-function expandSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('main-content');
-    
-    sidebar.classList.remove('w-16');
-    sidebar.classList.add('w-64');
-    sidebar.dataset.collapsed = 'false';
-    
-    // Show text elements
-    document.querySelectorAll('.nav-text').forEach(el => el.classList.remove('hidden'));
-    document.getElementById('nav-label').classList.remove('hidden');
-    
-    // Switch logos
-    document.getElementById('logo-full').classList.remove('hidden');
-    document.getElementById('logo-mini').classList.add('hidden');
-    document.getElementById('logo-mini').classList.remove('flex');
-    
-    // Adjust main content
-    if (mainContent) {
-        mainContent.classList.remove('lg:ml-16');
-        mainContent.classList.add('lg:ml-64');
-    }
-    
-    localStorage.setItem('sidebar-collapsed', 'false');
-}
 
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    if (sidebar.dataset.collapsed === 'true') {
-        expandSidebar();
-    } else {
-        collapseSidebar();
-    }
+    setSidebarCollapsed(sidebar?.dataset.collapsed !== 'true');
 }
 
 function openMobileSidebar() {
-    document.getElementById('sidebar').classList.remove('-translate-x-full');
-    document.getElementById('sidebar-overlay').classList.remove('hidden');
+    document.getElementById('sidebar')?.classList.remove('-translate-x-full');
+    document.getElementById('sidebar-overlay')?.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
 }
 
 function closeMobileSidebar() {
-    document.getElementById('sidebar').classList.add('-translate-x-full');
-    document.getElementById('sidebar-overlay').classList.add('hidden');
+    document.getElementById('sidebar')?.classList.add('-translate-x-full');
+    document.getElementById('sidebar-overlay')?.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
 }
 </script>
 @endpush

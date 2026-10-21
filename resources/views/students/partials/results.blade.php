@@ -1,33 +1,97 @@
 <div id="students-results" class="space-y-6">
     <!-- Results Count -->
     <div class="flex items-center justify-between">
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-            <span id="results-count" class="font-medium text-gray-900 dark:text-white">{{ $students->total() }}</span> candidat(s) trouvé(s)
+        <p class="text-sm text-muted-foreground">
+            <span id="results-count" class="font-medium text-foreground">{{ $students->total() }}</span> candidat(s) trouvé(s)
         </p>
     </div>
 
-    <!-- Students Table -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead class="bg-gray-50 dark:bg-gray-700/50">
+    {{-- Compact cards on phones and tablets --}}
+    <div class="space-y-3 lg:hidden">
+        @forelse($students as $student)
+            @php
+                $engagement = (float) ($student->engagement ?? 0);
+                $paid = (float) ($student->payment_done ?? 0);
+                $remaining = (float) ($student->payment_remaining ?? 0);
+                $paymentProgress = $engagement > 0 ? min(100, ($paid / $engagement) * 100) : 0;
+                $rate = $student->engagement_rate;
+            @endphp
+            <article class="rounded-xl border border-border bg-card p-4 shadow-sm">
+                <div class="flex items-start gap-3">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-sm font-bold text-primary dark:bg-blue-400/10">{{ strtoupper(substr($student->name, 0, 2)) }}</div>
+                    <div class="min-w-0 flex-1">
+                        <h3 class="truncate font-semibold text-foreground">{{ $student->name }}</h3>
+                        <p class="text-xs font-mono text-muted-foreground">{{ $student->cin }}</p>
+                    </div>
+                    <div class="flex shrink-0 items-center gap-1">
+                        <a href="{{ route('students.edit', $student) }}" class="rounded-lg p-2 text-muted-foreground transition hover:bg-muted hover:text-primary" aria-label="Modifier {{ $student->name }}" title="Modifier">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m16 4 4 4M4 20l4-.8L19 8a2.1 2.1 0 0 0-3-3L5 16l-1 4Z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </a>
+                        @if(filled($student->notes))
+                            <button type="button" onclick='showNotes(@json($student->notes), @json($student->name))' class="rounded-lg p-2 text-muted-foreground transition hover:bg-muted hover:text-primary" aria-label="Voir les notes de {{ $student->name }}" title="Voir les notes">
+                                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke-width="1.8" stroke-linecap="round"/></svg>
+                            </button>
+                        @endif
+                        <form action="{{ route('students.destroy', $student) }}" method="POST" onsubmit="return confirm('Supprimer ce candidat ?')">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="rounded-lg p-2 text-muted-foreground transition hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30" aria-label="Supprimer {{ $student->name }}" title="Supprimer">
+                                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7h16m-10 4v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                    <div class="min-w-0"><p class="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Téléphone</p><p class="mt-0.5 truncate text-foreground">{{ $student->phone ?: '—' }}</p></div>
+                    <div class="min-w-0"><p class="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Formation</p><p class="mt-0.5 truncate text-foreground">{{ $student->formation->name ?? '—' }}</p></div>
+                    <div><p class="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Présence</p><p class="mt-0.5 font-semibold text-foreground">{{ $rate === null ? 'Aucune séance' : $rate . '%' }}</p></div>
+                    <div><p class="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Paiement restant</p><p class="mt-0.5 font-semibold {{ $remaining > 0 ? 'text-amber-600 dark:text-amber-300' : 'text-emerald-600 dark:text-emerald-300' }}">{{ number_format($remaining, 0) }} DH</p></div>
+                </div>
+                <div class="mt-3 flex flex-wrap gap-1.5">
+                    @forelse($student->groups as $group)
+                        <a href="{{ route('groups.show', $group) }}" class="max-w-full truncate rounded-full bg-blue-50 px-2 py-1 text-[11px] font-medium text-blue-700 dark:bg-blue-400/10 dark:text-blue-200">{{ $group->name }}</a>
+                    @empty
+                        <span class="text-xs text-muted-foreground">Aucun groupe</span>
+                    @endforelse
+                    <span class="rounded-full bg-muted px-2 py-1 text-[11px] text-muted-foreground">Début : {{ optional($student->start_date)->format('d/m/Y') ?? '—' }}</span>
+                    <span class="rounded-full bg-muted px-2 py-1 text-[11px] text-muted-foreground">Attestation : {{ $student->attestation === 'yes' ? 'Oui' : 'Non' }}</span>
+                    <span class="rounded-full bg-muted px-2 py-1 text-[11px] text-muted-foreground">Certificat : {{ $student->certificate_generated === 'yes' ? 'Généré' : 'Non généré' }}</span>
+                </div>
+                <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-muted"><div class="h-full rounded-full bg-emerald-500" style="width: {{ $paymentProgress }}%"></div></div>
+            </article>
+        @empty
+            <div class="rounded-xl border border-dashed border-border bg-card px-5 py-12 text-center">
+                <h3 class="font-semibold text-foreground">Aucun candidat trouvé</h3>
+                <p class="mt-1 text-sm text-muted-foreground">Essayez de modifier les filtres ou ajoutez un candidat.</p>
+            </div>
+        @endforelse
+    </div>
+
+    {{-- Fixed-layout table on wide screens; secondary columns are combined into the compact view above. --}}
+    <div class="hidden overflow-hidden rounded-xl border border-border bg-card lg:block">
+        <table class="w-full table-fixed text-sm">
+            <colgroup>
+                <col style="width:22%"><col style="width:18%"><col style="width:16%"><col class="hidden" style="width:0">
+                <col style="width:13%"><col class="hidden" style="width:0"><col class="hidden" style="width:0"><col class="hidden" style="width:0">
+                <col style="width:21%"><col class="hidden" style="width:0"><col style="width:10%">
+            </colgroup>
+                <thead class="bg-muted/50">
                     <tr>
-                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Candidat</th>
-                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Contact</th>
-                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Formation</th>
-                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Groupes</th>
-                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Engagement</th>
-                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Date</th>
-                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Attestation</th>
-                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Certificat Généré</th>
-                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Paiement</th>
-                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Ville</th>
-                        <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Candidat</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Contact</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Formation</th>
+                        <th class="hidden py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Groupes</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Engagement</th>
+                        <th class="hidden py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</th>
+                        <th class="hidden py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Attestation</th>
+                        <th class="hidden py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Certificat Généré</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Paiement</th>
+                        <th class="hidden py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ville</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="students-table-body" class="divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody id="students-table-body" class="divide-y divide-border">
                     @foreach($students as $student)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                    <tr class="hover:bg-muted/50 transition-colors">
                         <!-- Student Info (Name + CIN + Avatar) -->
                         <td class="py-3 px-4">
                             <div class="flex items-center gap-3">
@@ -35,10 +99,10 @@
                                     {{ strtoupper(substr($student->name, 0, 2)) }}
                                 </div>
                                 <div class="min-w-0">
-                                    <p class="font-medium text-sm text-gray-900 dark:text-white truncate">
+                                    <p class="font-medium text-sm text-foreground truncate">
                                         {{ $student->name }}
                                     </p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                                    <p class="text-xs text-muted-foreground font-mono">
                                         {{ $student->cin }}
                                     </p>
                                 </div>
@@ -48,15 +112,15 @@
                         <!-- Contact Info -->
                         <td class="py-3 px-4">
                             <div class="space-y-1">
-                                <p class="text-xs text-gray-900 dark:text-white flex items-center gap-1.5">
-                                    <svg class="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <p class="text-xs text-foreground flex items-center gap-1.5">
+                                    <svg class="w-3 h-3 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                     </svg>
                                     {{ $student->phone }}
                                 </p>
                                 @if($student->email)
-                                <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1.5 truncate max-w-[180px]">
+                                <p class="text-xs text-muted-foreground flex items-center gap-1.5 truncate max-w-[180px]">
                                     <svg class="w-3 h-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -69,11 +133,11 @@
 
                         <!-- Formation -->
                         <td class="py-3 px-4">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $student->formation->name ?? '-' }}</p>
+                            <p class="truncate text-sm font-medium text-foreground">{{ $student->formation->name ?? '-' }}</p>
                         </td>
 
                         <!-- Groups -->
-                        <td class="py-3 px-4">
+                        <td class="hidden py-3 px-4">
                             <div class="flex flex-wrap gap-1 max-w-[180px]">
                                 @forelse($student->groups as $g)
                                     <a href="{{ route('groups.show', $g) }}"
@@ -82,7 +146,7 @@
                                         {{ $g->name }}
                                     </a>
                                 @empty
-                                    <span class="text-xs text-gray-400 dark:text-gray-500">—</span>
+                                    <span class="text-xs text-muted-foreground">—</span>
                                 @endforelse
                             </div>
                         </td>
@@ -91,7 +155,7 @@
                         <td class="py-3 px-4">
                             @php $rate = $student->engagement_rate; @endphp
                             @if($rate === null)
-                                <span class="text-xs text-gray-400 dark:text-gray-500">Aucune séance</span>
+                                <span class="text-xs text-muted-foreground">Aucune séance</span>
                             @else
                                 @php
                                     $barColor = $rate >= 75 ? 'bg-green-500' : ($rate >= 50 ? 'bg-amber-500' : 'bg-red-500');
@@ -101,8 +165,8 @@
                                             ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
                                             : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300');
                                 @endphp
-                                <div class="space-y-1 min-w-[120px]">
-                                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                <div class="w-full max-w-[140px] space-y-1">
+                                    <div class="w-full bg-muted rounded-full h-1.5">
                                         <div class="{{ $barColor }} h-1.5 rounded-full transition-all" style="width: {{ $rate }}%"></div>
                                     </div>
                                     <span class="inline-block px-1.5 py-0.5 rounded text-xs font-semibold {{ $badgeColor }}">
@@ -113,14 +177,14 @@
                         </td>
 
                         <!-- Start Date -->
-                        <td class="py-3 px-4">
-                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                        <td class="hidden py-3 px-4">
+                            <p class="text-xs text-muted-foreground">
                                 {{ optional($student->start_date)->format('d/m/Y') ?? '-' }}
                             </p>
                         </td>
 
                         <!-- Attestation Status -->
-                        <td class="py-3 px-4">
+                        <td class="hidden py-3 px-4">
                             <div class="flex items-center gap-1">
                                 @if($student->attestation === 'yes')
                                     <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -137,7 +201,7 @@
                         </td>
 
                         <!-- Certificate Generated Status -->
-                        <td class="py-3 px-4">
+                        <td class="hidden py-3 px-4">
                             <div class="flex items-center gap-1">
                                 @if($student->certificate_generated === 'yes')
                                     <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -155,7 +219,7 @@
 
                         <!-- Payment Info with Progress Bar -->
                         <td class="py-3 px-4">
-                            <div class="space-y-2 min-w-[180px]">
+                            <div class="w-full min-w-0 space-y-2">
                                 @php
                                     $engagement = $student->engagement ?? 0;
                                     $paid = $student->payment_done ?? 0;
@@ -164,18 +228,18 @@
                                 @endphp
 
                                 <!-- Progress Bar -->
-                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                <div class="w-full bg-muted rounded-full h-1.5">
                                     <div class="bg-green-600 h-1.5 rounded-full transition-all"
                                          style="width: {{ min($percentage, 100) }}%"></div>
                                 </div>
 
                                 <!-- Payment Details -->
-                                <div class="flex items-center justify-between text-xs">
+                                <div class="flex flex-wrap items-center justify-between gap-x-1 text-xs">
                                     <span class="text-green-600 font-semibold">
                                         {{ number_format($paid, 0) }} DH
                                     </span>
-                                    <span class="text-gray-400">/</span>
-                                    <span class="text-gray-700 dark:text-gray-300 font-medium">
+                                    <span class="text-muted-foreground">/</span>
+                                    <span class="text-foreground font-medium">
                                         {{ number_format($engagement, 0) }} DH
                                     </span>
                                 </div>
@@ -196,8 +260,8 @@
                         </td>
 
                         <!-- City -->
-                        <td class="py-3 px-4">
-                            <p class="text-xs text-gray-500 dark:text-gray-400">{{ $student->city ?? '-' }}</p>
+                        <td class="hidden py-3 px-4">
+                            <p class="text-xs text-muted-foreground">{{ $student->city ?? '-' }}</p>
                         </td>
 
                         <!-- Actions -->
@@ -206,7 +270,7 @@
                                 @if(!is_null($student->notes) && trim($student->notes) !== '')
                                 <button type="button"
                                         onclick='showNotes(@json($student->notes), @json($student->name))'
-                                        class="p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-500 hover:text-blue-600 transition-colors"
+                                        class="p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 text-muted-foreground hover:text-blue-600 transition-colors"
                                         title="Voir notes">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -216,13 +280,13 @@
                                 @endif
 
                                 <!-- Edit Button -->
-                                <button onclick='openModal("edit", @json($student))'
-                                        class="p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-500 hover:text-blue-600 transition-colors"
+                                <a href="{{ route('students.edit', $student) }}"
+                                        class="p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 text-muted-foreground hover:text-blue-600 transition-colors"
                                         title="Modifier">
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
-                                </button>
+                                </a>
 
                                 <!-- Delete Button -->
                                 <form action="{{ route('students.destroy', $student) }}" method="POST" class="inline">
@@ -230,7 +294,7 @@
                                     @method('DELETE')
                                     <button type="submit"
                                             onclick="return confirm('Êtes-vous sûr de vouloir supprimer {{ addslashes($student->name) }} ?')"
-                                            class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-500 hover:text-red-600 transition-colors"
+                                            class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-muted-foreground hover:text-red-600 transition-colors"
                                             title="Supprimer">
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -246,20 +310,20 @@
 
             @if($students->isEmpty())
             <div class="text-center py-16">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 mb-4">
-                    <svg class="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
+                    <svg class="w-8 h-8 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Aucun candidat trouvé</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Commencez par ajouter votre premier candidat</p>
+                <h3 class="text-lg font-semibold text-foreground mb-1">Aucun candidat trouvé</h3>
+                <p class="text-sm text-muted-foreground">Commencez par ajouter votre premier candidat</p>
             </div>
             @endif
         </div>
 
         <!-- Pagination -->
         @if($students->hasPages())
-        <div id="pagination-container" class="p-4 border-t border-gray-200 dark:border-gray-700">
+        <div id="pagination-container" class="p-4 border-t border-border">
             {{ $students->withQueryString()->links() }}
         </div>
         @endif

@@ -11,6 +11,16 @@ use App\Imports\StudentsImport;
 
 class StudentController extends Controller
 {
+
+    public function create()
+    {
+        $formations = Formation::orderBy('name')->get();
+        $professions = Student::PROFESSIONS;
+        $student = new Student();
+        $editing = false;
+
+        return view('students.create', compact('formations', 'professions', 'student', 'editing'));
+    }
   
     public function index(Request $request)
     {
@@ -121,6 +131,15 @@ class StudentController extends Controller
         $filters = session('student_filters', []);
         return redirect()->route('students.index', $filters)
             ->with('success', 'Candidat ajouté avec succès!');
+    }
+
+    public function edit(Student $student)
+    {
+        $formations = Formation::orderBy('name')->get();
+        $professions = Student::PROFESSIONS;
+        $editing = true;
+
+        return view('students.edit', compact('formations', 'professions', 'student', 'editing'));
     }
 
     public function update(Request $request, Student $student)

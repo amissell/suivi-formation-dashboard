@@ -3,27 +3,34 @@
 @section('title', 'Candidats')
 
 @section('content')
-<div class="space-y-6">
+<div class="mx-auto max-w-7xl space-y-6">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Candidats</h1>
-            <p class="text-gray-500 dark:text-gray-400">Gérer les candidats de l'académie</p>
+            <p class="text-xs font-semibold uppercase tracking-[.16em] text-primary">Suivi des apprenants</p>
+            <h1 class="mt-1 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Candidats</h1>
+            <p class="mt-1 text-sm text-muted-foreground">Consultez les dossiers, les inscriptions et les paiements.</p>
         </div>
-        <button onclick="openModal('add')"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+        <a href="{{ route('students.create') }}"
+                class="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
             </svg>
             Ajouter un candidat
-        </button>
+        </a>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+    <div class="rounded-xl border border-border bg-card p-4 shadow-sm sm:p-5">
+        <div class="mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h2 class="text-sm font-semibold text-foreground">Importer des candidats</h2>
+                <p class="text-xs text-muted-foreground">Sélectionnez un fichier Excel pour importer les dossiers.</p>
+            </div>
+        </div>
         <div class="flex flex-wrap gap-3">
             <form action="{{ route('students.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2">
                 @csrf
                 <input type="file" name="file" required
-                       class="text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                       class="text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                 <button type="submit"
                         class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm font-medium">
                     <span class="flex items-center gap-2">
@@ -37,16 +44,16 @@
         </div>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+    <div class="rounded-xl border border-border bg-card p-4 shadow-sm sm:p-5">
         <form method="GET" id="filter-form" action="{{ route('students.index') }}" class="space-y-3">
             <div class="flex flex-col sm:flex-row gap-3">
                 <input type="text" name="search" id="search-input" value="{{ request('search') }}"
                        placeholder="🔍 Nom, CIN, téléphone, email..." autocomplete="off"
-                       class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
+                       class="min-w-0 flex-1 rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
 
                 <div class="flex gap-2 shrink-0">
                     <button type="submit" id="filter-submit-btn"
-                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium inline-flex items-center gap-2">
+                            class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
                         <svg id="filter-spinner" class="hidden animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -54,18 +61,18 @@
                         <span>Rechercher</span>
                     </button>
                     <button type="button" id="reset-filters-btn"
-                            class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                            class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:bg-muted">
                         Réinitialiser
                     </button>
                     <button type="submit" formaction="{{ route('students.export') }}" formmethod="GET" formtarget="_blank" data-no-ajax
-                            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium">
+                            class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700">
                         Excel
                     </button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-                <select name="formation_id" class="filter-field px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500">
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6">
+                <select name="formation_id" class="filter-field rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
                     <option value="">Toutes les formations</option>
                     @foreach($formations as $formation)
                         <option value="{{ $formation->id }}" {{ request('formation_id') == $formation->id ? 'selected' : '' }}>
@@ -73,18 +80,18 @@
                         </option>
                     @endforeach
                 </select>
-                <select name="payment_status" class="filter-field px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500">
+                <select name="payment_status" class="filter-field rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
                     <option value="">Paiement (tous)</option>
                     <option value="paid" {{ request('payment_status') === 'paid' ? 'selected' : '' }}>Paiement complété</option>
                     <option value="unpaid" {{ request('payment_status') === 'unpaid' ? 'selected' : '' }}>Paiement en attente</option>
                 </select>
-                <select name="attestation" class="filter-field px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500">
+                <select name="attestation" class="filter-field rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
                     <option value="">Attestation (tous)</option>
                     <option value="yes" {{ request('attestation') === 'yes' ? 'selected' : '' }}>A obtenu l'attestation</option>
                     <option value="no" {{ request('attestation') === 'no' ? 'selected' : '' }}>N'a pas obtenu</option>
                 </select>
 
-                <select name="certificate_generated" class="filter-field px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500">
+                <select name="certificate_generated" class="filter-field rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
                     <option value="">Certificat (tous)</option>
                     <option value="yes" {{ request('certificate_generated') === 'yes' ? 'selected' : '' }}>A déjà pris le certificat</option>
                     <option value="no" {{ request('certificate_generated') === 'no' ? 'selected' : '' }}>N'a pas encore pris</option>
@@ -92,16 +99,16 @@
 
                 <input type="date" name="date_from" value="{{ request('date_from') }}"
                        title="Date de début (à partir de)"
-                       class="filter-field px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500">
+                       class="filter-field rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
 
                 <input type="date" name="date_to" value="{{ request('date_to') }}"
                        title="Date de début (jusqu'à)"
-                       class="filter-field px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500">
+                       class="filter-field rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
             </div>
 
             @if(request()->hasAny(['search','formation_id','payment_status','profession','attestation','certificate_generated','date_from','date_to']))
-            <div class="flex items-center justify-between pt-1">
-                <span class="text-xs text-gray-400 dark:text-gray-500">
+            <div class="flex items-center justify-between border-t border-border pt-3">
+                <span class="text-xs text-muted-foreground">
                     Filtres actifs — les résultats se mettent à jour automatiquement.
                 </span>
             </div>
@@ -112,16 +119,16 @@
     @include('students.partials.results')
 </div>
 
-<div id="student-modal" class="fixed inset-0 hidden bg-black/60 backdrop-blur-sm flex justify-center items-center p-4 z-50">
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl w-full max-w-3xl shadow-2xl flex flex-col max-h-[90vh] transform transition-all scale-95 opacity-0" id="modal-content">
+<div id="student-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm">
+    <div class="flex max-h-[92vh] w-full max-w-3xl scale-95 transform flex-col overflow-hidden rounded-2xl border border-border bg-card opacity-0 shadow-2xl transition-all" id="modal-content">
         <!-- Header -->
-        <div class="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700 rounded-t-xl flex-shrink-0">
+        <div class="flex justify-between items-center p-6 border-b border-border rounded-t-xl flex-shrink-0">
             <div>
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white" id="modal-title">Ajouter Candidat</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Remplissez les informations du candidat</p>
+                <h3 class="text-xl font-bold text-foreground" id="modal-title">Ajouter Candidat</h3>
+                <p class="text-sm text-muted-foreground mt-1">Remplissez les informations du candidat</p>
             </div>
             <button onclick="closeStudentModal()" type="button"
-                    class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                    class="p-2 text-muted-foreground hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 hover:bg-muted rounded-lg transition-colors">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -133,7 +140,7 @@
                 @csrf
 
                 <div class="space-y-4">
-                    <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
+                    <h4 class="text-sm font-semibold text-foreground flex items-center gap-2 pb-2 border-b border-border">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -141,41 +148,41 @@
                         Informations Personnelles
                     </h4>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Nom complet *</label>
+                            <label class="block text-sm font-medium text-foreground mb-1.5">Nom complet *</label>
                             <input type="text" name="name" placeholder="Ex: Ahmed Benali"
-                                   class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                   class="w-full border border-border bg-background rounded-lg px-3 py-2 text-sm text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">CIN *</label>
+                            <label class="block text-sm font-medium text-foreground mb-1.5">CIN *</label>
                             <input type="text" name="cin" placeholder="Ex: AB123456"
-                                   class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                   class="w-full border border-border bg-background rounded-lg px-3 py-2 text-sm text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Téléphone *</label>
+                            <label class="block text-sm font-medium text-foreground mb-1.5">Téléphone *</label>
                             <input type="text" name="phone" placeholder="Ex: 0612345678"
-                                   class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                   class="w-full border border-border bg-background rounded-lg px-3 py-2 text-sm text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">E-mail</label>
+                            <label class="block text-sm font-medium text-foreground mb-1.5">E-mail</label>
                             <input type="email" name="email" placeholder="Ex: ahmed@example.com"
-                                   class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                   class="w-full border border-border bg-background rounded-lg px-3 py-2 text-sm text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
-                        <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Ville</label>
+                        <div class="sm:col-span-2">
+                            <label class="block text-sm font-medium text-foreground mb-1.5">Ville</label>
                             <input type="text" name="city" placeholder="Ex: Casablanca"
-                                   class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                   class="w-full border border-border bg-background rounded-lg px-3 py-2 text-sm text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
                     </div>
                 </div>
 
                 <div class="space-y-4">
-                    <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
+                    <h4 class="text-sm font-semibold text-foreground flex items-center gap-2 pb-2 border-b border-border">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -183,11 +190,11 @@
                         Formation et Statut
                     </h4>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Formation *</label>
+                            <label class="block text-sm font-medium text-foreground mb-1.5">Formation *</label>
                             <select name="formation_id" id="formation_id"
-                                    class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                    class="w-full border border-border bg-background rounded-lg px-3 py-2 text-sm text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                                 <option value="">Sélectionner une formation</option>
                                 @foreach(App\Models\Formation::all() as $formation)
                                 <option value="{{ $formation->id }}">{{ $formation->name }}</option>
@@ -196,15 +203,15 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Date de Début *</label>
+                            <label class="block text-sm font-medium text-foreground mb-1.5">Date de Début *</label>
                             <input type="date" name="start_date"
-                                   class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                   class="w-full border border-border bg-background rounded-lg px-3 py-2 text-sm text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Profession / Statut *</label>
+                            <label class="block text-sm font-medium text-foreground mb-1.5">Profession / Statut *</label>
                             <select name="status"
-                                    class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                    class="w-full border border-border bg-background rounded-lg px-3 py-2 text-sm text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                                 <option value="">Sélectionner</option>
                                 @foreach($professions as $value => $label)
                                 <option value="{{ $value }}">{{ $label }}</option>
@@ -213,29 +220,29 @@
                         </div>
 
                         <div id="attestation-field">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Attestation *</label>
+                            <label class="block text-sm font-medium text-foreground mb-1.5">Attestation *</label>
                             <select name="attestation"
-                                    class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                    class="w-full border border-border bg-background rounded-lg px-3 py-2 text-sm text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                                 <option value="yes">Oui</option>
                                 <option value="no">Non</option>
                             </select>
-                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Non disponible par défaut à la création — à activer une fois le certificat prêt.</p>
+                            <p class="text-xs text-muted-foreground mt-1">Non disponible par défaut à la création — à activer une fois le certificat prêt.</p>
                         </div>
 
                         <div id="certificate-generated-field">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Certificat Généré *</label>
+                            <label class="block text-sm font-medium text-foreground mb-1.5">Certificat Généré *</label>
                             <select name="certificate_generated"
-                                    class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                    class="w-full border border-border bg-background rounded-lg px-3 py-2 text-sm text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                                 <option value="no">Non</option>
                                 <option value="yes">Oui</option>
                             </select>
-                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Cochez "Oui" une fois le certificat imprimé, pour éviter de le regénérer.</p>
+                            <p class="text-xs text-muted-foreground mt-1">Cochez "Oui" une fois le certificat imprimé, pour éviter de le regénérer.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="space-y-4">
-                    <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
+                    <h4 class="text-sm font-semibold text-foreground flex items-center gap-2 pb-2 border-b border-border">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
@@ -243,23 +250,23 @@
                         Informations de Paiement
                     </h4>
 
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Engagement (DH) *</label>
+                            <label class="block text-sm font-medium text-foreground mb-1.5">Engagement (DH) *</label>
                             <input type="number" step="1" name="engagement" id="engagement" placeholder="Ex: 5000"
-                                   class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                   class="w-full border border-border bg-background rounded-lg px-3 py-2 text-sm text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Payé (DH)</label>
+                            <label class="block text-sm font-medium text-foreground mb-1.5">Payé (DH)</label>
                             <input type="number" step="1" name="payment_done" id="payment_done" placeholder="Ex: 2000"
-                                   class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                   class="w-full border border-border bg-background rounded-lg px-3 py-2 text-sm text-foreground focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Reste (DH)</label>
+                            <label class="block text-sm font-medium text-foreground mb-1.5">Reste (DH)</label>
                             <input type="number" step="1" name="payment_remaining" id="payment_remaining" value="0" readonly
-                                   class="w-full border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-900 rounded-lg px-3 py-2 text-sm text-gray-500 dark:text-gray-400 cursor-not-allowed">
+                                   class="w-full border border-border bg-muted rounded-lg px-3 py-2 text-sm text-muted-foreground cursor-not-allowed">
                         </div>
                     </div>
 
@@ -275,7 +282,7 @@
                 </div>
 
                 <div class="space-y-4">
-                    <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
+                    <h4 class="text-sm font-semibold text-foreground flex items-center gap-2 pb-2 border-b border-border">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
@@ -285,15 +292,15 @@
 
                     <div>
                         <textarea name="notes" placeholder="Ajoutez des notes ou remarques sur ce candidat..."
-                                  class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                                  class="w-full border border-border bg-background rounded-lg px-3 py-2 text-sm text-foreground h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
                     </div>
                 </div>
             </form>
         </div>
 
-        <div class="flex justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-700 rounded-b-xl flex-shrink-0">
+        <div class="flex justify-end gap-3 p-6 border-t border-border rounded-b-xl flex-shrink-0">
             <button type="button" onclick="closeStudentModal()"
-                    class="px-5 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium text-gray-700 dark:text-gray-300">
+                    class="px-5 py-2.5 border border-border rounded-lg bg-card hover:bg-muted transition-colors text-sm font-medium text-foreground">
                 Annuler
             </button>
             <button type="submit" form="student-form" id="submit-btn"
@@ -309,25 +316,25 @@
 </div>
 
 <div id="notes-modal" class="fixed inset-0 hidden bg-black/60 backdrop-blur-sm flex justify-center items-center p-4 z-50">
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md transform transition-all scale-95 opacity-0" id="notes-modal-content">
-        <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+    <div class="bg-card rounded-xl shadow-2xl w-full max-w-md transform transition-all scale-95 opacity-0" id="notes-modal-content">
+        <div class="p-6 border-b border-border flex justify-between items-center">
+            <h3 class="text-lg font-bold text-foreground flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
                 Notes - <span id="notes-student-name"></span>
             </h3>
-            <button onclick="closeNotesModal()" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+            <button onclick="closeNotesModal()" class="p-2 hover:bg-gray-100 hover:bg-muted rounded-lg transition-colors">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
         <div class="p-6 max-h-64 overflow-y-auto">
-            <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap" id="notes-content"></p>
+            <p class="text-sm text-foreground whitespace-pre-wrap" id="notes-content"></p>
         </div>
-        <div class="p-6 border-t border-gray-200 dark:border-gray-700">
+        <div class="p-6 border-t border-border">
             <button onclick="closeNotesModal()"
                     class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
                 Fermer
