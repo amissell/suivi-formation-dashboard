@@ -42,11 +42,13 @@ class SeanceController extends Controller
 
     public function edit(Group $group, Seance $seance)
     {
+        abort_unless($seance->group_id === $group->id, 404);
         return view('seances.edit', compact('group', 'seance'));
     }
 
     public function update(Request $request, Group $group, Seance $seance)
     {
+        abort_unless($seance->group_id === $group->id, 404);
         $data = $request->validate([
             'titre'       => 'required|string|max:255',
             'date_seance' => 'required|date',
@@ -67,6 +69,7 @@ class SeanceController extends Controller
 
     public function destroy(Group $group, Seance $seance)
     {
+        abort_unless($seance->group_id === $group->id, 404);
         $seance->delete();
 
         return back()->with('success', 'Séance supprimée!');

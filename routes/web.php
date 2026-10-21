@@ -39,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('groups.seances', SeanceController::class)->except(['show']);
     Route::get('/groups/{group}/seances/{seance}/attendance', [AttendanceController::class, 'edit'])->name('seances.attendance.edit');
     Route::post('/groups/{group}/seances/{seance}/attendance', [AttendanceController::class, 'update'])->name('seances.attendance.update');
+    Route::get('/groups/{group}/students/{student}/attendance', [AttendanceController::class, 'history'])->name('groups.students.attendance');
 
 
 

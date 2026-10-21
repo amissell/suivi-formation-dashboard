@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\Group;
 use App\Models\Seance;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
@@ -20,6 +21,29 @@ class AttendanceController extends Controller
             ->keyBy('student_id');
 
         return view('seances.attendance', compact('group', 'seance', 'students', 'existing'));
+    }
+
+    /** Show one student's attendance totals and session-by-session history. */
+    public function history(Group $group, Student $student)
+    {
+        abort_unless($group->students()->whereKey($student->id)->exists(), 404);
+
+        $history = Attendance::with('seance')
+            ->where('student_id', $student->id)
+            ->whereHas('seance', fn ($query) => $query->where('group_id', $group->id))
+            ->get()
+            ->sortByDesc(fn ($attendance) => $attendance->seance->date_seance)
+            ->values();
+
+        $totals = [
+            'present' => $history->where('status', 'present')->count(),
+            'absent' => $history->where('status', 'absent')->count(),
+            'late' => $history->where('status', 'late')->count(),
+            'recorded' => $history->count(),
+            'sessions' => $group->seances()->where('statut', '!=', 'annulée')->count(),
+        ];
+
+        return view('students.attendance-history', compact('group', 'student', 'history', 'totals'));
     }
 
     /**

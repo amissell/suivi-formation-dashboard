@@ -152,6 +152,7 @@
                         <th class="text-left font-medium px-4 py-3">Téléphone</th>
                         <th class="text-left font-medium px-4 py-3">Formation</th>
                         <th class="text-left font-medium px-4 py-3">Engagement</th>
+                        <th class="text-right font-medium px-4 py-3">Historique</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-border">
@@ -177,10 +178,13 @@
                                     </div>
                                 @endif
                             </td>
+                            <td class="px-4 py-3 text-right">
+                                <a href="{{ route('groups.students.attendance', [$group, $s]) }}" class="px-2.5 py-1 text-xs border border-border rounded hover:bg-muted transition-colors">Voir les présences</a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center py-10 text-muted-foreground">
+                            <td colspan="6" class="text-center py-10 text-muted-foreground">
                                 Aucun candidat dans ce groupe
                             </td>
                         </tr>

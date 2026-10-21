@@ -80,6 +80,7 @@
                             </label>
                         @endforeach
                     </div>
+                    <span class="attendance-save-state text-xs text-muted-foreground w-16 text-right" aria-live="polite"></span>
                 </div>
             @empty
                 <div class="text-center py-10 text-muted-foreground">
@@ -107,6 +108,34 @@ function markAll(status) {
         if (input) input.checked = true;
     });
 }
+
+// Save each individual choice immediately. The form still supports bulk saves
+// after using “Tous présents/absents”.
+document.querySelectorAll('.attendance-row input[type="radio"]').forEach(input => {
+    input.addEventListener('change', async () => {
+        const row = input.closest('.attendance-row');
+        const state = row.querySelector('.attendance-save-state');
+        state.textContent = 'Saving…';
+
+        try {
+            const body = new URLSearchParams();
+            body.append(`statuses[${row.dataset.student}]`, input.value);
+            const response = await fetch(@json(route('seances.attendance.update', [$group, $seance])), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                    'X-CSRF-TOKEN': @json(csrf_token()),
+                    'Accept': 'application/json',
+                },
+                body,
+            });
+            if (!response.ok) throw new Error('Save failed');
+            state.textContent = 'Saved';
+        } catch (error) {
+            state.textContent = 'Not saved';
+        }
+    });
+});
 </script>
 @endpush
 @endsection
