@@ -1,59 +1,151 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Must Négoce Academy
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Must Négoce Academy is a Laravel web application for managing the day-to-day operations of a training center. Administrators can manage learners, training programs, groups, sessions, attendance, and payment tracking from one interface.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Dashboard** — learner and program totals, payment summaries, charts, and follow-up alerts.
+- **Learner management** — create and update learner records, search and filter the directory, track payment balances, and import or export Excel files.
+- **Training programs** — manage program names and trainers.
+- **Groups and schedules** — assign learners to groups, manage weekly time slots, and check for schedule conflicts.
+- **Sessions and attendance** — plan sessions, record present, absent, or late status, and review attendance history for each learner.
+- **Authentication** — application pages are protected by Laravel authentication.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Technology
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.2+
+- Laravel 12
+- MySQL or SQLite
+- Blade templates and Tailwind CSS
+- Vite and Node.js for frontend assets
+- Laravel Excel (`maatwebsite/excel`) for learner imports and exports
+- Chart.js for dashboard charts
 
-## Learning Laravel
+## Requirements
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Install the following before setting up the application:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 8.2 or later and Composer
+- Node.js and npm
+- A database supported by the Laravel configuration, such as SQLite or MySQL
+- PHP extensions required by Laravel and the selected database driver
 
-## Laravel Sponsors
+## Local setup
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. Install backend dependencies:
 
-### Premium Partners
+   ```bash
+   composer install
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+2. Create a local `.env` file using your team's environment template. **This repository does not currently include an `.env.example` file.** For a local SQLite setup, configure at least:
 
-## Contributing
+   ```dotenv
+   APP_NAME="Must Négoce Academy"
+   APP_ENV=local
+   APP_KEY=
+   APP_DEBUG=true
+   APP_URL=http://127.0.0.1:8000
+   DB_CONNECTION=sqlite
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   Then create the SQLite database and generate the application key:
 
-## Code of Conduct
+   ```bash
+   touch database/database.sqlite
+   php artisan key:generate
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+   If you use MySQL, set `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` in `.env` instead, and make sure the database is running.
 
-## Security Vulnerabilities
+3. Run database migrations:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+   ```bash
+   php artisan migrate
+   ```
+
+   To load the development seed data as well:
+
+   ```bash
+   php artisan db:seed
+   ```
+
+4. Install frontend dependencies and build the assets:
+
+   ```bash
+   npm install
+   npm run build
+   ```
+
+5. Start the application:
+
+   ```bash
+   php artisan serve
+   ```
+
+   Open [http://127.0.0.1:8000](http://127.0.0.1:8000). For frontend development with Vite hot reload, run `npm run dev` in a second terminal.
+
+## Development commands
+
+| Command | Description |
+| --- | --- |
+| `php artisan serve` | Start the Laravel development server. |
+| `npm run dev` | Start Vite with hot reload. |
+| `npm run build` | Compile production frontend assets. |
+| `php artisan migrate` | Apply database migrations. |
+| `php artisan db:seed` | Run the configured database seeders. |
+| `php artisan test` | Run the Laravel test suite. |
+
+The Composer `dev` script can also start the Laravel server, queue listener, log viewer, and Vite together:
+
+```bash
+composer run dev
+```
+
+## Excel learner imports
+
+The learner import expects an `.xlsx` or `.xls` workbook with a heading row containing these column names:
+
+| Column | Required |
+| --- | --- |
+| `name` | Yes |
+| `cin` | Yes |
+| `phone` | Yes |
+| `formation_id` | Yes |
+| `start_date` | Yes |
+| `engagement` | Yes |
+| `email` | No |
+
+`formation_id` must match an existing training program's database ID. Review the file before importing it into a live database.
+
+## Project structure
+
+```text
+app/
+  Exports/       Excel export definitions
+  Http/          Controllers and request handling
+  Imports/       Excel import definitions
+  Models/        Eloquent models
+database/
+  migrations/    Database schema changes
+  seeders/       Development seed data
+resources/
+  css/           Tailwind styles
+  js/            Frontend entry points
+  views/         Blade pages and components
+routes/
+  web.php        Authenticated web routes
+  auth.php       Authentication routes
+```
+
+## Deployment notes
+
+- Set `APP_ENV=production` and `APP_DEBUG=false` in production.
+- Use a strong, unique `APP_KEY` and keep `.env` out of version control.
+- Configure a persistent production database and run migrations as part of deployment.
+- Build frontend assets with `npm run build` before serving the application.
+- Serve the `public/` directory through a web server configured for Laravel's `public/index.php` entry point.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The project is currently declared under the MIT License in `composer.json`.
