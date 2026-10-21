@@ -143,7 +143,8 @@ routes/
 - Set `APP_ENV=production` and `APP_DEBUG=false` in production.
 - Use a strong, unique `APP_KEY` and keep `.env` out of version control.
 - Configure a persistent production database and run migrations as part of deployment.
-- Build frontend assets with `npm run build` before serving the application.
+- Production assets in `public/build/` are committed so a Git-based deployment receives the matching CSS and JavaScript. After changing frontend source files, run `npm run build` and include the updated `public/build/` files in the same commit.
+- After deployment, clear Laravel's cached views and configuration with `php artisan optimize:clear` if the application still serves stale pages, then hard-refresh the browser.
 - Serve the `public/` directory through a web server configured for Laravel's `public/index.php` entry point.
 
 ## License
