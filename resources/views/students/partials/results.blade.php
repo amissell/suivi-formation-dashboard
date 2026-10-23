@@ -66,26 +66,22 @@
         @endforelse
     </div>
 
-    {{-- Fixed-layout table on wide screens; secondary columns are combined into the compact view above. --}}
-    <div class="hidden overflow-hidden rounded-xl border border-border bg-card lg:block">
-        <table class="w-full table-fixed text-sm">
-            <colgroup>
-                <col style="width:22%"><col style="width:18%"><col style="width:16%"><col class="hidden" style="width:0">
-                <col style="width:13%"><col class="hidden" style="width:0"><col class="hidden" style="width:0"><col class="hidden" style="width:0">
-                <col style="width:21%"><col class="hidden" style="width:0"><col style="width:10%">
-            </colgroup>
+    {{-- Keep every candidate detail available in the desktop table; scroll horizontally on smaller screens. --}}
+    <div class="hidden overflow-x-auto rounded-xl border border-border bg-card lg:block">
+        <table class="w-full min-w-[1500px] text-sm">
                 <thead class="bg-muted/50">
                     <tr>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Candidat</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Contact</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Formation</th>
-                        <th class="hidden py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Groupes</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Profession / statut</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Groupes</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Engagement</th>
-                        <th class="hidden py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</th>
-                        <th class="hidden py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Attestation</th>
-                        <th class="hidden py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Certificat Généré</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Attestation</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Certificat Généré</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Paiement</th>
-                        <th class="hidden py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ville</th>
+                        <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ville</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
@@ -136,8 +132,13 @@
                             <p class="truncate text-sm font-medium text-foreground">{{ $student->formation->name ?? '-' }}</p>
                         </td>
 
+                        <!-- Profession / Status -->
+                        <td class="py-3 px-4">
+                            <p class="text-sm text-foreground">{{ \App\Models\Student::PROFESSIONS[$student->status] ?? $student->status ?? '-' }}</p>
+                        </td>
+
                         <!-- Groups -->
-                        <td class="hidden py-3 px-4">
+                        <td class="py-3 px-4">
                             <div class="flex flex-wrap gap-1 max-w-[180px]">
                                 @forelse($student->groups as $g)
                                     <a href="{{ route('groups.show', $g) }}"
@@ -177,14 +178,14 @@
                         </td>
 
                         <!-- Start Date -->
-                        <td class="hidden py-3 px-4">
+                        <td class="py-3 px-4">
                             <p class="text-xs text-muted-foreground">
                                 {{ optional($student->start_date)->format('d/m/Y') ?? '-' }}
                             </p>
                         </td>
 
                         <!-- Attestation Status -->
-                        <td class="hidden py-3 px-4">
+                        <td class="py-3 px-4">
                             <div class="flex items-center gap-1">
                                 @if($student->attestation === 'yes')
                                     <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -201,7 +202,7 @@
                         </td>
 
                         <!-- Certificate Generated Status -->
-                        <td class="hidden py-3 px-4">
+                        <td class="py-3 px-4">
                             <div class="flex items-center gap-1">
                                 @if($student->certificate_generated === 'yes')
                                     <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -260,7 +261,7 @@
                         </td>
 
                         <!-- City -->
-                        <td class="hidden py-3 px-4">
+                        <td class="py-3 px-4">
                             <p class="text-xs text-muted-foreground">{{ $student->city ?? '-' }}</p>
                         </td>
 
