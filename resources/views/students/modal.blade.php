@@ -50,15 +50,6 @@
 
         <!-- Row 4 -->
         <div>
-          <label class="block text-xs font-medium mb-1">Statut *</label>
-          <select name="status" id="status" class="w-full border rounded p-2 text-sm" required>
-            <option value="aide_vendeur">Aide Vendeur</option>
-            <option value="vendeur">Vendeur</option>
-            <option value="superviseur">Superviseur</option>
-            <option value="CDR">CDR</option>
-          </select>
-        </div>
-        <div>
           <label class="block text-xs font-medium mb-1">Attestation *</label>
           <select name="attestation" id="attestation" class="w-full border rounded p-2 text-sm" required>
             <option value="yes">Oui</option>

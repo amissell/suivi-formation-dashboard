@@ -50,7 +50,7 @@
     <section class="rounded-xl border border-border bg-card p-5 shadow-sm sm:p-6">
         <div class="mb-5 border-b border-border pb-4">
             <h3 class="font-semibold text-foreground">Formation et suivi</h3>
-            <p class="mt-1 text-xs text-muted-foreground">Affectez le candidat à une formation et renseignez son statut.</p>
+            <p class="mt-1 text-xs text-muted-foreground">Affectez le candidat à une formation.</p>
         </div>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
@@ -62,16 +62,6 @@
                     @endforeach
                 </select>
                 @error('formation_id')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
-            </div>
-            <div>
-                <label for="status" class="mb-1.5 block text-sm font-medium text-foreground">Profession / statut <span class="text-red-500">*</span></label>
-                <select id="status" name="status" required class="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
-                    <option value="">Sélectionner un statut</option>
-                    @foreach($professions as $value => $label)
-                        <option value="{{ $value }}" {{ old('status', $student->status) === $value ? 'selected' : '' }}>{{ $label }}</option>
-                    @endforeach
-                </select>
-                @error('status')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             @if($editing)
                 <div>

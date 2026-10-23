@@ -74,7 +74,6 @@
                         <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Candidat</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Contact</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Formation</th>
-                        <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Profession / statut</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Groupes</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Engagement</th>
                         <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</th>
@@ -130,11 +129,6 @@
                         <!-- Formation -->
                         <td class="py-3 px-4">
                             <p class="truncate text-sm font-medium text-foreground">{{ $student->formation->name ?? '-' }}</p>
-                        </td>
-
-                        <!-- Profession / Status -->
-                        <td class="py-3 px-4">
-                            <p class="text-sm text-foreground">{{ \App\Models\Student::PROFESSIONS[$student->status] ?? $student->status ?? '-' }}</p>
                         </td>
 
                         <!-- Groups -->

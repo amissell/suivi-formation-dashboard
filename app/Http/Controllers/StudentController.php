@@ -110,7 +110,6 @@ class StudentController extends Controller
             'phone' => 'required|string|max:20',
             'email' => 'nullable|email|max:255',
             'formation_id' => 'required|exists:formations,id',
-            'status' => 'required|in:' . implode(',', array_keys(Student::PROFESSIONS)),
             'start_date' => 'required|date',
             'engagement' => 'required|numeric|min:0',
             'payment_done' => 'nullable|numeric|min:0',
@@ -120,6 +119,7 @@ class StudentController extends Controller
 
         $data['attestation'] = 'no';
         $data['certificate_generated'] = 'no';
+        $data['status'] = 'aide_vendeur';
 
         // Calculate remaining payment
         $data['payment_done'] = $data['payment_done'] ?? 0;
@@ -150,7 +150,6 @@ class StudentController extends Controller
             'phone' => 'required|string|max:20',
             'email' => 'nullable|email|max:255',
             'formation_id' => 'required|exists:formations,id',
-            'status' => 'required|in:' . implode(',', array_keys(Student::PROFESSIONS)),
             'start_date' => 'required|date',
             'engagement' => 'required|numeric|min:0',
             'payment_done' => 'nullable|numeric|min:0',
