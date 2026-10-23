@@ -85,7 +85,7 @@
                         <th class="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="students-table-body" class="divide-y divide-border">
+                <tbody id="students-table-body" class="divide-y divide-border" style="display: table-row-group; overflow: visible; max-height: none; height: auto;">
                     @foreach($students as $student)
                     <tr class="hover:bg-muted/50 transition-colors">
                         <!-- Student Info (Name + CIN + Avatar) -->
