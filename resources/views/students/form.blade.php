@@ -71,6 +71,16 @@
                 </select>
                 @error('attestation')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
+            @unless($editing)
+                <div>
+                    <label for="certificate_generated" class="mb-1.5 block text-sm font-medium text-foreground">Certificat généré</label>
+                    <select id="certificate_generated" name="certificate_generated" required class="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
+                        <option value="no" {{ old('certificate_generated', 'no') === 'no' ? 'selected' : '' }}>Non</option>
+                        <option value="yes" {{ old('certificate_generated', 'no') === 'yes' ? 'selected' : '' }}>Oui</option>
+                    </select>
+                    @error('certificate_generated')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+                </div>
+            @endunless
             @if($editing)
                 <div>
                     <label for="certificate_generated" class="mb-1.5 block text-sm font-medium text-foreground">Certificat généré</label>

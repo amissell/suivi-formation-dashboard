@@ -1,3 +1,16 @@
+@push('styles')
+<style>
+    #students-table-container {
+        overflow-y: hidden !important;
+    }
+    #students-table-container::-webkit-scrollbar:vertical,
+    #students-table-body::-webkit-scrollbar:vertical {
+        display: none;
+        width: 0;
+    }
+</style>
+@endpush
+
 <div id="students-results" class="space-y-6">
     <!-- Results Count -->
     <div class="flex items-center justify-between">

@@ -111,6 +111,7 @@ class StudentController extends Controller
             'email' => 'nullable|email|max:255',
             'formation_id' => 'required|exists:formations,id',
             'attestation' => 'required|in:yes,no',
+            'certificate_generated' => 'required|in:yes,no',
             'start_date' => 'required|date',
             'engagement' => 'required|numeric|min:0',
             'payment_done' => 'nullable|numeric|min:0',
@@ -118,7 +119,6 @@ class StudentController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $data['certificate_generated'] = 'no';
         $data['status'] = 'aide_vendeur';
 
         // Calculate remaining payment
