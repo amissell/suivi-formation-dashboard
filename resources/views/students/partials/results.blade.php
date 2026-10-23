@@ -67,7 +67,7 @@
     </div>
 
     {{-- Keep every candidate detail available in the desktop table; scroll horizontally on smaller screens. --}}
-    <div class="hidden overflow-x-auto overflow-y-clip rounded-xl border border-border bg-card lg:block">
+    <div class="hidden overflow-x-auto overflow-y-hidden rounded-xl border border-border bg-card lg:block">
         <table class="w-full min-w-[1500px] text-sm">
                 <thead class="bg-muted/50">
                     <tr>
