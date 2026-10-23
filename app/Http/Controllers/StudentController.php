@@ -110,6 +110,7 @@ class StudentController extends Controller
             'phone' => 'required|string|max:20',
             'email' => 'nullable|email|max:255',
             'formation_id' => 'required|exists:formations,id',
+            'attestation' => 'required|in:yes,no',
             'start_date' => 'required|date',
             'engagement' => 'required|numeric|min:0',
             'payment_done' => 'nullable|numeric|min:0',
@@ -117,7 +118,6 @@ class StudentController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $data['attestation'] = 'no';
         $data['certificate_generated'] = 'no';
         $data['status'] = 'aide_vendeur';
 

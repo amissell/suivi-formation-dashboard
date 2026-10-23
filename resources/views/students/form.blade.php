@@ -63,14 +63,15 @@
                 </select>
                 @error('formation_id')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
+            <div>
+                <label for="attestation" class="mb-1.5 block text-sm font-medium text-foreground">Attestation</label>
+                <select id="attestation" name="attestation" required class="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
+                    <option value="no" {{ old('attestation', $student->attestation ?? 'no') === 'no' ? 'selected' : '' }}>Non obtenue</option>
+                    <option value="yes" {{ old('attestation', $student->attestation ?? 'no') === 'yes' ? 'selected' : '' }}>Obtenue</option>
+                </select>
+                @error('attestation')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+            </div>
             @if($editing)
-                <div>
-                    <label for="attestation" class="mb-1.5 block text-sm font-medium text-foreground">Attestation</label>
-                    <select id="attestation" name="attestation" required class="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
-                        <option value="no" {{ old('attestation', $student->attestation) === 'no' ? 'selected' : '' }}>Non obtenue</option>
-                        <option value="yes" {{ old('attestation', $student->attestation) === 'yes' ? 'selected' : '' }}>Obtenue</option>
-                    </select>
-                </div>
                 <div>
                     <label for="certificate_generated" class="mb-1.5 block text-sm font-medium text-foreground">Certificat généré</label>
                     <select id="certificate_generated" name="certificate_generated" required class="w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
