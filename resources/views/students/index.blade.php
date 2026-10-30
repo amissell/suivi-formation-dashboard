@@ -20,31 +20,6 @@
     </div>
 
     <div class="rounded-xl border border-border bg-card p-4 shadow-sm sm:p-5">
-        <div class="mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-                <h2 class="text-sm font-semibold text-foreground">Importer des candidats</h2>
-                <p class="text-xs text-muted-foreground">Sélectionnez un fichier Excel pour importer les dossiers.</p>
-            </div>
-        </div>
-        <div class="flex flex-wrap gap-3">
-            <form action="{{ route('students.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2">
-                @csrf
-                <input type="file" name="file" required
-                       class="text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                <button type="submit"
-                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm font-medium">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
-                        </svg>
-                        Importer Excel
-                    </span>
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <div class="rounded-xl border border-border bg-card p-4 shadow-sm sm:p-5">
         <form method="GET" id="filter-form" action="{{ route('students.index') }}" class="space-y-3">
             <div class="flex flex-col sm:flex-row gap-3">
                 <input type="text" name="search" id="search-input" value="{{ request('search') }}"
