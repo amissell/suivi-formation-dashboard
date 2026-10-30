@@ -15,8 +15,11 @@
     }
     #students-table-container { overflow-y: hidden !important; }
     #students-table-container table { width: 100%; min-width: 1210px; table-layout: fixed; }
-    #students-table-container th { padding: 0.75rem 0.5rem; font-size: 10px; letter-spacing: 0.04em; line-height: 1.25; }
-    #students-table-container td { padding: 0.75rem 0.5rem; }
+    #students-table-container th { padding: 0.55rem 0.3rem; font-size: 10px; letter-spacing: 0.04em; line-height: 1.3; white-space: normal; }
+    #students-table-container td { padding: 0.5rem 0.3rem; vertical-align: middle; }
+    #students-table-container tbody tr { border-bottom: 1px solid hsl(var(--border)); }
+    #students-table-container tbody tr:last-child { border-bottom: 0; }
+    #students-table-container tbody tr:hover { background: hsl(var(--muted) / 0.45); }
     #students-table-container .students-actions { display: flex; flex-wrap: wrap; gap: 0.125rem; }
     #students-table-container .students-actions a,
     #students-table-container .students-actions button { padding: 0.375rem; }
@@ -93,7 +96,7 @@
                 </div>
                 <div class="mt-3 flex flex-wrap gap-2">
                     @forelse($student->groups as $group)
-                        <a href="{{ route('groups.show', $group) }}" class="max-w-full truncate rounded-full bg-blue-50 px-2 py-1 text-[11px] font-medium text-blue-700 dark:bg-blue-400/10 dark:text-blue-200">{{ $group->name }}</a>
+                        <a href="{{ route('groups.show', $group) }}" class="max-w-full truncate rounded-full bg-blue-50 px-2.5 py-1.5 text-sm font-semibold text-blue-700 dark:bg-blue-400/10 dark:text-blue-200">{{ $group->name }}</a>
                     @empty
                         <span class="text-xs text-muted-foreground">Aucun groupe</span>
                     @endforelse
@@ -159,7 +162,7 @@
                                 {{ strtoupper(substr($student->name, 0, 2)) }}
                             </div>
                             <div class="min-w-0 space-y-1">
-                                <p class="truncate text-sm font-semibold leading-5 text-foreground" title="{{ $student->name }}">{{ $student->name }}</p>
+                                <p class="break-words text-sm font-semibold leading-5 text-foreground" title="{{ $student->name }}">{{ $student->name }}</p>
                                 <p class="truncate text-[11px] font-medium text-muted-foreground" title="CIN : {{ $student->cin }}">CIN <span class="font-mono text-foreground/75">{{ $student->cin }}</span></p>
                             </div>
                         </div>
@@ -198,7 +201,7 @@
                             @forelse($student->groups as $g)
                                 <a href="{{ route('groups.show', $g) }}"
                                    title="{{ optional($g->formation)->name ?? '' }}"
-                                   class="inline-flex max-w-full items-center truncate rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50">
+                                   class="inline-flex max-w-full items-center whitespace-normal break-words rounded-full bg-blue-50 px-2 py-0.5 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50">
                                     {{ $g->name }}
                                 </a>
                             @empty

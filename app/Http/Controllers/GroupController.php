@@ -26,6 +26,8 @@ class GroupController extends Controller
             $q->whereNotNull('jours_semaine')
               ->whereNotNull('date_fin')
               ->whereDate('date_fin', '<', now()->toDateString());
+        } elseif ($r->status === 'pending') {
+            $q->whereNull('jours_semaine');
         }
     }
 

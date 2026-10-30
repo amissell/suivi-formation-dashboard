@@ -49,6 +49,7 @@
                 <option value="">Tous</option>
                 <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Actif</option>
                 <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Libéré</option>
+                <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>En attente</option>
             </select>
         </div>
 
@@ -112,7 +113,7 @@
                                         @endif
                                     </div>
                                 @else
-                                    <span class="text-muted-foreground">—</span>
+                                    <span class="text-amber-600 dark:text-amber-400 font-medium">En attente</span>
                                 @endif
                             </td>
 
