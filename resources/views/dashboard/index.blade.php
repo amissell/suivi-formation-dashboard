@@ -64,10 +64,10 @@
             $studentChange = $stats['student_change'];
             $formationChange = $stats['formation_change'];
             $cards = [
-                ['label' => 'Candidats', 'value' => number_format($stats['total_students']), 'change' => $studentChange, 'hint' => 'vs mois dernier', 'icon' => 'users', 'tone' => 'blue'],
-                ['label' => 'Formations', 'value' => number_format($stats['total_formations']), 'change' => $formationChange, 'hint' => 'vs mois dernier', 'icon' => 'book', 'tone' => 'violet'],
-                ['label' => 'Revenus encaissés', 'value' => number_format($financial['total_revenue']) . ' DH', 'hint' => 'Total encaissé', 'icon' => 'wallet', 'tone' => 'emerald'],
-                ['label' => 'Paiements restants', 'value' => number_format($financial['total_remaining']) . ' DH', 'hint' => number_format($financial['students_unpaid']) . ' candidat(s) à suivre', 'icon' => 'clock', 'tone' => 'amber'],
+                ['key' => 'total_students', 'label' => 'Candidats', 'value' => number_format($stats['total_students']), 'change' => $studentChange, 'hint' => 'vs mois dernier', 'icon' => 'users', 'tone' => 'blue'],
+                ['key' => 'total_formations', 'label' => 'Formations', 'value' => number_format($stats['total_formations']), 'change' => $formationChange, 'hint' => 'vs mois dernier', 'icon' => 'book', 'tone' => 'violet'],
+                ['key' => 'total_revenue', 'label' => 'Revenus encaissés', 'value' => number_format($financial['total_revenue']) . ' DH', 'hint' => 'Total encaissé', 'icon' => 'wallet', 'tone' => 'emerald'],
+                ['key' => 'total_remaining', 'label' => 'Paiements restants', 'value' => number_format($financial['total_remaining']) . ' DH', 'hint' => number_format($financial['students_unpaid']) . ' candidat(s) à suivre', 'icon' => 'clock', 'tone' => 'amber'],
             ];
         @endphp
         @foreach($cards as $card)
@@ -83,7 +83,7 @@
                 <div class="flex items-start justify-between gap-3">
                     <div>
                         <p class="text-sm font-medium text-muted-foreground">{{ $card['label'] }}</p>
-                        <p class="mt-3 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{{ $card['value'] }}</p>
+                        <p class="mt-3 text-2xl font-bold tracking-tight text-foreground sm:text-3xl" data-dashboard-value="{{ $card['key'] }}">{{ $card['value'] }}</p>
                     </div>
                     <div class="rounded-xl p-2.5 ring-1 {{ $toneClasses }}">
                         @if($card['icon'] === 'users')
@@ -101,7 +101,7 @@
                     @if(isset($card['change']))
                         <span class="font-semibold {{ $card['change'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">{{ $card['change'] >= 0 ? '↑' : '↓' }} {{ abs($card['change']) }}%</span>
                     @endif
-                    <span>{{ $card['hint'] }}</span>
+                    <span @if($card['key'] === 'total_remaining') data-dashboard-unpaid-count @endif>{{ $card['hint'] }}</span>
                 </div>
             </article>
         @endforeach
@@ -114,7 +114,13 @@
                 <h3 class="text-lg font-semibold text-foreground">Vue d’ensemble</h3>
                 <p class="text-sm text-muted-foreground">Suivez l’évolution des inscriptions et des finances.</p>
             </div>
-            <span class="text-xs text-muted-foreground">Données mises à jour à l’ouverture de la page</span>
+            <div class="flex flex-wrap items-center gap-3">
+                <span id="dashboard-updated" class="text-xs text-muted-foreground">Données mises à jour à l’ouverture de la page</span>
+                <button id="dashboard-refresh" type="button" class="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted disabled:cursor-wait disabled:opacity-60">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7v5h-5M4 17v-5h5m-3.5-4a7 7 0 0 1 11.6-2L20 12M4 12l2.9 5a7 7 0 0 0 11.6-2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Actualiser
+                </button>
+            </div>
         </div>
         <div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
             @foreach([
@@ -192,6 +198,39 @@ document.addEventListener('DOMContentLoaded', () => {
         type: 'bar',
         data: { labels: @json($yearLabels), datasets: [{ label: 'Candidats', data: @json($yearTotals), borderRadius: 5, maxBarThickness: 34, backgroundColor: 'rgba(245, 158, 11, .75)' }] },
         options: baseOptions
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('dashboard-refresh');
+    const updated = document.getElementById('dashboard-updated');
+    if (!button) return;
+
+    button.addEventListener('click', async () => {
+        button.disabled = true;
+        const originalLabel = button.innerHTML;
+        button.textContent = 'Actualisation…';
+
+        try {
+            const response = await fetch(@json(route('dashboard.refresh')), {
+                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            if (!response.ok) throw new Error('Refresh failed');
+            const data = await response.json();
+            const number = value => new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(Number(value) || 0);
+
+            document.querySelector('[data-dashboard-value="total_students"]').textContent = number(data.stats.total_students);
+            document.querySelector('[data-dashboard-value="total_formations"]').textContent = number(data.stats.total_formations);
+            document.querySelector('[data-dashboard-value="total_revenue"]').textContent = number(data.financial.total_revenue) + ' DH';
+            document.querySelector('[data-dashboard-value="total_remaining"]').textContent = number(data.financial.total_remaining) + ' DH';
+            document.querySelector('[data-dashboard-unpaid-count]').textContent = number(data.financial.students_unpaid) + ' candidat(s) à suivre';
+            if (updated) updated.textContent = 'Mis à jour à ' + data.updated_at;
+        } catch (error) {
+            if (updated) updated.textContent = 'Actualisation impossible. Réessayez.';
+        } finally {
+            button.innerHTML = originalLabel;
+            button.disabled = false;
+        }
     });
 });
 </script>

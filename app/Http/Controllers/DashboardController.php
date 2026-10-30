@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Formation;
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 // use GuzzleHttp\Psr7\Request;
 use Illuminate\Http\Request;
@@ -14,8 +15,10 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-
-
+        $data = Cache::remember(
+            'dashboard.overview.' . Carbon::today()->toDateString(),
+            now()->addSeconds(30),
+            function () {
     $now            = Carbon::now();
     $thisMonthStart = $now->copy()->startOfMonth();
     $lastMonthStart = $now->copy()->subMonthNoOverflow()->startOfMonth();
@@ -206,7 +209,7 @@ class DashboardController extends Controller
             ];
         }
 
-        return view('dashboard.index', compact(
+        return compact(
             'stats',
             'financial',
             'alerts',
@@ -222,7 +225,11 @@ class DashboardController extends Controller
             'yearTotals',
             'revenueLabels',
             'revenueTotals'
-        ));
+        );
+            }
+        );
+
+        return view('dashboard.index', $data);
     }
     /**
  * AJAX refresh for dashboard stats
